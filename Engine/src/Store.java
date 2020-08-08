@@ -86,13 +86,13 @@ public class Store
         this.storeOrders = storeOrders;
     }
 
-//    public Collection<Product> getProductsInStore() {
-//        return productsInStore;
-//    }
-//
-//    public void setProductsInStore(Collection<Product> productsInStore) {
-//        this.productsInStore = productsInStore;
-//    }
+    public Map<Product, Integer> getProductsInStore() {
+        return productsInStore;
+    }
+
+    public void setProductsInStore(Map<Product, Integer> productsInStore) {
+        this.productsInStore = productsInStore;
+    }
 
     float getDeliveryCostByLocation(Point customerPosition)
     {
@@ -114,32 +114,23 @@ public class Store
         return allDeliveriesCost;
     }
 
-//    int getHowManyTimesProductSoldById(int productId)
-//    {
-//        int howManyTimesProductSold = 0;
-//        Product selectedProduct = null;
-//
-//        for (Product product: productsInStore)
-//        {
-//            if (product.getId() == productId)
-//            {
-//                selectedProduct = product;
-//                break;
-//            }
-//        }
-//        for (Order order: storeOrders)
-//        {
-//            howManyTimesProductSold += order.getProductQuantity(selectedProduct);
-//        }
-//
-//        return howManyTimesProductSold;
-//    }
+    int getHowManyTimesProductSold(Product product)
+    {
+        int howManyTimesProductSold = 0;
+
+        for (Order order: storeOrders)
+        {
+            howManyTimesProductSold += order.getProductQuantity(product);
+        }
+
+        return howManyTimesProductSold;
+    }
 
     @Override
     public String toString() {
-        return "Store details: " + "\r\n" +
-                "ID: " + id + "\r\n" +
-                "Name: " + name + '\'' + "\r\n" +
-                "Price per kilometer: " + ppk + "\r\n";
+        return "Store details: " + "\n" +
+                "ID: " + id + "\n" +
+                "Name: " + name + "\n" +
+                "Price per kilometer: " + ppk + "\n";
     }
 }
