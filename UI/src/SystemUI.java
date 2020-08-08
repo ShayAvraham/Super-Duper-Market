@@ -10,7 +10,7 @@ public class SystemUI
 //            {
 //                System.out.print(product.toString());
 //            }
-            for (Store store: sd.getStores())
+            for (Store store: sd.getStores().values())
             {
                 System.out.print(store.toString());
             }
