@@ -62,17 +62,17 @@ public class Order
         this.productInOrder = productInOrder;
     }
 
-    float getTotalCostOfOrder()
-    {
-        float totalCost = 0;
-        for (Product product: productInOrder.keySet())
-        {
-            totalCost += productInOrder.get(product) * product.getPrice();
-        }
-        totalCost += deliveryCost;
-
-        return totalCost;
-    }
+//    float getTotalCostOfOrder()
+//    {
+//        float totalCost = 0;
+//        for (Product product: productInOrder.keySet())
+//        {
+//            totalCost += productInOrder.get(product) * product.getPrice();
+//        }
+//        totalCost += deliveryCost;
+//
+//        return totalCost;
+//    }
 
     int getProductQuantity(Product product)
     {

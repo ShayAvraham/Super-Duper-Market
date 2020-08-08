@@ -1,5 +1,7 @@
 import jaxb.generated.SDMItem;
 
+import java.util.Objects;
+
 public class Product
 {
     public enum ProductPurchaseForm
@@ -10,15 +12,6 @@ public class Product
     private int id;
     private String name;
     private ProductPurchaseForm purchaseForm;
-    private float price;
-
-    public Product(int id, String name, ProductPurchaseForm purchaseForm, float price)
-    {
-        this.id = id;
-        this.name = name;
-        this.purchaseForm = purchaseForm;
-        this.price = price;
-    }
 
     public Product(SDMItem item)
     {
@@ -51,14 +44,6 @@ public class Product
         this.purchaseForm = purchaseForm;
     }
 
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
     @Override
     public String toString()
     {
@@ -66,5 +51,20 @@ public class Product
                 "ID: " + id + "\r\n" +
                 "Name: " + name + "\r\n" +
                 "The product is purchase by: " + purchaseForm.toString().toLowerCase() + "\r\n";
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(id);
     }
 }

@@ -1,3 +1,4 @@
+import jaxb.generated.Location;
 import jaxb.generated.SDMItem;
 import jaxb.generated.SDMPrices;
 import jaxb.generated.SDMStore;
@@ -14,6 +15,11 @@ import static java.lang.Math.round;
 
 public class Store
 {
+    private final int MIN_BOUND = 1;
+    private final int MAX_BOUND = 50;
+    private final String POSITION_VALUS_OUT_OF_BOUNDS_MSG = "Error: The store position is out of the bounds of [%1$s,%2$s]";
+
+
     private int id;
     private String name;
     private Map<Product,Integer> productsInStore;
@@ -21,27 +27,23 @@ public class Store
     private float ppk;
     private Point position;
 
-    public Store(int id, String name, Collection<Product> productsInStore, float ppk, Point position)
-    {
-        this.id = id;
-        this.name = name;
-        this.productsInStore = new HashMap<>();
-//        for (Product product: productsInStore)
-//        {
-//            this.productsInStore.put(product);
-//        }
-        this.storeOrders = new ArrayList<>();
-        this.ppk = ppk;
-        this.position = position;
-    }
-
     public Store(SDMStore store ,Map<Product,Integer> productsInStore)
     {
         this.id = store.getId();
         this.name = store.getName();
-        this.position = new Point(store.getLocation().getX(),store.getLocation().getY());
+        this.position = createPosition(store.getLocation());
         this.ppk = store.getDeliveryPpk();
         this.productsInStore = productsInStore;
+    }
+
+    private Point createPosition(Location storeLocation)
+    {
+        Point position = new Point(storeLocation.getX(),storeLocation.getY());
+        if((position.getX() > MAX_BOUND)||(position.getX() < MIN_BOUND)||(position.getY() > MAX_BOUND)||(position.getY() < MIN_BOUND))
+        {
+            throw new IndexOutOfBoundsException(String.format(POSITION_VALUS_OUT_OF_BOUNDS_MSG,MIN_BOUND,MAX_BOUND));
+        }
+        return position;
     }
 
     public int getId() {
