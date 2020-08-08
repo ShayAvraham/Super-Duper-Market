@@ -137,12 +137,9 @@ public class Store
 
     @Override
     public String toString() {
-        return "Store{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", productsInStore=" + productsInStore +
-                ", ppk=" + ppk +
-                ", position=" + position +
-                '}';
+        return "Store details: " + "\r\n" +
+                "ID: " + id + "\r\n" +
+                "Name: " + name + '\'' + "\r\n" +
+                "Price per kilometer: " + ppk + "\r\n";
     }
 }
