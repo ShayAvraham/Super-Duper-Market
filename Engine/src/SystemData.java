@@ -2,19 +2,22 @@ import jaxb.generated.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SystemData
 {
-    private Collection<Product> products;
-    private Collection<Store> stores;
+    private Map<Integer,Product> products;
+    private Map<Integer,Store> stores;
 
     public SystemData(SuperDuperMarketDescriptor marketDescription)
     {
-        products = new ArrayList<Product>();
+        products = new HashMap<>();
         CreateProductsFromSDMItems(marketDescription);
 
-        stores = new ArrayList<Store>();
+        stores = new HashMap<>();
         CreateStoresFromSDMStores(marketDescription);
+
     }
 
     private void CreateProductsFromSDMItems(SuperDuperMarketDescriptor marketDescription)
@@ -22,7 +25,7 @@ public class SystemData
         SDMItems generatedItems = marketDescription.getSDMItems();
         for(SDMItem item: generatedItems.getSDMItem())
         {
-            products.add(new Product(item));
+            products.putIfAbsent(item.getId(),new Product(item));
         }
 
     }
@@ -32,16 +35,28 @@ public class SystemData
         SDMStores generatedIStores = marketDescription.getSDMStores();
         for(SDMStore store: generatedIStores.getSDMStore())
         {
-            stores.add(new Store(store));
+
+            stores.putIfAbsent(store.getId(),new Store(store,CreateProductsInStore(store.getSDMPrices())));
         }
     }
 
-    public Collection<Product> getProducts()
+    private Map<Product,Integer> CreateProductsInStore(SDMPrices generatedPrices)
+    {
+        Map<Product,Integer> productsInStore = new HashMap<>();
+        for (SDMSell itemInStore : generatedPrices.getSDMSell())
+        {
+            Product product = products.get(itemInStore.getItemId());
+            productsInStore.putIfAbsent(product,itemInStore.getPrice());
+        }
+        return  productsInStore;
+    }
+
+    public Map<Integer,Product> getProducts()
     {
         return products;
     }
 
-    public Collection<Store> getStores()
+    public Map<Integer,Store> getStores()
     {
         return stores;
     }

@@ -1,4 +1,5 @@
 import jaxb.generated.SDMItem;
+import jaxb.generated.SDMPrices;
 import jaxb.generated.SDMStore;
 import sun.text.CodePointIterator;
 
@@ -15,7 +16,7 @@ public class Store
 {
     private int id;
     private String name;
-    private Collection<Product> productsInStore;
+    private Map<Product,Integer> productsInStore;
     private Collection<Order> storeOrders;
     private float ppk;
     private Point position;
@@ -24,23 +25,23 @@ public class Store
     {
         this.id = id;
         this.name = name;
-        this.productsInStore = new ArrayList<Product>();
-        for (Product product: productsInStore)
-        {
-            this.productsInStore.add(product);
-        }
-        this.storeOrders = new ArrayList<Order>();
+        this.productsInStore = new HashMap<>();
+//        for (Product product: productsInStore)
+//        {
+//            this.productsInStore.put(product);
+//        }
+        this.storeOrders = new ArrayList<>();
         this.ppk = ppk;
         this.position = position;
     }
 
-    public Store(SDMStore store)
+    public Store(SDMStore store ,Map<Product,Integer> productsInStore)
     {
         this.id = store.getId();
         this.name = store.getName();
         this.position = new Point(store.getLocation().getX(),store.getLocation().getY());
         this.ppk = store.getDeliveryPpk();
-
+        this.productsInStore = productsInStore;
     }
 
     public int getId() {
@@ -83,13 +84,13 @@ public class Store
         this.storeOrders = storeOrders;
     }
 
-    public Collection<Product> getProductsInStore() {
-        return productsInStore;
-    }
-
-    public void setProductsInStore(Collection<Product> productsInStore) {
-        this.productsInStore = productsInStore;
-    }
+//    public Collection<Product> getProductsInStore() {
+//        return productsInStore;
+//    }
+//
+//    public void setProductsInStore(Collection<Product> productsInStore) {
+//        this.productsInStore = productsInStore;
+//    }
 
     float getDeliveryCostByLocation(Point customerPosition)
     {
@@ -111,32 +112,35 @@ public class Store
         return allDeliveriesCost;
     }
 
-    int getHowManyTimesProductSoldById(int productId)
-    {
-        int howManyTimesProductSold = 0;
-        Product selectedProduct = null;
-
-        for (Product product: productsInStore)
-        {
-            if (product.getId() == productId)
-            {
-                selectedProduct = product;
-                break;
-            }
-        }
-        for (Order order: storeOrders)
-        {
-            howManyTimesProductSold += order.getProductQuantity(selectedProduct);
-        }
-
-        return howManyTimesProductSold;
-    }
+//    int getHowManyTimesProductSoldById(int productId)
+//    {
+//        int howManyTimesProductSold = 0;
+//        Product selectedProduct = null;
+//
+//        for (Product product: productsInStore)
+//        {
+//            if (product.getId() == productId)
+//            {
+//                selectedProduct = product;
+//                break;
+//            }
+//        }
+//        for (Order order: storeOrders)
+//        {
+//            howManyTimesProductSold += order.getProductQuantity(selectedProduct);
+//        }
+//
+//        return howManyTimesProductSold;
+//    }
 
     @Override
     public String toString() {
-        return "Store details:" + "\r\n" +
-                "ID: " + id + "\r\n" +
-                "Name: " + name + "\r\n" +
-                "Price per kilometer: " + ppk;
+        return "Store{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", productsInStore=" + productsInStore +
+                ", ppk=" + ppk +
+                ", position=" + position +
+                '}';
     }
 }

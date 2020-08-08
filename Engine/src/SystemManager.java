@@ -9,10 +9,10 @@ public class SystemManager
 
     public void ShowAllStoresInSystem()
     {
-        for (Store store: systemData.getStores())
+        for (Store store: systemData.getStores().values())
         {
             System.out.println(store);
-            for (Product product: systemData.getProducts())
+            for (Product product: systemData.getProducts().values())
             {
                 System.out.println(product);
             }

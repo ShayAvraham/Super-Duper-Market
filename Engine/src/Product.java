@@ -60,12 +60,11 @@ public class Product
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Product details:" + "\r\n" +
                 "ID: " + id + "\r\n" +
                 "Name: " + name + "\r\n" +
                 "The product is purchase by: " + purchaseForm.toString().toLowerCase() + "\r\n";
-//                +
-//                "price: " + price;
     }
 }
