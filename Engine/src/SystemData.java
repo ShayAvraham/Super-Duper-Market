@@ -2,10 +2,7 @@ import exceptions.DuplicateValuesException;
 import exceptions.InstanceNotExistException;
 import jaxb.generated.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SystemData
 {
@@ -51,7 +48,7 @@ public class SystemData
         SDMStores generatedIStores = marketDescription.getSDMStores();
         for(SDMStore store: generatedIStores.getSDMStore())
         {
-            Map<Product,Integer> productsInStore = CreateProductsInStore(store.getSDMPrices());
+            Collection<StoreProduct> productsInStore = CreateProductsInStore(store.getSDMPrices());
            if(stores.putIfAbsent(store.getId(),new Store(store,productsInStore)) != null)
            {
                throw new DuplicateValuesException("store", store.getId());
@@ -59,9 +56,9 @@ public class SystemData
         }
     }
 
-    private Map<Product,Integer> CreateProductsInStore(SDMPrices generatedPrices)
+    private Collection<StoreProduct> CreateProductsInStore(SDMPrices generatedPrices)
     {
-        Map<Product,Integer> productsInStore = new HashMap<>();
+        Collection<StoreProduct> productsInStore = new HashSet<>();
         for (SDMSell itemInStore : generatedPrices.getSDMSell())
         {
             Product product = products.get(itemInStore.getItemId());
@@ -69,12 +66,12 @@ public class SystemData
             {
                 throw new InstanceNotExistException("product",itemInStore.getItemId());
             }
-            if(productsInStore.putIfAbsent(product,itemInStore.getPrice())!= null)
+            if(!productsInStore.add(new StoreProduct(product, itemInStore.getPrice())))
             {
                 throw new DuplicateValuesException("product in the store", product.getId());
             }
         }
-        return  productsInStore;
+        return productsInStore;
     }
 
     public Map<Integer,Product> getProducts()

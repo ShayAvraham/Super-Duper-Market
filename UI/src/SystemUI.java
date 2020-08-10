@@ -156,7 +156,7 @@ public class SystemUI
                 System.out.println("---------------------------");
                 for (Product product : manager.getAllProducts()) {
                     System.out.println(product);
-                    System.out.println("Price: " + store.getProductsInStore().get(product) + "\n");
+                    System.out.println("Price: " + store.getProductById(product.getId()).getPrice() + "\n");
                 }
                 System.out.println("---------------------------");
             }
@@ -170,7 +170,7 @@ public class SystemUI
     private void showProduct(Store store, Product product)
     {
         System.out.println(product);
-        System.out.println("Price: " + store.getProductsInStore().get(product));
+        System.out.println("Price: " + store.getProductById(product.getId()).getPrice());
         if(manager.getHowManyTimesProductSoldBySpecificStore(store, product) > 0) {
             System.out.println("Total amount of this product sold in this store: "
                     + manager.getHowManyTimesProductSoldBySpecificStore(store, product) + "\n");
@@ -184,7 +184,7 @@ public class SystemUI
     private void showOrder(Store store, Order order)
     {
         System.out.println(order);
-        System.out.println("Total amount of products: " + order.getProductsInOrder().keySet().size());
+        System.out.println("Total amount of products: " + order.getProductsInOrder().size());
 
     }
 

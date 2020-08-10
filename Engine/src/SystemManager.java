@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class SystemManager
@@ -40,31 +42,22 @@ public class SystemManager
         return store.getHowManyTimesProductSold(product);
     }
 
-    public float getProductAvgPrice(Product product)
+    public float getProductAvgPrice(Product selectedProduct)
     {
         float sumOfProductPrices = 0;
-        int numOfStoresWhoSellsProduct = getHowManyStoresSellProduct(product);
+        int numOfStoresWhoSellsProduct = getHowManyStoresSellProduct(selectedProduct);
 
         for (Store store: systemData.getStores().values())
         {
-            if (store.getProductsInStore().get(product) != null)
+            StoreProduct product = store.getProductById(selectedProduct.getId());
+            if (product != null)
             {
-                sumOfProductPrices += store.getProductsInStore().get(product);
+                sumOfProductPrices += product.getPrice();
             }
         }
         return (sumOfProductPrices/numOfStoresWhoSellsProduct);
     }
 
-
-    public Collection<Store> getAllStores()
-    {
-        return systemData.getStores().values();
-    }
-
-    public Collection<Product> getAllProducts()
-    {
-        return systemData.getProducts().values();
-    }
 
     public Collection<Order> getAllOrders(Store store)
     {
@@ -85,9 +78,9 @@ public class SystemManager
     {
         int totalAmountOfProducts = 0;
 
-        for (Product product: order.getProductsInOrder().keySet())
+        for (OrderProduct product: order.getProductsInOrder())
         {
-            totalAmountOfProducts += order.getProductsInOrder().get(product);
+            totalAmountOfProducts += product.getAmount();
         }
         return totalAmountOfProducts;
     }
@@ -101,4 +94,14 @@ public class SystemManager
 //    {
 //
 //    }
+
+    public Collection<Store> getAllStores()
+    {
+        return systemData.getStores().values();
+    }
+
+    public Collection<Product> getAllProducts()
+    {
+        return systemData.getProducts().values();
+    }
 }

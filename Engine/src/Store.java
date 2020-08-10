@@ -1,15 +1,9 @@
 import jaxb.generated.Location;
-import jaxb.generated.SDMItem;
-import jaxb.generated.SDMPrices;
 import jaxb.generated.SDMStore;
-import sun.text.CodePointIterator;
 
 import java.awt.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.List;
 
 import static java.lang.Math.round;
 
@@ -22,34 +16,20 @@ public class Store
 
     private int id;
     private String name;
-    private Map<Product,Integer> productsInStore;
+    private Collection<StoreProduct> productsInStore;
     private Collection<Order> storeOrders;
     private float ppk;
     private Point position;
 
-/*
-    ProductInStore
 
-    Product p1
-    int price
-    Discount d1 = null
-
-
-    Discount
-
-    int amount
-
- */
-
-
-    public Store(SDMStore store ,Map<Product,Integer> productsInStore)
+    public Store(SDMStore store ,Collection<StoreProduct> productsInStore)
     {
         this.id = store.getId();
         this.name = store.getName();
         this.position = createPosition(store.getLocation());
         this.ppk = store.getDeliveryPpk();
         this.productsInStore = productsInStore;
-        this.storeOrders = new ArrayList<Order>();
+        this.storeOrders = new HashSet<>();
     }
 
     private Point createPosition(Location storeLocation)
@@ -102,12 +82,26 @@ public class Store
         this.storeOrders = storeOrders;
     }
 
-    public Map<Product, Integer> getProductsInStore() {
+    public Collection<StoreProduct> getProductsInStore() {
         return productsInStore;
     }
 
-    public void setProductsInStore(Map<Product, Integer> productsInStore) {
+    public void setProductsInStore(Collection<StoreProduct> productsInStore) {
         this.productsInStore = productsInStore;
+    }
+
+    public StoreProduct getProductById(int productId)
+    {
+        StoreProduct storeProduct = null;
+        for (StoreProduct currentProduct: productsInStore)
+        {
+            if(currentProduct.getProduct().getId() == productId)
+            {
+                storeProduct = currentProduct;
+                break;
+            }
+        }
+        return storeProduct;
     }
 
     float getDeliveryCostByLocation(Point customerPosition)
@@ -136,7 +130,7 @@ public class Store
 
         for (Order order: storeOrders)
         {
-            howManyTimesProductSold += order.getProductQuantity(product);
+            howManyTimesProductSold += order.getProductQuantityInOrder(product);
         }
 
         return howManyTimesProductSold;

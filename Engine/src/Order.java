@@ -6,24 +6,19 @@ public class Order
     private int shopId;
     private Date orderDate;
     private float deliveryCost;
-    private Map<Product, Integer> productsInOrder;
+    private Collection<OrderProduct> productsInOrder;
 
-    /*
 
-    PRODUCT -> PRODUCTINSTORE->PRODUCTINORDER
-
-     */
-
-    public Order(int id, int shopId, Date date, float deliveryCost, Map<Product, Integer> productInOrder)
+    public Order(int id, int shopId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
     {
         this.id = id;
         this.shopId = shopId;
         this.orderDate = date;
         this.deliveryCost = deliveryCost;
-        this.productsInOrder = new HashMap<Product, Integer>();
-        for (Product product: productInOrder.keySet())
+        this.productsInOrder = new HashSet<>();
+        for (OrderProduct product: productsInOrder)
         {
-            this.productsInOrder.put(product, productInOrder.get(product));
+            this.productsInOrder.add(product);
         }
     }
 
@@ -59,11 +54,11 @@ public class Order
         this.deliveryCost = deliveryCost;
     }
 
-    public Map<Product, Integer> getProductsInOrder() {
+    public Collection<OrderProduct> getProductsInOrder() {
         return productsInOrder;
     }
 
-    public void setProductsInOrder(Map<Product, Integer> productsInOrder) {
+    public void setProductsInOrder(Collection<OrderProduct> productsInOrder) {
         this.productsInOrder = productsInOrder;
     }
 
@@ -79,9 +74,18 @@ public class Order
 //        return totalCost;
 //    }
 
-    int getProductQuantity(Product product)
+    int getProductQuantityInOrder(Product product)
     {
-        return productsInOrder.get(product);
+        int productQuantityInOrder = 0;
+
+        for (OrderProduct orderProduct: productsInOrder)
+        {
+            if(orderProduct.getStoreProduct().getProduct().getId() == product.getId())
+            {
+                productQuantityInOrder = orderProduct.getAmount();
+            }
+        }
+        return productQuantityInOrder;
     }
 
     @Override
