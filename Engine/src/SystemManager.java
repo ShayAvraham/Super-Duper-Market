@@ -1,3 +1,5 @@
+import java.util.Collection;
+
 public class SystemManager
 {
     private SystemData systemData;
@@ -7,38 +9,8 @@ public class SystemManager
         this.systemData = systemData;
     }
 
-    public void ShowAllStoresInSystem()
-    {
-        System.out.println("All stores in the system:");
-        System.out.println("---------------------------");
-        for (Store store: systemData.getStores().values())
-        {
-            System.out.println(store);
-            System.out.println("All " + store.getName() + " products:");
-            System.out.println("---------------------------");
-            for (Product product: systemData.getProducts().values())
-            {
-                System.out.println(product);
-                System.out.println("Price: " + store.getProductsInStore().get(product) + "\n");
-            }
-            System.out.println("---------------------------");
-        }
-    }
 
-    public void ShowAllProductsInSystem()
-    {
-        System.out.println("All products in the system:\r\n");
-        System.out.println("---------------------------\r\n");
-        for (Product product: systemData.getProducts().values())
-        {
-            System.out.println(product);
-            System.out.println(getHowManyStoresSellProduct(product));
-            System.out.println(getProductAvgPrice(product));
-            System.out.println(getHowManyTimesProductSold(product));
-        }
-    }
-
-    private int getHowManyStoresSellProduct(Product product)
+    public int getHowManyStoresSellProduct(Product product)
     {
         int howManyStoresSellProduct = 0;
 
@@ -52,29 +24,81 @@ public class SystemManager
         return howManyStoresSellProduct;
     }
 
-    private int getHowManyTimesProductSold(Product product)
+    public int getHowManyTimesProductSold(Product product)
     {
         int howManyTimesProductSold = 0;
 
         for (Store store: systemData.getStores().values())
         {
-            howManyTimesProductSold += store.getHowManyTimesProductSold(product);
+            howManyTimesProductSold += getHowManyTimesProductSoldBySpecificStore(store, product);
         }
         return howManyTimesProductSold;
     }
 
-    private float getProductAvgPrice(Product product)
+    public int getHowManyTimesProductSoldBySpecificStore(Store store, Product product)
     {
-        float productAvgPrice = 0;
+        return store.getHowManyTimesProductSold(product);
+    }
+
+    public float getProductAvgPrice(Product product)
+    {
+        float sumOfProductPrices = 0;
         int numOfStoresWhoSellsProduct = getHowManyStoresSellProduct(product);
 
         for (Store store: systemData.getStores().values())
         {
             if (store.getProductsInStore().get(product) != null)
             {
-                productAvgPrice += store.getProductsInStore().get(product);
+                sumOfProductPrices += store.getProductsInStore().get(product);
             }
         }
-        return (productAvgPrice/numOfStoresWhoSellsProduct);
+        return (sumOfProductPrices/numOfStoresWhoSellsProduct);
     }
+
+
+    public Collection<Store> getAllStores()
+    {
+        return systemData.getStores().values();
+    }
+
+    public Collection<Product> getAllProducts()
+    {
+        return systemData.getProducts().values();
+    }
+
+    public Collection<Order> getAllOrders(Store store)
+    {
+
+        Collection<Order> allOrders = null;
+        for (Store currentStore: systemData.getStores().values())
+        {
+            if(currentStore.getId() == store.getId())
+            {
+                allOrders = currentStore.getStoreOrders();
+                break;
+            }
+        }
+        return allOrders;
+    }
+
+    public int getTotalAmountOfProductsInOrder(Order order)
+    {
+        int totalAmountOfProducts = 0;
+
+        for (Product product: order.getProductsInOrder().keySet())
+        {
+            totalAmountOfProducts += order.getProductsInOrder().get(product);
+        }
+        return totalAmountOfProducts;
+    }
+
+//    public float getTotalCostOfAllProductsInOrder(Order order)
+//    {
+//
+//    }
+//
+//    public float getTotalCostOfOrder(Order order)
+//    {
+//
+//    }
 }

@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.*;
 
 public class Order
@@ -7,7 +6,13 @@ public class Order
     private int shopId;
     private Date orderDate;
     private float deliveryCost;
-    private Map<Product, Integer> productInOrder;
+    private Map<Product, Integer> productsInOrder;
+
+    /*
+
+    PRODUCT -> PRODUCTINSTORE->PRODUCTINORDER
+
+     */
 
     public Order(int id, int shopId, Date date, float deliveryCost, Map<Product, Integer> productInOrder)
     {
@@ -15,10 +20,10 @@ public class Order
         this.shopId = shopId;
         this.orderDate = date;
         this.deliveryCost = deliveryCost;
-        this.productInOrder = new HashMap<Product, Integer>();
+        this.productsInOrder = new HashMap<Product, Integer>();
         for (Product product: productInOrder.keySet())
         {
-            this.productInOrder.put(product, productInOrder.get(product));
+            this.productsInOrder.put(product, productInOrder.get(product));
         }
     }
 
@@ -54,12 +59,12 @@ public class Order
         this.deliveryCost = deliveryCost;
     }
 
-    public Map<Product, Integer> getProductInOrder() {
-        return productInOrder;
+    public Map<Product, Integer> getProductsInOrder() {
+        return productsInOrder;
     }
 
-    public void setProductInOrder(Map<Product, Integer> productInOrder) {
-        this.productInOrder = productInOrder;
+    public void setProductsInOrder(Map<Product, Integer> productsInOrder) {
+        this.productsInOrder = productsInOrder;
     }
 
 //    float getTotalCostOfOrder()
@@ -76,6 +81,13 @@ public class Order
 
     int getProductQuantity(Product product)
     {
-        return productInOrder.get(product);
+        return productsInOrder.get(product);
+    }
+
+    @Override
+    public String toString() {
+        return "Order details: " + "\n" +
+                "Date: " + orderDate + "\n" +
+                "Delivery cost: " + deliveryCost + "\n";
     }
 }

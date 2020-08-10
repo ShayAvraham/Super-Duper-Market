@@ -27,6 +27,21 @@ public class Store
     private float ppk;
     private Point position;
 
+/*
+    ProductInStore
+
+    Product p1
+    int price
+    Discount d1 = null
+
+
+    Discount
+
+    int amount
+
+ */
+
+
     public Store(SDMStore store ,Map<Product,Integer> productsInStore)
     {
         this.id = store.getId();
@@ -34,6 +49,7 @@ public class Store
         this.position = createPosition(store.getLocation());
         this.ppk = store.getDeliveryPpk();
         this.productsInStore = productsInStore;
+        this.storeOrders = new ArrayList<Order>();
     }
 
     private Point createPosition(Location storeLocation)

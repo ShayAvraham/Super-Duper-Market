@@ -115,17 +115,77 @@ public class SystemUI
 
     }
 
-    private void makePurchase() {
-
+    private void makePurchase()
+    {
+        showAvailableStoresToBuy();
     }
 
-    private void showAllProducts() {
-
+    private void showAllProducts()
+    {
+        if (manager.getAllProducts().size() > 0)
+        {
+            System.out.println("All products in the system:");
+            System.out.println("---------------------------");
+            for (Product product : manager.getAllProducts()) {
+                System.out.println(product);
+                if (manager.getHowManyStoresSellProduct(product) > 0) {
+                    System.out.println("Number of stores who sells the product: " + manager.getHowManyStoresSellProduct(product));
+                    System.out.println("Average price of the product: " + manager.getProductAvgPrice(product));
+                    System.out.println("Number of times the product was sold: " + manager.getHowManyTimesProductSold(product));
+                } else {
+                    System.out.println("This product is not sold in any store.");
+                }
+                System.out.println("---------------------------");
+            }
+        }
+        else
+        {
+            System.out.println("There are no products in the system.");
+        }
     }
 
     private void showAllStores()
     {
-        manager.ShowAllStoresInSystem();
+        if(manager.getAllStores().size() > 0)
+        {
+            System.out.println("All stores in the system:");
+            System.out.println("---------------------------");
+            for (Store store : manager.getAllStores()) {
+                System.out.println(store);
+                System.out.println("All " + store.getName() + " products:");
+                System.out.println("---------------------------");
+                for (Product product : manager.getAllProducts()) {
+                    System.out.println(product);
+                    System.out.println("Price: " + store.getProductsInStore().get(product) + "\n");
+                }
+                System.out.println("---------------------------");
+            }
+        }
+        else
+        {
+            System.out.println("There are no stores in the system.");
+        }
+    }
+
+    private void showProduct(Store store, Product product)
+    {
+        System.out.println(product);
+        System.out.println("Price: " + store.getProductsInStore().get(product));
+        if(manager.getHowManyTimesProductSoldBySpecificStore(store, product) > 0) {
+            System.out.println("Total amount of this product sold in this store: "
+                    + manager.getHowManyTimesProductSoldBySpecificStore(store, product) + "\n");
+        }
+        else
+        {
+            System.out.println("This product is not yet sold in this store.");
+        }
+    }
+
+    private void showOrder(Store store, Order order)
+    {
+        System.out.println(order);
+        System.out.println("Total amount of products: " + order.getProductsInOrder().keySet().size());
+
     }
 
     private void loadDataFromFile()
@@ -140,6 +200,18 @@ public class SystemUI
         catch (Exception exp)
         {
             System.out.print("Error:" + exp.getMessage());
+        }
+    }
+
+    private void showAvailableStoresToBuy()
+    {
+        System.out.println("All avialable stores in the system:");
+        System.out.println("-----------------------------------");
+        for (Store store: manager.getAllStores())
+        {
+            String storeDetails = store.getId() + ". " + store.getName() + "\n"
+                                + "Price per kilometer: " + store.getPpk();
+            System.out.println(storeDetails);
         }
     }
 }
