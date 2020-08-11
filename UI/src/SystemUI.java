@@ -1,3 +1,5 @@
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class SystemUI
@@ -16,6 +18,7 @@ public class SystemUI
     private static final String CHOISE_OUT_OF_RANGE_MESSAGE = "Choise is out of range of valid values";
     private static final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
     private static final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number:\n";
+    private static final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load:\n";
     private static final String QUIT_MESSAGE = "Bye bye, see you next time!";
     private static final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
     private static final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
@@ -44,7 +47,6 @@ public class SystemUI
     private static final String AVIALABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
 
     private SystemManager manager;
-
 
     public void run()
     {
@@ -119,7 +121,7 @@ public class SystemUI
     {
         if (userStartMenuChoise == StartMenuOptions.LoadFile)
         {
-            loadDataFromFile();
+            loadDataFromXmlFile();
         }
         else
         {
@@ -147,6 +149,24 @@ public class SystemUI
             {
                 throw new Exception(OPTION_NOT_VALID_MESSAGE);
             }
+        }
+    }
+
+    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException
+    {
+        try
+        {
+            this.manager = new SystemManager();
+            System.out.println(ENTER_FILE_PATH_MESSAGE);
+            Scanner scanner = new Scanner(System.in);
+            String xmlFilePath = scanner.nextLine();
+            manager.loadDataFromXmlFile(xmlFilePath);
+            System.out.println(FILE_LOADED_SUCCESFULLY_MESSAGE);
+        }
+        catch (Exception exp)
+        {
+            manager = null;
+            throw exp;
         }
     }
 
@@ -280,21 +300,6 @@ public class SystemUI
             String.format(TOTAL_COST_OF_ORDER_MESSAGE, manager.getTotalCostOfOrder(order)) +
             SEPARATOR_MESSAGE;
         return orderDetails;
-    }
-
-    private void loadDataFromFile()
-    {
-        try
-        {
-            XmlSystemDataBuilder xmlBuilder = new XmlSystemDataBuilder();
-            SystemData systemData = xmlBuilder.deserializeXmlToSystemData("/resources/ex1-small.xml");
-            this.manager = new SystemManager(systemData);
-            System.out.println(FILE_LOADED_SUCCESFULLY_MESSAGE);
-        }
-        catch (Exception exp)
-        {
-            System.out.print("Error:" + exp.getMessage());
-        }
     }
 
     private void showAvailableStoresToBuy()

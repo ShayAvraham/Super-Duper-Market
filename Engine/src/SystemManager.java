@@ -1,15 +1,24 @@
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.jar.JarException;
 
 public class SystemManager
 {
     private SystemData systemData;
+    private XmlSystemDataBuilder xmlSystemDataBuilder;
 
-    public SystemManager(SystemData systemData)
+    public SystemManager()
     {
-        this.systemData = systemData;
+        this.xmlSystemDataBuilder = new XmlSystemDataBuilder();
+    }
+
+    public void loadDataFromXmlFile(String xmlFilePath) throws JAXBException, FileNotFoundException
+    {
+            systemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
     }
 
 

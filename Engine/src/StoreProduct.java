@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class StoreProduct
 {
     private Product product;
@@ -21,7 +23,18 @@ public class StoreProduct
         this.product = product;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setPrice(int price) { this.price = price; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StoreProduct)) return false;
+        StoreProduct that = (StoreProduct) o;
+        return getProduct().equals(that.getProduct());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getProduct());
     }
 }
