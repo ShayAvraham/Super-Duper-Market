@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class SystemManager
 {
@@ -85,15 +86,32 @@ public class SystemManager
         return totalAmountOfProducts;
     }
 
-//    public float getTotalCostOfAllProductsInOrder(Order order)
-//    {
-//
-//    }
-//
-//    public float getTotalCostOfOrder(Order order)
-//    {
-//
-//    }
+    public float getTotalCostOfAllProductsInOrder(Order order)
+    {
+        float totalCostOfAllProducts = 0;
+
+        for (OrderProduct product: order.getProductsInOrder())
+        {
+            totalCostOfAllProducts += product.getAmount() * product.getStoreProduct().getPrice();
+        }
+        return totalCostOfAllProducts;
+    }
+
+    public float getTotalCostOfOrder(Order order)
+    {
+        return getTotalCostOfAllProductsInOrder(order) + order.getDeliveryCost();
+    }
+
+    public float getStoreTotalCashFromDeliveries(Store store)
+    {
+        float totalCashFromDeliveries = 0;
+
+        for (Order order: store.getStoreOrders())
+        {
+            totalCashFromDeliveries += order.getDeliveryCost();
+        }
+        return totalCashFromDeliveries;
+    }
 
     public Collection<Store> getAllStores()
     {
