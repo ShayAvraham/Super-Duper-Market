@@ -10,32 +10,22 @@ public class XmlSystemDataBuilder
 {
     private final String JAXB_PACKAGE_NAME = "jaxb.generated";
     private final String FILE_NOT_EXIST_ERROR_MSG = "Error: No xml file was found in this path: ";
-    private final String FILE_NOT_XML_ERROR_MSG = "Error: The file in the path is not xml file ";
 
     private String xmlFilePath;
 
     public SystemData deserializeXmlToSystemData(String xmlFilePath) throws JAXBException, FileNotFoundException
     {
         this.xmlFilePath = xmlFilePath;
-        InputStream inputStream = createInputStreamFromPath();
-        JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
-        Unmarshaller u = jc.createUnmarshaller();
-        return new SystemData((SuperDuperMarketDescriptor) u.unmarshal(inputStream));
-    }
-
-    private InputStream createInputStreamFromPath() throws FileNotFoundException
-    {
-        if(!xmlFilePath.endsWith(".xml"))
-        {
-            throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
-        }
         InputStream inputStream = XmlSystemDataBuilder.class.getResourceAsStream(xmlFilePath);
         if (inputStream == null)
         {
             throw new FileNotFoundException(FILE_NOT_EXIST_ERROR_MSG + xmlFilePath);
         }
-        return inputStream;
+        JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
+        Unmarshaller u = jc.createUnmarshaller();
+        return new SystemData((SuperDuperMarketDescriptor) u.unmarshal(inputStream));
     }
+
 
     public static void main(String[] args)
     {

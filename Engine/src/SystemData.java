@@ -6,29 +6,26 @@ import java.util.*;
 
 public class SystemData
 {
-    private final String NOT_ALL_PRODUCTS_IN_STORE = "Error: There is a product that is not sold in any store";
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
-
-    private Set<Product>productsOnSale;
 
     public SystemData(SuperDuperMarketDescriptor marketDescription)
     {
         products = new HashMap<>();
         CreateProductsFromSDMItems(marketDescription);
 
-        productsOnSale = new HashSet<>();
         stores = new HashMap<>();
         CreateStoresFromSDMStores(marketDescription);
+
         CheckIfAllProductsInStores();
 
     }
 
     private void CheckIfAllProductsInStores()
     {
-        if(productsOnSale.size()!=products.size())
+        for(Store store: stores.values())
         {
-            throw new RuntimeException(NOT_ALL_PRODUCTS_IN_STORE);
+            //add to class product a proprety of ifProductIsInAnyStore
         }
     }
 
@@ -69,12 +66,10 @@ public class SystemData
             {
                 throw new InstanceNotExistException("product",itemInStore.getItemId());
             }
-            productsOnSale.add(product);
             if(!productsInStore.add(new StoreProduct(product, itemInStore.getPrice())))
             {
                 throw new DuplicateValuesException("product in the store", product.getId());
             }
-
         }
         return productsInStore;
     }
