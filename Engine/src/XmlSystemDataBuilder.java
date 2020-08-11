@@ -37,26 +37,4 @@ public class XmlSystemDataBuilder
         return inputStream;
     }
 
-    public static void main(String[] args)
-    {
-        try
-        {
-            XmlSystemDataBuilder temp1 = new XmlSystemDataBuilder();
-            SystemData sd = temp1.deserializeXmlToSystemData("/resources/ex1-small.xml");
-//            SystemData sd = temp1.deserializeXmlToSystemData("/resources/ex1-error-3.6.xml");
-
-//            for (Product product: sd.getProducts())
-//            {
-//                System.out.print(product.toString());
-//            }
-            for (Store store: sd.getStores().values())
-            {
-                System.out.print(store.toString());
-            }
-
-        }
-        catch (Exception exp) {
-            System.out.print("$$" + exp.getMessage());
-        }
-    }
 }

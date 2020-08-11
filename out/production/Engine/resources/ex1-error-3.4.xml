@@ -17,10 +17,6 @@
 			<name>Pasta</name>
 			<purchase-category>Quantity</purchase-category>
 		</SDM-item>
-		<SDM-item id="5">
-			<name>Tomato</name>
-			<purchase-category>Weight</purchase-category>
-		</SDM-item>
 	</SDM-items>
 	<SDM-stores>
 		<SDM-store id="1">
