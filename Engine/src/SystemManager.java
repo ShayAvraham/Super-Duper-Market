@@ -10,6 +10,7 @@ public class SystemManager
 {
     private SystemData systemData;
     private XmlSystemDataBuilder xmlSystemDataBuilder;
+    private boolean isFileWasLoadSuccessfully = false;
 
     public SystemManager()
     {
@@ -18,7 +19,9 @@ public class SystemManager
 
     public void loadDataFromXmlFile(String xmlFilePath) throws JAXBException, FileNotFoundException
     {
-            systemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
+        SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
+        isFileWasLoadSuccessfully = true;
+        systemData = newSystemData;
     }
 
 
@@ -130,5 +133,9 @@ public class SystemManager
     public Collection<Product> getAllProducts()
     {
         return systemData.getProducts().values();
+    }
+
+    public boolean isFileWasLoadSuccessfully() {
+        return isFileWasLoadSuccessfully;
     }
 }

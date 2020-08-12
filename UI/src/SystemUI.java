@@ -15,7 +15,7 @@ public class SystemUI
     }
 
     private static final String WELCOME_MESSAGE = "Hello, welcome to super duper market!";
-    private static final String CHOISE_OUT_OF_RANGE_MESSAGE = "Choise is out of range of valid values";
+    private static final String CHOICE_OUT_OF_RANGE_MESSAGE = "Choice is out of range of valid values";
     private static final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
     private static final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number:\n";
     private static final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load:\n";
@@ -42,11 +42,11 @@ public class SystemUI
     private static final String TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE = "Total cost of all products: %1$s \n";
     private static final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s \n";
     private static final String TOTAL_COST_OF_ORDER_MESSAGE = "Total order cost: %1$s \n";
-    private static final String FILE_LOADED_SUCCESFULLY_MESSAGE = "File loaded succesfully!";
-    private static final String ALL_AVIALABLE_STORES_TO_BUY_MESSAGE = "All avialable stores in the system:\n%1$s";
-    private static final String AVIALABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
+    private static final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
+    private static final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
+    private static final String AVAILABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
 
-    private SystemManager manager;
+    private SystemManager manager = new SystemManager();
 
     public void run()
     {
@@ -111,7 +111,7 @@ public class SystemUI
     {
         if (userStartChoiseInput > StartMenuOptions.values().length || userStartChoiseInput < 0)
         {
-            throw new Exception(CHOISE_OUT_OF_RANGE_MESSAGE);
+            throw new Exception(CHOICE_OUT_OF_RANGE_MESSAGE);
         }
         return userStartChoiseInput - 1;
     }
@@ -125,7 +125,7 @@ public class SystemUI
         }
         else
         {
-            if (manager != null)
+            if (manager.isFileWasLoadSuccessfully())
             {
                 switch (userStartMenuChoise)
                 {
@@ -154,20 +154,11 @@ public class SystemUI
 
     private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException
     {
-        try
-        {
-            this.manager = new SystemManager();
-            System.out.println(ENTER_FILE_PATH_MESSAGE);
-            Scanner scanner = new Scanner(System.in);
-            String xmlFilePath = scanner.nextLine();
-            manager.loadDataFromXmlFile(xmlFilePath);
-            System.out.println(FILE_LOADED_SUCCESFULLY_MESSAGE);
-        }
-        catch (Exception exp)
-        {
-            manager = null;
-            throw exp;
-        }
+        System.out.println(ENTER_FILE_PATH_MESSAGE);
+        Scanner scanner = new Scanner(System.in);
+        String xmlFilePath = scanner.nextLine();
+        manager.loadDataFromXmlFile(xmlFilePath);
+        System.out.println(FILE_LOADED_SUCCESSFULLY_MESSAGE);
     }
 
     private void showAllOrdersHistory()
@@ -305,11 +296,11 @@ public class SystemUI
     private void showAvailableStoresToBuy()
     {
         String avialableStoresToBuyMsg = "";
-        avialableStoresToBuyMsg += String.format(ALL_AVIALABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
+        avialableStoresToBuyMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
         for (Store store: manager.getAllStores())
         {
             avialableStoresToBuyMsg += String.format(
-                    AVIALABLE_STORE_TO_BUY_MESSAGE, store.getId(), store.getName(), store.getPpk());
+                    AVAILABLE_STORE_TO_BUY_MESSAGE, store.getId(), store.getName(), store.getPpk());
         }
         System.out.println(avialableStoresToBuyMsg);
     }

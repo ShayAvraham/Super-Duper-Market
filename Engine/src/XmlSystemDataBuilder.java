@@ -9,8 +9,8 @@ import java.io.InputStream;
 public class XmlSystemDataBuilder
 {
     private final String JAXB_PACKAGE_NAME = "jaxb.generated";
-    private final String FILE_NOT_EXIST_ERROR_MSG = "Error: No xml file was found in this path: ";
-    private final String FILE_NOT_XML_ERROR_MSG = "Error: The file in the path is not xml file ";
+    private final String FILE_NOT_EXIST_ERROR_MSG = "Cause of failure : No xml file was found in this path: ";
+    private final String FILE_NOT_XML_ERROR_MSG = "Cause of failure: The file in the path is not xml file ";
 
     private String xmlFilePath;
 
@@ -21,6 +21,7 @@ public class XmlSystemDataBuilder
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
         return new SystemData((SuperDuperMarketDescriptor) u.unmarshal(inputStream));
+
     }
 
     private InputStream createInputStreamFromPath() throws FileNotFoundException
