@@ -3,7 +3,7 @@ import java.util.Objects;
 public class StoreProduct
 {
     private Product product;
-    private int price;
+    private float price;
 
     public StoreProduct(Product product, int price)
     {
@@ -15,7 +15,7 @@ public class StoreProduct
         return product;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
