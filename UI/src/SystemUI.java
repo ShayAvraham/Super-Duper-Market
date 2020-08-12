@@ -160,13 +160,22 @@ public class SystemUI
         }
     }
 
+
     private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException //change1
     {
-        System.out.println(ENTER_FILE_PATH_MESSAGE);
-        Scanner scanner = new Scanner(System.in);
-        String xmlFilePath = scanner.nextLine();
-        manager.loadDataFromXmlFile(xmlFilePath);
-        System.out.println(FILE_LOADED_SUCCESSFULLY_MESSAGE);
+        try
+        {
+            System.out.println(ENTER_FILE_PATH_MESSAGE);
+            Scanner scanner = new Scanner(System.in);
+            String xmlFilePath = scanner.nextLine();
+            manager.loadDataFromXmlFile(xmlFilePath);
+            System.out.println(FILE_LOADED_SUCCESSFULLY_MESSAGE);
+        }
+        catch(Exception exp)
+        {
+            System.out.println(LOAD_FILE_FAUILE_MESSAGE);
+            throw  exp;
+        }
     }
 
     private void showAllOrdersHistory()
