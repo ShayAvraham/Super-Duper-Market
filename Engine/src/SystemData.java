@@ -9,11 +9,13 @@ public class SystemData
     private final String NOT_ALL_PRODUCTS_IN_STORE = "Error: There is a product that is not sold in any store";
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
+    private Set<Order> orders;
 
     private Set<Product>productsOnSale;
 
     public SystemData(SuperDuperMarketDescriptor marketDescription)
     {
+        orders = new HashSet<>();
         products = new HashMap<>();
         CreateProductsFromSDMItems(marketDescription);
 
@@ -87,5 +89,9 @@ public class SystemData
     public Map<Integer,Store> getStores()
     {
         return stores;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
     }
 }

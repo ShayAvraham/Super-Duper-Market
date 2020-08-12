@@ -95,7 +95,7 @@ public class Store
         StoreProduct storeProduct = null;
         for (StoreProduct currentProduct: productsInStore)
         {
-            if(currentProduct.getProduct().getId() == productId)
+            if(currentProduct.getId() == productId)
             {
                 storeProduct = currentProduct;
                 break;

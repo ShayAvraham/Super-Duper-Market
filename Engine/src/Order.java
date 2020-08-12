@@ -3,22 +3,22 @@ import java.util.*;
 public class Order
 {
     private int id;
-    private int shopId;
+    private int storeId;
     private Date orderDate;
     private float deliveryCost;
-    private Collection<OrderProduct> productsInOrder;
+    private Collection<OrderProduct> orderedProducts;
 
 
-    public Order(int id, int shopId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
+    public Order(int id, int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
     {
         this.id = id;
-        this.shopId = shopId;
+        this.storeId = storeId;
         this.orderDate = date;
         this.deliveryCost = deliveryCost;
-        this.productsInOrder = new HashSet<>();
+        this.orderedProducts = new HashSet<>();
         for (OrderProduct product: productsInOrder)
         {
-            this.productsInOrder.add(product);
+            this.orderedProducts.add(product);
         }
     }
 
@@ -30,12 +30,12 @@ public class Order
         this.id = id;
     }
 
-    public int getShopId() {
-        return shopId;
+    public int getStoreId() {
+        return storeId;
     }
 
-    public void setShopId(int shopId) {
-        this.shopId = shopId;
+    public void setStoreId(int shopId) {
+        this.storeId = shopId;
     }
 
     public Date getOrderDate() {
@@ -54,33 +54,37 @@ public class Order
         this.deliveryCost = deliveryCost;
     }
 
-    public Collection<OrderProduct> getProductsInOrder() {
-        return productsInOrder;
+    public Collection<OrderProduct> getOrderedProducts() {
+        return orderedProducts;
     }
 
-    public void setProductsInOrder(Collection<OrderProduct> productsInOrder) {
-        this.productsInOrder = productsInOrder;
+    public void setOrderedProducts(Collection<OrderProduct> orderedProducts) {
+        this.orderedProducts = orderedProducts;
     }
 
-//    float getTotalCostOfOrder()
-//    {
-//        float totalCost = 0;
-//        for (Product product: productInOrder.keySet())
-//        {
-//            totalCost += productInOrder.get(product) * product.getPrice();
-//        }
-//        totalCost += deliveryCost;
-//
-//        return totalCost;
-//    }
-
-    int getProductQuantityInOrder(Product product)
+    public float getCostOfAllProducts()
     {
-        int productQuantityInOrder = 0;
-
-        for (OrderProduct orderProduct: productsInOrder)
+        float costOfAllProducts = 0;
+        for (OrderProduct orderProduct: orderedProducts)
         {
-            if(orderProduct.getStoreProduct().getProduct().getId() == product.getId())
+            costOfAllProducts += orderProduct.getAmount() * orderProduct.getPrice();
+        }
+        return  costOfAllProducts;
+    }
+
+    public float getTotalCostOfOrder()
+    {
+        float totalCost = getCostOfAllProducts() + deliveryCost;
+        return totalCost;
+    }
+
+    public float getProductQuantityInOrder(Product product)
+    {
+        float productQuantityInOrder = 0;
+
+        for (OrderProduct orderProduct: orderedProducts)
+        {
+            if(orderProduct.equals(product))
             {
                 productQuantityInOrder = orderProduct.getAmount();
             }
@@ -88,10 +92,34 @@ public class Order
         return productQuantityInOrder;
     }
 
+    public int getAllOrderedProductsQuantity()
+    {
+        int allOrderedProductsQuantity = 0;
+
+        for (OrderProduct orderProduct: orderedProducts)
+        {
+            allOrderedProductsQuantity += orderProduct.getAmount();
+        }
+        return allOrderedProductsQuantity;
+    }
+
     @Override
     public String toString() {
         return "Order details: " + "\n" +
                 "Date: " + orderDate + "\n" +
                 "Delivery cost: " + deliveryCost + "\n";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Order)) return false;
+        Order order = (Order) o;
+        return getId() == order.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

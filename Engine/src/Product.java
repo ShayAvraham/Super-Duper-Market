@@ -20,29 +20,36 @@ public class Product
         this.purchaseForm = (item.getPurchaseCategory().equals("Weight") ? ProductPurchaseForm.WEIGHT : ProductPurchaseForm.QUANTITY);
     }
 
+    protected Product(Product product)
+    {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.purchaseForm = product.getPurchaseForm();
+    }
+
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+//    public void setId(int id) {
+//        this.id = id;
+//    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     public ProductPurchaseForm getPurchaseForm() {
         return purchaseForm;
     }
 
-    public void setSaleByWeight(ProductPurchaseForm purchaseForm) {
-        this.purchaseForm = purchaseForm;
-    }
+//    public void setSaleByWeight(ProductPurchaseForm purchaseForm) {
+//        this.purchaseForm = purchaseForm;
+//    }
 
     @Override
     public String toString()

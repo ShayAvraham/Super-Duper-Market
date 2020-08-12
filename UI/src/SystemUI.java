@@ -1,6 +1,11 @@
 import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.Set;
 
 public class SystemUI
 {
@@ -19,6 +24,7 @@ public class SystemUI
     private static final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
     private static final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number:\n";
     private static final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load:\n";
+    private final String LOAD_FILE_FAUILE_MESSAGE = "Unable to load the file";
     private static final String QUIT_MESSAGE = "Bye bye, see you next time!";
     private static final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
     private static final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
@@ -45,6 +51,8 @@ public class SystemUI
     private static final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
     private static final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
     private static final String AVAILABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
+    private static final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
+    private static final String AVAILABLE_PRODUCT_TO_BUY_MESSAGE = "%1$s. %2$s\n   Purchase form: %3$s\n\n";
 
     private SystemManager manager = new SystemManager();
 
@@ -164,11 +172,6 @@ public class SystemUI
     private void showAllOrdersHistory()
     {
 
-    }
-
-    private void makePurchase()
-    {
-        showAvailableStoresToBuy();
     }
 
     private void showAllStores()
@@ -293,6 +296,79 @@ public class SystemUI
         return orderDetails;
     }
 
+    private void makePurchase()
+    {
+        try
+        {
+            int storeId = getStoreIdFromUser();
+            Date date = getDateFromUser();
+            Point location = getLocationFromUser(storeId);
+            Product product = getProdeuctFromUser(storeId);
+
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private int getStoreIdFromUser() throws Exception
+    {
+        showAvailableStoresToBuy();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please select a store from the list:");
+        int userInput = scanner.nextInt();
+        int userStoreSelection = getValidChoiseFromUser(userInput, manager.getAllStoresID());
+        return userStoreSelection;
+    }
+
+    private Date getDateFromUser() throws ParseException
+    {
+        System.out.println("Please enter date:");
+        Scanner scanner = new Scanner(System.in);
+        String userDateString = scanner.nextLine();
+        Date userDate = new SimpleDateFormat("dd/mm-hh:mm").parse(userDateString);
+        return userDate;
+    }
+
+    private Point getLocationFromUser(int storeId)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter location:");
+        System.out.println("Please enter X cordinate:");
+        int xCordinate = scanner.nextInt();
+        System.out.println("Please enter Y cordinate:");
+        int yCordinate = scanner.nextInt();
+        Point userLocation = new Point(xCordinate, yCordinate);
+        manager.checkIsUserLocationValid(userLocation, storeId);
+        return userLocation;
+    }
+
+    private Product getProdeuctFromUser(int storeId) throws Exception
+    {
+        showAvailableProductsToBuy(storeId);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please select product from the list:");
+        int userInput = scanner.nextInt();
+        int productId = getValidChoiseFromUser(userInput, manager.getAllProductsID());
+        manager.checkIsStoreSellProduct(productId, storeId);
+        return manager.getProductById(productId);
+    }
+
+    private void showAvailableProductsToBuy(int storeId)
+    {
+        String avialableProductsToBuyMsg = "";
+        avialableProductsToBuyMsg += String.format(ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
+        for (Product product: manager.getAllProducts())
+        {
+            avialableProductsToBuyMsg += String.format(
+                    AVAILABLE_PRODUCT_TO_BUY_MESSAGE, product.getId(), product.getName(),
+                    product.getPurchaseForm().toString().toLowerCase());
+        }
+
+        System.out.println(avialableProductsToBuyMsg);
+    }
+
     private void showAvailableStoresToBuy()
     {
         String avialableStoresToBuyMsg = "";
@@ -303,5 +379,14 @@ public class SystemUI
                     AVAILABLE_STORE_TO_BUY_MESSAGE, store.getId(), store.getName(), store.getPpk());
         }
         System.out.println(avialableStoresToBuyMsg);
+    }
+
+    private int getValidChoiseFromUser(int userSelection, Set<Integer> idSet) throws Exception
+    {
+        if (!idSet.contains(userSelection))
+        {
+            throw new Exception(CHOICE_OUT_OF_RANGE_MESSAGE + REENTER_ACTION_MESSAGE);
+        }
+        return userSelection;
     }
 }

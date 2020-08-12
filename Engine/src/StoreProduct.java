@@ -1,40 +1,30 @@
 import java.util.Objects;
 
-public class StoreProduct
+public class StoreProduct extends Product
 {
-    private Product product;
-    private int price;
+    private float price;
 
     public StoreProduct(Product product, int price)
     {
-        this.product = product;
+        super(product);
         this.price = price;
     }
 
-    public Product getProduct() {
-        return product;
+    protected StoreProduct(StoreProduct storeProduct)
+    {
+        super(storeProduct);
+        this.price = storeProduct.price;
     }
 
-    public int getPrice() {
+
+    public float getPrice() {
         return price;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+//    public void setProduct(Product product) {
+//        this.product = product;
+//    }
 
-    public void setPrice(int price) { this.price = price; }
+//    public void setPrice(int price) { this.price = price; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StoreProduct)) return false;
-        StoreProduct that = (StoreProduct) o;
-        return getProduct().equals(that.getProduct());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getProduct());
-    }
 }

@@ -1,27 +1,21 @@
+import java.util.Objects;
 
-public class OrderProduct
+public class OrderProduct extends StoreProduct
 {
-    private StoreProduct storeProduct;
-    private int amount;
+    private float amount;
 
-    public OrderProduct(StoreProduct storeProduct, int amount) {
-        this.storeProduct = storeProduct;
+    public OrderProduct(StoreProduct storeProduct, int amount)
+    {
+        super(storeProduct);
         this.amount = amount;
     }
 
-    public StoreProduct getStoreProduct() {
-        return storeProduct;
-    }
-
-    public void setStoreProduct(StoreProduct storeProduct) {
-        this.storeProduct = storeProduct;
-    }
-
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+//    public void setAmount(int amount) {
+//        this.amount = amount;
+//    }
+
 }
