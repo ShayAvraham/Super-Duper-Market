@@ -152,7 +152,7 @@ public class SystemUI
         }
     }
 
-    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException
+    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException //change1
     {
         System.out.println(ENTER_FILE_PATH_MESSAGE);
         Scanner scanner = new Scanner(System.in);
