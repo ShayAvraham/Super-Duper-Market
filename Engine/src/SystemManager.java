@@ -12,6 +12,9 @@ public class SystemManager
 {
     private SystemData systemData;
     private XmlSystemDataBuilder xmlSystemDataBuilder;
+    private Collection<StoreDataContainer> allStoresData;
+    private Collection<ProductDataContainer> allProductsData;
+    private Collection<OrderDataContainer> allOrdersData;
     private boolean isFileWasLoadSuccessfully = false;
 
     public SystemManager()
@@ -19,21 +22,36 @@ public class SystemManager
         this.xmlSystemDataBuilder = new XmlSystemDataBuilder();
     }
 
-    public void loadDataFromXmlFile(String xmlFilePath) throws JAXBException, FileNotFoundException
-    {
-        SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
-        isFileWasLoadSuccessfully = true;
-        systemData = newSystemData;
+
+    public Collection<StoreDataContainer> getAllStoresData() {
+        return allStoresData;
     }
 
-    public boolean isFileWasLoadSuccessfully()
-    {
+    public Collection<ProductDataContainer> getAllProductsData() {
+        return allProductsData;
+    }
+
+    public Collection<OrderDataContainer> getAllOrdersData() {
+        return allOrdersData;
+    }
+
+    public boolean isFileWasLoadSuccessfully() {
         return isFileWasLoadSuccessfully;
     }
 
-    public Collection<StoreDataContainer> getAllStoresData()
+    public void loadDataFromXmlFile(String xmlFilePath) throws JAXBException, FileNotFoundException
     {
-        Collection<StoreDataContainer> allStoresData = new ArrayList<>();
+        SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
+        systemData = newSystemData;
+        createAllStoresData();
+        createAllProductsData();
+        createAllOrdersData();
+        isFileWasLoadSuccessfully = true;
+    }
+
+    public void createAllStoresData()
+    {
+        allStoresData = new ArrayList<>();
         for (Store store: systemData.getStores().values())
         {
             allStoresData.add(new StoreDataContainer(
@@ -44,10 +62,9 @@ public class SystemManager
                     getStoreProductsData(store),
                     getStoreOrdersData(store)));
         }
-        return allStoresData;
     }
 
-    public float getStoreTotalIncomeFromDeliveries(Store store)
+    private float getStoreTotalIncomeFromDeliveries(Store store)
     {
         float totalIncomeFromDeliveries = 0;
 
@@ -119,9 +136,9 @@ public class SystemManager
         return soldAmountPerStore;
     }
 
-    public Collection<ProductDataContainer> getAllProductsData()
+    public void createAllProductsData()
     {
-        Collection<ProductDataContainer> allProductsData = new ArrayList<>();
+        allProductsData = new ArrayList<>();
         for (Product product: systemData.getProducts().values())
         {
             allProductsData.add(new ProductDataContainer(
@@ -132,10 +149,9 @@ public class SystemManager
                     getProductAvgPrice(product),
                     getHowManyTimesProductSold(product)));
         }
-        return allProductsData;
     }
 
-    public int getHowManyStoresSellProduct(Product product)
+    private int getHowManyStoresSellProduct(Product product)
     {
         int howManyStoresSellProduct = 0;
 
@@ -149,7 +165,7 @@ public class SystemManager
         return howManyStoresSellProduct;
     }
 
-    public float getProductAvgPrice(Product selectedProduct)
+    private float getProductAvgPrice(Product selectedProduct)
     {
         float sumOfProductPrices = 0;
         int numOfStoresWhoSellsProduct = getHowManyStoresSellProduct(selectedProduct);
@@ -165,7 +181,7 @@ public class SystemManager
         return (sumOfProductPrices/numOfStoresWhoSellsProduct);
     }
 
-    public float getHowManyTimesProductSold(Product product)
+    private float getHowManyTimesProductSold(Product product)
     {
         float howManyTimesProductSold = 0;
 
@@ -177,9 +193,9 @@ public class SystemManager
     }
 
 
-    public Collection<OrderDataContainer> getAllOrdersData()
+    public void createAllOrdersData()
     {
-        Collection<OrderDataContainer> allOrdersData = new ArrayList<>();
+        allOrdersData = new ArrayList<>();
         for (Order order: systemData.getOrders())
         {
             allOrdersData.add(new OrderDataContainer(
@@ -194,7 +210,6 @@ public class SystemManager
                     order.getTotalCostOfOrder()
                     ));
         }
-        return allOrdersData;
     }
 
 
