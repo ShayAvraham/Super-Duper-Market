@@ -5,16 +5,16 @@ public class StoreDataContainer
     private int id;
     private String name;
     private float ppk;
-    private float totalCashFromDeliveries;
+    private float totalIncomeFromDeliveries;
     private Collection<ProductDataContainer> products;
     private Collection<OrderDataContainer> orders;
 
-    public StoreDataContainer(int id, String name, float ppk, float totalCashFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders)
+    public StoreDataContainer(int id, String name, float ppk, float totalIncomeFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders)
     {
         this.id = id;
         this.name = name;
         this.ppk = ppk;
-        this.totalCashFromDeliveries = totalCashFromDeliveries;
+        this.totalIncomeFromDeliveries = totalIncomeFromDeliveries;
         this.products = products;
         this.orders = orders;
     }
@@ -29,14 +29,14 @@ public class StoreDataContainer
         return name;
     }
 
-    public float getPpk()
+    public float getPPK()
     {
         return ppk;
     }
 
-    public float getTotalCashFromDeliveries()
+    public float getTotalIncomeFromDeliveries()
     {
-        return totalCashFromDeliveries;
+        return totalIncomeFromDeliveries;
     }
 
     public Collection<ProductDataContainer> getProducts()

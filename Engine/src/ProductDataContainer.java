@@ -8,11 +8,11 @@ public class ProductDataContainer
     private Product.ProductPurchaseForm purchaseForm;
     private int numberOfStoresSellProduct;
     private float averagePrice;
-    private int numOfProductWasOrdered;
+    private float numOfProductWasOrdered;
     private Map<Integer,Float> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
 
-    public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, int numberOfStoresSellProduct, float averagePrice, int numOfProductWasOrdered)
+    public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
         this.id = id;
         this.name = name;
@@ -50,7 +50,7 @@ public class ProductDataContainer
         return averagePrice;
     }
 
-    public int getNumOfProductWasOrdered() {
+    public float getNumOfProductWasOrdered() {
         return numOfProductWasOrdered;
     }
 

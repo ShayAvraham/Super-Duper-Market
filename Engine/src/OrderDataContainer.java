@@ -13,8 +13,7 @@ public class OrderDataContainer
     private int numOfProductTypes;
 
 
-    public OrderDataContainer(int id, Date date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
-        this.id = id;
+    public OrderDataContainer(Date date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
         this.date = date;
         this.numOfProducts = numOfProducts;
         this.costOfAllProducts = costOfAllProducts;

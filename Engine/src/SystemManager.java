@@ -39,23 +39,23 @@ public class SystemManager
             allStoresData.add(new StoreDataContainer(
                    store.getId(),
                    store.getName(),
-                   store.getPpk(),
-                   getStoreTotalCashFromDeliveries(store),
+                   store.getPPK(),
+                    getStoreTotalIncomeFromDeliveries(store),
                     getStoreProductsData(store),
                     getStoreOrdersData(store)));
         }
         return allStoresData;
     }
 
-    public float getStoreTotalCashFromDeliveries(Store store)
+    public float getStoreTotalIncomeFromDeliveries(Store store)
     {
-        float totalCashFromDeliveries = 0;
+        float totalIncomeFromDeliveries = 0;
 
         for (Order order: store.getStoreOrders())
         {
-            totalCashFromDeliveries += order.getDeliveryCost();
+            totalIncomeFromDeliveries += order.getTotalCostOfOrder();
         }
-        return totalCashFromDeliveries;
+        return totalIncomeFromDeliveries;
     }
 
     private Collection<ProductDataContainer> getStoreProductsData(Store store)
@@ -80,7 +80,6 @@ public class SystemManager
         for (Order order: store.getStoreOrders())
         {
             allOrdersData.add(new OrderDataContainer(
-                    order.getId(),
                     order.getOrderDate(),
                     order.getAllOrderedProductsQuantity(),
                     order.getCostOfAllProducts(),
@@ -166,9 +165,9 @@ public class SystemManager
         return (sumOfProductPrices/numOfStoresWhoSellsProduct);
     }
 
-    public int getHowManyTimesProductSold(Product product)
+    public float getHowManyTimesProductSold(Product product)
     {
-        int howManyTimesProductSold = 0;
+        float howManyTimesProductSold = 0;
 
         for (Store store: systemData.getStores().values())
         {
@@ -177,11 +176,26 @@ public class SystemManager
         return howManyTimesProductSold;
     }
 
-    //
-//    public Collection<OrderDataContainer> getAllOrdersData()
-//    {
-//        return null;
-//    }
+
+    public Collection<OrderDataContainer> getAllOrdersData()
+    {
+        Collection<OrderDataContainer> allOrdersData = new ArrayList<>();
+        for (Order order: systemData.getOrders())
+        {
+            allOrdersData.add(new OrderDataContainer(
+                    order.getId(),
+                    order.getOrderDate(),
+                    order.getStoreId(),
+                    systemData.getStores().get(order.getStoreId()).getName(),
+                    order.getOrderedProducts().size(),
+                    order.getAllOrderedProductsQuantity(),
+                    order.getCostOfAllProducts(),
+                    order.getDeliveryCost(),
+                    order.getTotalCostOfOrder()
+                    ));
+        }
+        return allOrdersData;
+    }
 
 
 

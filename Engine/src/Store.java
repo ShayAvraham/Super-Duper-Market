@@ -58,11 +58,11 @@ public class Store
         this.name = name;
     }
 
-    public float getPpk() {
+    public float getPPK() {
         return ppk;
     }
 
-    public void setPpk(float ppk) {
+    public void getPPK(float ppk) {
         this.ppk = ppk;
     }
 
@@ -124,13 +124,13 @@ public class Store
         return allDeliveriesCost;
     }
 
-    int getHowManyTimesProductSold(Product product)
+    float getHowManyTimesProductSold(Product product)
     {
-        int howManyTimesProductSold = 0;
+        float howManyTimesProductSold = 0;
 
         for (Order order: storeOrders)
         {
-            howManyTimesProductSold += order.getProductQuantityInOrder(product);
+            howManyTimesProductSold += order.getProductAmountInOrder(product);
         }
 
         return howManyTimesProductSold;

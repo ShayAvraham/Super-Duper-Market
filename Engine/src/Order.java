@@ -74,22 +74,22 @@ public class Order
 
     public float getTotalCostOfOrder()
     {
-        float totalCost = getCostOfAllProducts() + deliveryCost;
-        return totalCost;
+       return getCostOfAllProducts() + deliveryCost;
     }
 
-    public float getProductQuantityInOrder(Product product)
+    public float getProductAmountInOrder(Product product)
     {
-        float productQuantityInOrder = 0;
+        float productAmountInOrder = 0;
 
         for (OrderProduct orderProduct: orderedProducts)
         {
             if(orderProduct.equals(product))
             {
-                productQuantityInOrder = orderProduct.getAmount();
+                productAmountInOrder = orderProduct.getAmount();
+                break;
             }
         }
-        return productQuantityInOrder;
+        return productAmountInOrder;
     }
 
     public int getAllOrderedProductsQuantity()
@@ -98,7 +98,13 @@ public class Order
 
         for (OrderProduct orderProduct: orderedProducts)
         {
-            allOrderedProductsQuantity += orderProduct.getAmount();
+            float productQuantity = orderProduct.getAmount();
+            if(orderProduct.getPurchaseForm() == Product.ProductPurchaseForm.WEIGHT)
+            {
+                productQuantity = 1;
+            }
+            allOrderedProductsQuantity += productQuantity;
+
         }
         return allOrderedProductsQuantity;
     }
