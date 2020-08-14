@@ -1,9 +1,5 @@
 import javax.xml.bind.JAXBException;
-import java.awt.*;
 import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -19,40 +15,46 @@ public class SystemUI
         Quit
     }
 
-    private static final String WELCOME_MESSAGE = "Hello, welcome to super duper market!";
-    private static final String CHOICE_OUT_OF_RANGE_MESSAGE = "Choice is out of range of valid values";
-    private static final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
-    private static final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number:\n";
-    private static final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load:\n";
+    private final String WELCOME_MESSAGE = "Hello, welcome to super duper market!";
+    private final String CHOICE_OUT_OF_RANGE_MESSAGE = "Choice is out of range of valid values";
+    private final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
+    private final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number:\n";
+    private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load:\n";
     private final String LOAD_FILE_FAUILE_MESSAGE = "Unable to load the file";
-    private static final String QUIT_MESSAGE = "Bye bye, see you next time!";
-    private static final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
-    private static final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
-    private static final String SEPARATOR_MESSAGE = "---------------------------\n";
-    private static final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
-    private static final String PPK_MESSAGE = "PPK: %1$s \n";
-    private static final String TOTAL_CASH_FROM_DELIVERIES_MESSAGE = "Total cash from deliveries: %1$s \n";
-    private static final String NO_STORES_MESSAGE = "There are no stores in the system.\n";
-    private static final String NO_PRODUCTS_MESSAGE = "There are no products in the system.\n";
-    private static final String ID_MESSAGE = "ID: %1$s \n";
-    private static final String NAME_MESSAGE = "Name: %1$s \n";
-    private static final String PURCHASE_FORM_OF_PRODUCT_MESSAGE = "The product is for sale by: %1$s \n";
-    private static final String PRICE_MESSAGE = "Price: %1$s \n";
-    private static final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_STORE_MESSAGE = "Total amount of this product sold in this store: %1$s \n";
-    private static final String PRODUCT_NOT_SOLD_IN_STORE_MESSAGE = "This product is not yet sold in this store.\n";
-    private static final String NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE = "Number of stores who sell this product: %1$s \n";
-    private static final String AVERAGE_PRICE_OF_PRODUCT_MESSAGE = "Average price: %1$s \n";
-    private static final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE = "Number of times the product sold in the system: %1$s \n";
-    private static final String ORDER_DATE_MESSAGE = "Date: %1$s \n";
-    private static final String TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE = "Total amount of products: %1$s \n";
-    private static final String TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE = "Total cost of all products: %1$s \n";
-    private static final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s \n";
-    private static final String TOTAL_COST_OF_ORDER_MESSAGE = "Total order cost: %1$s \n";
-    private static final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
-    private static final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
-    private static final String AVAILABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
-    private static final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
-    private static final String AVAILABLE_PRODUCT_TO_BUY_MESSAGE = "%1$s. %2$s\n   Purchase form: %3$s\n\n";
+    private final String QUIT_MESSAGE = "Bye bye, see you next time!";
+    private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
+    private final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
+    private final String SEPARATOR_MESSAGE = "=========================\n";
+    private final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
+    private static final String ALL_ORDERS_OF_STORE_MESSAGE = "The orders of %1$s store:\n%2$s";
+    private final String PPK_MESSAGE = "PPK: %1$s \n";
+    private final String TOTAL_INCOME_FROM_DELIVERIES_MESSAGE = "Total in come from deliveries: %1$s \n";
+    private final String NO_STORES_MESSAGE = "There are no stores in the system.\n";
+    private final String NO_PRODUCTS_IN_SYSTEM_MESSAGE = "There are no products in the system.\n";
+    private final String NO_PRODUCTS_IN_STORE_MESSAGE = "This store has no products for sale.\n";
+    private final String NO_ORDERS_IN_STORE_MESSAGE = "This store has no orders.\n";
+    private final String ID_MESSAGE = "ID: %1$s \n";
+    private final String NAME_MESSAGE = "Name: %1$s \n";
+    private final String PURCHASE_FORM_OF_PRODUCT_MESSAGE = "The product is for sale by: %1$s \n";
+    private final String PRICE_MESSAGE = "Price: %1$s \n";
+    private final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_STORE_MESSAGE = "Total amount of this product sold in this store: %1$s \n";
+    private final String PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE = "This product is not sold in any store.\n";
+    private final String NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE = "Number of stores who sell this product: %1$s \n";
+    private final String AVERAGE_PRICE_OF_PRODUCT_MESSAGE = "Average price: %1$s \n";
+    private final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE = "Number of times the product sold in the system: %1$s \n";
+    private final String ORDER_DATE_MESSAGE = "Date: %1$s \n";
+    private final String TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE = "Total amount of products: %1$s \n";
+    private final String TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE = "Total cost of all products: %1$s \n";
+    private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s \n";
+    private final String TOTAL_COST_OF_ORDER_MESSAGE = "Total order cost: %1$s \n";
+    private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
+    private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
+    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
+    private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
+    private final String AVAILABLE_PRODUCT_TO_BUY_MESSAGE = "%1$s. %2$s\n   Purchase form: %3$s\n\n";
+    private final String STORE_NUMBER_MESSAGE = "Store No. %1$s\n";
+    private final String PRODUCT_NUMBER_MESSAGE = "Product No. %1$s\n";
+    private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
 
     private SystemManager manager = new SystemManager();
 
@@ -186,78 +188,103 @@ public class SystemUI
     private void showAllStores()
     {
         String allStoresMsg = "";
-        if (manager.getAllStores().size() > 0)
+        if (manager.getAllStoresData().size() > 0)
         {
+            int storeIndex = 1;
             allStoresMsg += String.format(ALL_STORES_MESSAGE, SEPARATOR_MESSAGE);
-            for (Store store : manager.getAllStores())
+            for (StoreDataContainer storeData : manager.getAllStoresData())
             {
-                allStoresMsg += getStoreDetails(store);
-                allStoresMsg += String.format(ALL_PRODUCTS_OF_STORE_MESSAGE, store.getName(), SEPARATOR_MESSAGE);
-                for (StoreProduct product : store.getProductsInStore())
+                allStoresMsg += String.format(STORE_NUMBER_MESSAGE, storeIndex);
+                allStoresMsg += createStoreDetails(storeData);
+                if (storeData.getProducts().size() > 0)
                 {
-                    allStoresMsg += getProductStatisticsForShowingStoresInSystem(store, product);
+                    int productIndex = 1;
+                    allStoresMsg += String.format(ALL_PRODUCTS_OF_STORE_MESSAGE, storeData.getName(), SEPARATOR_MESSAGE);
+                    for (ProductDataContainer productData : storeData.getProducts())
+                    {
+                        allStoresMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
+                        allStoresMsg += createProductDetailsForDisplayingAllStores(storeData, productData);
+                        productIndex++;
+                    }
                 }
-                for (Order order: manager.getAllOrders(store))
+                else
                 {
-                    allStoresMsg += getOrderDetails(order);
+                    allStoresMsg += NO_PRODUCTS_IN_STORE_MESSAGE;
+                }
+                if (storeData.getOrders().size() > 0)
+                {
+                    int orderIndex = 1;
+                    allStoresMsg += String.format(ALL_ORDERS_OF_STORE_MESSAGE, storeData.getName(), SEPARATOR_MESSAGE);
+                    for (OrderDataContainer orderData : storeData.getOrders())
+                    {
+                        allStoresMsg += String.format(ORDER_NUMBER_MESSAGE, orderIndex);
+                        allStoresMsg += createOrderDetails(orderData);
+                        orderIndex++;
+                    }
+                }
+                else
+                {
+                    allStoresMsg += NO_ORDERS_IN_STORE_MESSAGE;
                 }
                 allStoresMsg +=
-                    String.format(PPK_MESSAGE, store.getPpk()) +
-                    String.format(TOTAL_CASH_FROM_DELIVERIES_MESSAGE, manager.getStoreTotalCashFromDeliveries(store));
+                    String.format(PPK_MESSAGE, storeData.getPPK()) +
+                    String.format(TOTAL_INCOME_FROM_DELIVERIES_MESSAGE, storeData.getTotalIncomeFromDeliveries());
+                allStoresMsg += SEPARATOR_MESSAGE;
+                storeIndex++;
             }
         }
         else
         {
             allStoresMsg += NO_STORES_MESSAGE;
         }
-        allStoresMsg += SEPARATOR_MESSAGE;
         System.out.println(allStoresMsg);
     }
 
     private void showAllProducts()
     {
         String allProductsMsg = "";
-        if (manager.getAllProducts().size() > 0)
+        if (manager.getAllProductsData().size() > 0)
         {
+            int productIndex = 1;
             allProductsMsg += String.format(ALL_PRODUCTS_MESSAGE, SEPARATOR_MESSAGE);
-            for (Product product : manager.getAllProducts())
+            for (ProductDataContainer productData : manager.getAllProductsData())
             {
-                allProductsMsg += getProductStatisticsForShowingProductsInSystem(product);
+                allProductsMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
+                allProductsMsg += createProductDetailsForDisplayingAllProducts(productData);
+                productIndex++;
             }
         }
         else
         {
-            allProductsMsg += NO_PRODUCTS_MESSAGE;
+            allProductsMsg += NO_PRODUCTS_IN_SYSTEM_MESSAGE;
         }
         System.out.println(allProductsMsg);
     }
 
 
-    private String getStoreDetails(Store store)
+    private String createStoreDetails(StoreDataContainer storeData)
     {
         String storeDetails = "";
         storeDetails +=
-                String.format(ID_MESSAGE, store.getId()) +
-                String.format(NAME_MESSAGE, store.getName()) +
-                SEPARATOR_MESSAGE;
+                String.format(ID_MESSAGE, storeData.getId()) +
+                String.format(NAME_MESSAGE, storeData.getName());
         return storeDetails;
     }
 
-    private String getProductDetails(Product product)
+    private String createProductDetails(ProductDataContainer productData)
     {
         String productDetails =
-                String.format(ID_MESSAGE, product.getId()) +
-                String.format(NAME_MESSAGE, product.getName()) +
-                String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, product.getPurchaseForm().toString().toLowerCase());
-
+                String.format(ID_MESSAGE, productData.getId()) +
+                String.format(NAME_MESSAGE, productData.getName()) +
+                String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, productData.getPurchaseForm().toString().toLowerCase());
         return productDetails;
     }
 
-    private String getProductStatisticsForShowingStoresInSystem(Store store, StoreProduct product)
+    private String createProductDetailsForDisplayingAllStores(StoreDataContainer storeData, ProductDataContainer productData)
     {
-        String productStatisticsDetails = getProductDetails(product.getProduct());
-        productStatisticsDetails += String.format(PRICE_MESSAGE, product.getPrice());
-        int howManyTimesProductSoldByStore = manager.getHowManyTimesProductSoldBySpecificStore(store, product.getProduct());
+        String productStatisticsDetails = createProductDetails(productData);
+        productStatisticsDetails += String.format(PRICE_MESSAGE, productData.getPricePerStore().get(storeData.getId()));
+        float howManyTimesProductSoldByStore = productData.getSoldAmountPerStore().get(storeData.getId());
 
         if (howManyTimesProductSoldByStore > 0)
         {
@@ -265,130 +292,130 @@ public class SystemUI
         }
         else
         {
-            productStatisticsDetails += PRODUCT_NOT_SOLD_IN_STORE_MESSAGE;
+            productStatisticsDetails += PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE;
         }
         productStatisticsDetails += SEPARATOR_MESSAGE;
 
         return productStatisticsDetails;
     }
 
-    private String getProductStatisticsForShowingProductsInSystem(Product product)
+    private String createProductDetailsForDisplayingAllProducts(ProductDataContainer productData)
     {
-        String productStatisticsDetails = getProductDetails(product);
-        int howManyTimesProductSoldInSystem = manager.getHowManyTimesProductSold(product);
+        String productStatisticsDetails = createProductDetails(productData);
+        int numOfStoresSellProduct = productData.getNumberOfStoresSellProduct();
 
-        if (howManyTimesProductSoldInSystem > 0)
+        if (numOfStoresSellProduct > 0)
         {
             productStatisticsDetails +=
-                String.format(NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE, manager.getHowManyStoresSellProduct(product)) +
-                String.format(AVERAGE_PRICE_OF_PRODUCT_MESSAGE, manager.getProductAvgPrice(product)) +
-                String.format(TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE, manager.getHowManyTimesProductSold(product));
+                String.format(NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE, productData.getNumberOfStoresSellProduct()) +
+                String.format(AVERAGE_PRICE_OF_PRODUCT_MESSAGE, productData.getAveragePrice()) +
+                String.format(TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE, productData.getNumOfProductWasOrdered());
         }
         else
         {
-            productStatisticsDetails += PRODUCT_NOT_SOLD_IN_STORE_MESSAGE;
+            productStatisticsDetails += PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE;
         }
         productStatisticsDetails += SEPARATOR_MESSAGE;
 
         return productStatisticsDetails;
     }
 
-    private String getOrderDetails(Order order)
+    private String createOrderDetails(OrderDataContainer orderData)
     {
         String orderDetails =
-            String.format(ORDER_DATE_MESSAGE, order.getOrderDate()) +
-            String.format(TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE, manager.getTotalAmountOfProductsInOrder(order)) +
-            String.format(TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE, manager.getTotalCostOfAllProductsInOrder(order) ) +
-            String.format(DELIVERY_COST_OF_ORDER_MESSAGE, order.getDeliveryCost()) +
-            String.format(TOTAL_COST_OF_ORDER_MESSAGE, manager.getTotalCostOfOrder(order)) +
+            String.format(ORDER_DATE_MESSAGE, orderData.getDate()) +
+            String.format(TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE, orderData.getNumOfProducts()) +
+            String.format(TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE, orderData.getCostOfAllProducts()) +
+            String.format(DELIVERY_COST_OF_ORDER_MESSAGE, orderData.getDeliveryCost()) +
+            String.format(TOTAL_COST_OF_ORDER_MESSAGE, orderData.getTotalCost()) +
             SEPARATOR_MESSAGE;
         return orderDetails;
     }
 
     private void makePurchase()
     {
-        try
-        {
-            int storeId = getStoreIdFromUser();
-            Date date = getDateFromUser();
-            Point location = getLocationFromUser(storeId);
-            Product product = getProdeuctFromUser(storeId);
-
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+//        try
+//        {
+//            int storeId = getStoreIdFromUser();
+//            Date date = getDateFromUser();
+//            Point location = getLocationFromUser(storeId);
+//            Product product = getProdeuctFromUser(storeId);
+//
+//        }
+//        catch (Exception e)
+//        {
+//            System.out.println(e.getMessage());
+//        }
     }
 
-    private int getStoreIdFromUser() throws Exception
-    {
-        showAvailableStoresToBuy();
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please select a store from the list:");
-        int userInput = scanner.nextInt();
-        int userStoreSelection = getValidChoiseFromUser(userInput, manager.getAllStoresID());
-        return userStoreSelection;
-    }
-
-    private Date getDateFromUser() throws ParseException
-    {
-        System.out.println("Please enter date:");
-        Scanner scanner = new Scanner(System.in);
-        String userDateString = scanner.nextLine();
-        Date userDate = new SimpleDateFormat("dd/mm-hh:mm").parse(userDateString);
-        return userDate;
-    }
-
-    private Point getLocationFromUser(int storeId)
-    {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter location:");
-        System.out.println("Please enter X cordinate:");
-        int xCordinate = scanner.nextInt();
-        System.out.println("Please enter Y cordinate:");
-        int yCordinate = scanner.nextInt();
-        Point userLocation = new Point(xCordinate, yCordinate);
-        manager.checkIsUserLocationValid(userLocation, storeId);
-        return userLocation;
-    }
-
-    private Product getProdeuctFromUser(int storeId) throws Exception
-    {
-        showAvailableProductsToBuy(storeId);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Please select product from the list:");
-        int userInput = scanner.nextInt();
-        int productId = getValidChoiseFromUser(userInput, manager.getAllProductsID());
-        manager.checkIsStoreSellProduct(productId, storeId);
-        return manager.getProductById(productId);
-    }
-
-    private void showAvailableProductsToBuy(int storeId)
-    {
-        String avialableProductsToBuyMsg = "";
-        avialableProductsToBuyMsg += String.format(ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
-        for (Product product: manager.getAllProducts())
-        {
-            avialableProductsToBuyMsg += String.format(
-                    AVAILABLE_PRODUCT_TO_BUY_MESSAGE, product.getId(), product.getName(),
-                    product.getPurchaseForm().toString().toLowerCase());
-        }
-
-        System.out.println(avialableProductsToBuyMsg);
-    }
-
-    private void showAvailableStoresToBuy()
-    {
-        String avialableStoresToBuyMsg = "";
-        avialableStoresToBuyMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
-        for (Store store: manager.getAllStores())
-        {
-            avialableStoresToBuyMsg += String.format(
-                    AVAILABLE_STORE_TO_BUY_MESSAGE, store.getId(), store.getName(), store.getPpk());
-        }
-        System.out.println(avialableStoresToBuyMsg);
-    }
+//    private int getStoreIdFromUser() throws Exception
+//    {
+//        showAvailableStoresToBuy();
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please select a store from the list:");
+//        int userInput = scanner.nextInt();
+//        int userStoreSelection = getValidChoiseFromUser(userInput, manager.getAllStoresID());
+//        return userStoreSelection;
+//    }
+//
+//    private Date getDateFromUser() throws ParseException
+//    {
+//        System.out.println("Please enter date:");
+//        Scanner scanner = new Scanner(System.in);
+//        String userDateString = scanner.nextLine();
+//        Date userDate = new SimpleDateFormat("dd/mm-hh:mm").parse(userDateString);
+//        return userDate;
+//    }
+//
+//    private Point getLocationFromUser(int storeId)
+//    {
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please enter location:");
+//        System.out.println("Please enter X cordinate:");
+//        int xCordinate = scanner.nextInt();
+//        System.out.println("Please enter Y cordinate:");
+//        int yCordinate = scanner.nextInt();
+//        Point userLocation = new Point(xCordinate, yCordinate);
+//        manager.checkIsUserLocationValid(userLocation, storeId);
+//        return userLocation;
+//    }
+//
+//    private Product getProdeuctFromUser(int storeId) throws Exception
+//    {
+//        showAvailableProductsToBuy(storeId);
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Please select product from the list:");
+//        int userInput = scanner.nextInt();
+//        int productId = getValidChoiseFromUser(userInput, manager.getAllProductsID());
+//        manager.checkIsStoreSellProduct(productId, storeId);
+//        return manager.getProductById(productId);
+//    }
+//
+//    private void showAvailableProductsToBuy(int storeId)
+//    {
+//        String avialableProductsToBuyMsg = "";
+//        avialableProductsToBuyMsg += String.format(ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
+//        for (Product product: manager.getAllProducts())
+//        {
+//            avialableProductsToBuyMsg += String.format(
+//                    AVAILABLE_PRODUCT_TO_BUY_MESSAGE, product.getId(), product.getName(),
+//                    product.getPurchaseForm().toString().toLowerCase());
+//        }
+//
+//        System.out.println(avialableProductsToBuyMsg);
+//    }
+//
+//    private void showAvailableStoresToBuy()
+//    {
+//        String avialableStoresToBuyMsg = "";
+//        avialableStoresToBuyMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
+//        for (Store store: manager.getAllStores())
+//        {
+//            avialableStoresToBuyMsg += String.format(
+//                    AVAILABLE_STORE_TO_BUY_MESSAGE, store.getId(), store.getName(), store.getPpk());
+//        }
+//        System.out.println(avialableStoresToBuyMsg);
+//    }
 
     private int getValidChoiseFromUser(int userSelection, Set<Integer> idSet) throws Exception
     {

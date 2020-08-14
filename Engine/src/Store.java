@@ -136,6 +136,20 @@ public class Store
         return howManyTimesProductSold;
     }
 
+    public boolean isProductInStore(Product selectedProduct)
+    {
+        boolean isProductInStore = false;
+        for (StoreProduct product: productsInStore)
+        {
+            if (product.getId() == selectedProduct.getId())
+            {
+                isProductInStore = true;
+                break;
+            }
+        }
+        return isProductInStore;
+    }
+
     @Override
     public String toString() {
         return "Store details: " + "\n" +

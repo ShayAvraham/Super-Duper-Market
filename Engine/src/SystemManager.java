@@ -157,7 +157,7 @@ public class SystemManager
 
         for (Store store: systemData.getStores().values())
         {
-            if (store.getHowManyTimesProductSold(product) > 0)
+            if (store.isProductInStore(product))
             {
                 howManyStoresSellProduct++;
             }
