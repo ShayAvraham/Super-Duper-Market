@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Collection;
 
 public class StoreDataContainer
@@ -8,15 +9,18 @@ public class StoreDataContainer
     private float totalIncomeFromDeliveries;
     private Collection<ProductDataContainer> products;
     private Collection<OrderDataContainer> orders;
+    private Point position;
 
-    public StoreDataContainer(int id, String name, float ppk, float totalIncomeFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders)
+    public StoreDataContainer(int id, String name, Point position, float ppk, float totalIncomeFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders)
     {
         this.id = id;
         this.name = name;
+        this.position = position;
         this.ppk = ppk;
         this.totalIncomeFromDeliveries = totalIncomeFromDeliveries;
         this.products = products;
         this.orders = orders;
+
     }
 
     public int getId()
@@ -29,11 +33,13 @@ public class StoreDataContainer
         return name;
     }
 
+    public Point getPosition() {
+        return position;
+    }
     public float getPPK()
     {
         return ppk;
     }
-
     public float getTotalIncomeFromDeliveries()
     {
         return totalIncomeFromDeliveries;
@@ -48,4 +54,5 @@ public class StoreDataContainer
     {
         return orders;
     }
+
 }

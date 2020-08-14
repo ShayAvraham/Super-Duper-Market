@@ -49,6 +49,11 @@ public class SystemManager
         isFileWasLoadSuccessfully = true;
     }
 
+    public void addNewOrder(OrderDataContainer newOrder)
+    {
+
+    }
+
     public void createAllStoresData()
     {
         allStoresData = new ArrayList<>();
@@ -57,6 +62,7 @@ public class SystemManager
             allStoresData.add(new StoreDataContainer(
                    store.getId(),
                    store.getName(),
+                   store.getPosition(),
                    store.getPPK(),
                     getStoreTotalIncomeFromDeliveries(store),
                     getStoreProductsData(store),

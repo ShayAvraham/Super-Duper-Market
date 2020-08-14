@@ -10,7 +10,6 @@ public class SystemData
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
     private Set<Order> orders;
-
     private Set<Product>productsOnSale;
 
     public SystemData(SuperDuperMarketDescriptor marketDescription)

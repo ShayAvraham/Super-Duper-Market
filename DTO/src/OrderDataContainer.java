@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.util.Map;
 
 public class OrderDataContainer
 {
@@ -11,6 +12,7 @@ public class OrderDataContainer
     private int storeId;
     private String storeName;
     private int numOfProductTypes;
+    private Map<Integer,Float> amountPerProduct;
 
 
     public OrderDataContainer(Date date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
@@ -32,6 +34,14 @@ public class OrderDataContainer
         this.storeId = storeId;
         this.storeName = storeName;
         this.numOfProductTypes = numOfProductTypes;
+    }
+
+    public OrderDataContainer(int id, Date date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) {
+        this.id = id;
+        this.date = date;
+        this.deliveryCost = deliveryCost;
+        this.storeId = storeId;
+        this.amountPerProduct = amountPerProduct;
     }
 
     public int getId() {
@@ -68,5 +78,9 @@ public class OrderDataContainer
 
     public int getNumOfProductTypes() {
         return numOfProductTypes;
+    }
+
+    public Map<Integer, Float> getAmountPerProduct() {
+        return amountPerProduct;
     }
 }
