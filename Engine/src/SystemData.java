@@ -80,6 +80,13 @@ public class SystemData
         return productsInStore;
     }
 
+    public void addNewOrder(Order newOrder)
+    {
+        orders.add(newOrder);
+//        stores.
+//        updateStore(newOrder);
+    }
+
     public Map<Integer,Product> getProducts()
     {
         return products;

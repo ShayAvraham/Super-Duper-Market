@@ -22,6 +22,21 @@ public class Order
         }
     }
 
+    public Order(int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
+    {
+        this.id = id;
+        this.storeId = storeId;
+        this.orderDate = date;
+        this.deliveryCost = deliveryCost;
+        this.orderedProducts = new HashSet<>();
+        for (OrderProduct product: productsInOrder)
+        {
+            this.orderedProducts.add(product);
+        }
+    }
+
+
+
     public int getId() {
         return id;
     }

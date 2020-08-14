@@ -5,6 +5,7 @@ import exceptions.UserLocationNotValidException;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.text.CollationElementIterator;
 import java.util.*;
 import java.util.jar.JarException;
 
@@ -21,7 +22,6 @@ public class SystemManager
     {
         this.xmlSystemDataBuilder = new XmlSystemDataBuilder();
     }
-
 
     public Collection<StoreDataContainer> getAllStoresData() {
         return allStoresData;
@@ -49,9 +49,26 @@ public class SystemManager
         isFileWasLoadSuccessfully = true;
     }
 
-    public void addNewOrder(OrderDataContainer newOrder)
+    public void addNewOrder(OrderDataContainer newOrderDataContainer)
     {
+        Order newOrder;
+        Collection<OrderProduct> orderProducts  = new ArrayList<>();
+        for(Integer productId : newOrderDataContainer.getAmountPerProduct().keySet())
+        {
+            orderProducts.add(new OrderProduct(
+                    systemData.getStores().get(newOrderDataContainer.getStoreId()).getProductById(productId),
+                    newOrderDataContainer.getAmountPerProduct().get(productId)));
+        }
 
+        newOrder = new Order(
+                newOrderDataContainer.getStoreId(),
+                newOrderDataContainer.getDate(),
+                newOrderDataContainer.getDeliveryCost(),
+                orderProducts);
+
+        systemData.addNewOrder(newOrder);
+//        updateAllOrdersData();
+//        updateAllStoresData();
     }
 
     public void createAllStoresData()

@@ -36,8 +36,7 @@ public class OrderDataContainer
         this.numOfProductTypes = numOfProductTypes;
     }
 
-    public OrderDataContainer(int id, Date date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) {
-        this.id = id;
+    public OrderDataContainer(Date date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) {
         this.date = date;
         this.deliveryCost = deliveryCost;
         this.storeId = storeId;
