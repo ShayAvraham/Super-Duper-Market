@@ -55,6 +55,8 @@ public class SystemUI
     private final String STORE_NUMBER_MESSAGE = "Store No. %1$s\n";
     private final String PRODUCT_NUMBER_MESSAGE = "Product No. %1$s\n";
     private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
+    private static final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Thers is no orders in the system.\n";
+
 
     private SystemManager manager = new SystemManager();
 
@@ -182,8 +184,33 @@ public class SystemUI
 
     private void showAllOrdersHistory()
     {
-
+//        String allOrdersMsg = "";
+//        if (manager.getAllOrdersData().size() > 0)
+//        {
+//            for (OrderDataContainer orderData: manager.getAllOrdersData())
+//            {
+//                int orderIndex = 1;
+//                allOrdersMsg += createOrderDetailsForDisplayingAllOrdersHistory(orderData);
+//            }
+//        }
+//        else
+//        {
+//            allOrdersMsg += NO_ORDERS_IN_SYSTEM_MESSAGE;
+//        }
+//        System.out.println(allOrdersMsg);
     }
+
+//    private String createOrderDetailsForDisplayingAllOrdersHistory(OrderDataContainer orderData)
+//    {
+//        String orderDetails =
+//                String.format(ORDER_ID_MESSAGE, orderData.getId()) +
+//                String.format(ORDER_DATE_MESSAGE, orderData.getDate()) +
+//                String.format(STORE_, orderData.getCostOfAllProducts()) +
+//                String.format(DELIVERY_COST_OF_ORDER_MESSAGE, orderData.getDeliveryCost()) +
+//                String.format(TOTAL_COST_OF_ORDER_MESSAGE, orderData.getTotalCost()) +
+//                SEPARATOR_MESSAGE;
+//        return orderDetails;
+//    }
 
     private void showAllStores()
     {
@@ -218,7 +245,7 @@ public class SystemUI
                     for (OrderDataContainer orderData : storeData.getOrders())
                     {
                         allStoresMsg += String.format(ORDER_NUMBER_MESSAGE, orderIndex);
-                        allStoresMsg += createOrderDetails(orderData);
+                        allStoresMsg += createOrderDetailsForDisplayingAllStores(orderData);
                         orderIndex++;
                     }
                 }
@@ -320,7 +347,7 @@ public class SystemUI
         return productStatisticsDetails;
     }
 
-    private String createOrderDetails(OrderDataContainer orderData)
+    private String createOrderDetailsForDisplayingAllStores(OrderDataContainer orderData)
     {
         String orderDetails =
             String.format(ORDER_DATE_MESSAGE, orderData.getDate()) +

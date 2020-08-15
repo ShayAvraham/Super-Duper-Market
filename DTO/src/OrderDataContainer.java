@@ -14,6 +14,7 @@ public class OrderDataContainer
     private int numOfProductTypes;
     private Map<Integer,Float> amountPerProduct;
     private int numberOfStoresOrderedFrom = 1;
+    private boolean isDynamic = false;
 
 
     public OrderDataContainer(Date date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
@@ -94,5 +95,13 @@ public class OrderDataContainer
 
     public Map<Integer, Float> getAmountPerProduct() {
         return amountPerProduct;
+    }
+
+    public int getNumberOfStoresOrderedFrom() {
+        return numberOfStoresOrderedFrom;
+    }
+
+    public boolean isDynamic() {
+        return isDynamic;
     }
 }
