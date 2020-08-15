@@ -40,6 +40,7 @@ public class StoreDataContainer
     {
         return ppk;
     }
+
     public float getTotalIncomeFromDeliveries()
     {
         return totalIncomeFromDeliveries;

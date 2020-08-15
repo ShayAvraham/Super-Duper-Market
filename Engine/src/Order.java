@@ -7,11 +7,14 @@ public class Order
     private Date orderDate;
     private float deliveryCost;
     private Collection<OrderProduct> orderedProducts;
+    private static int idNumber = 0;
+    private boolean isMultiStoresOrderedFrom = false;
 
 
     public Order(int id, int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
     {
         this.id = id;
+        this.idNumber = id > idNumber ? ++id : idNumber;
         this.storeId = storeId;
         this.orderDate = date;
         this.deliveryCost = deliveryCost;
@@ -24,7 +27,7 @@ public class Order
 
     public Order(int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
     {
-        this.id = id;
+        this.id = idNumber++;
         this.storeId = storeId;
         this.orderDate = date;
         this.deliveryCost = deliveryCost;

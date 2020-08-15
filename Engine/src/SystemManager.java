@@ -43,15 +43,26 @@ public class SystemManager
     {
         SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
         systemData = newSystemData;
-        createAllStoresData();
-        createAllProductsData();
-        createAllOrdersData();
+        updateDataContainers();
         isFileWasLoadSuccessfully = true;
     }
 
     public void addNewOrder(OrderDataContainer newOrderDataContainer)
     {
-        Order newOrder;
+        Order newOrder = new Order(
+                newOrderDataContainer.getStoreId(),
+                newOrderDataContainer.getDate(),
+                newOrderDataContainer.getDeliveryCost(),
+                createOrderProductsFromOrderData(newOrderDataContainer));
+
+        systemData.addNewOrder(newOrder);
+        updateDataContainers();
+
+
+    }
+
+    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)
+    {
         Collection<OrderProduct> orderProducts  = new ArrayList<>();
         for(Integer productId : newOrderDataContainer.getAmountPerProduct().keySet())
         {
@@ -59,19 +70,18 @@ public class SystemManager
                     systemData.getStores().get(newOrderDataContainer.getStoreId()).getProductById(productId),
                     newOrderDataContainer.getAmountPerProduct().get(productId)));
         }
-
-        newOrder = new Order(
-                newOrderDataContainer.getStoreId(),
-                newOrderDataContainer.getDate(),
-                newOrderDataContainer.getDeliveryCost(),
-                orderProducts);
-
-        systemData.addNewOrder(newOrder);
-//        updateAllOrdersData();
-//        updateAllStoresData();
+        return orderProducts;
     }
 
-    public void createAllStoresData()
+    private void updateDataContainers()
+    {
+        createAllStoresData();
+        createAllProductsData();
+        createAllOrdersData();
+    }
+
+
+    private void createAllStoresData()
     {
         allStoresData = new ArrayList<>();
         for (Store store: systemData.getStores().values())
@@ -119,20 +129,25 @@ public class SystemManager
         Collection<OrderDataContainer> allOrdersData = new ArrayList<>();
         for (Order order: store.getStoreOrders())
         {
-            allOrdersData.add(new OrderDataContainer(
-                    order.getOrderDate(),
-                    order.getAllOrderedProductsQuantity(),
-                    order.getCostOfAllProducts(),
-                    order.getDeliveryCost(),
-                    order.getTotalCostOfOrder()));
+            allOrdersData.add(createStoreOrderData(order));
         }
 
         return allOrdersData;
     }
 
-    private Map<Integer, Float> getProductPricePerStore(StoreProduct selectedProduct)
+    private OrderDataContainer createStoreOrderData(Order order)
     {
-        Map<Integer,Float> productPricePerStore = new HashMap<>();
+        return new OrderDataContainer(
+                order.getOrderDate(),
+                order.getAllOrderedProductsQuantity(),
+                order.getCostOfAllProducts(),
+                order.getDeliveryCost(),
+                order.getTotalCostOfOrder());
+    }
+
+    private Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct)
+    {
+        Map<Integer,Integer> productPricePerStore = new HashMap<>();
         for (Store store: systemData.getStores().values())
         {
             for (StoreProduct storeProduct: store.getProductsInStore())
@@ -159,7 +174,7 @@ public class SystemManager
         return soldAmountPerStore;
     }
 
-    public void createAllProductsData()
+    private void createAllProductsData()
     {
         allProductsData = new ArrayList<>();
         for (Product product: systemData.getProducts().values())
@@ -216,27 +231,66 @@ public class SystemManager
     }
 
 
-    public void createAllOrdersData()
+    private void createAllOrdersData()
     {
         allOrdersData = new ArrayList<>();
         for (Order order: systemData.getOrders())
         {
-            allOrdersData.add(new OrderDataContainer(
-                    order.getId(),
-                    order.getOrderDate(),
-                    order.getStoreId(),
-                    systemData.getStores().get(order.getStoreId()).getName(),
-                    order.getOrderedProducts().size(),
-                    order.getAllOrderedProductsQuantity(),
-                    order.getCostOfAllProducts(),
-                    order.getDeliveryCost(),
-                    order.getTotalCostOfOrder()
-                    ));
+            allOrdersData.add(createOrderData(order));
         }
     }
 
+    private OrderDataContainer createOrderData(Order order)
+    {
+        return new OrderDataContainer(
+                order.getId(),
+                order.getOrderDate(),
+                order.getStoreId(),
+                systemData.getStores().get(order.getStoreId()).getName(),
+                order.getOrderedProducts().size(),
+                order.getAllOrderedProductsQuantity(),
+                order.getCostOfAllProducts(),
+                order.getDeliveryCost(),
+                order.getTotalCostOfOrder());
+    }
+
+//bonus add/remove/set price product
+
+    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)
+    {
+        systemData.removeProductFromStore(store.getId(),productToRemove.getId());
+        updateDataContainers();
+    }
+
+    public void addProductToStore(StoreDataContainer store, ProductDataContainer productToAdd, int price)
+    {
+        systemData.addProductToStore(store.getId(),productToAdd.getId(),price);
+        updateDataContainers();
+    }
+
+    public void updateProductPriceInStore(StoreDataContainer store,ProductDataContainer productToRemove, int newPrice)
+    {
+        systemData.updateProductPriceInStore(store.getId(), productToRemove.getId(), newPrice);
+        updateDataContainers();
+    }
 
 
+//bonus
+
+//bonus
+
+    public Collection<StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    {
+        Collection<StoreDataContainer> storeToBuyFrom = new ArrayList<>();
+
+        for (ProductDataContainer productToPurchase : productsToPurchase)
+        {
+
+        }
+        return storeToBuyFrom;
+    }
+
+//bonus
 
 //    public int getTotalAmountOfProductsInOrder(Order order)
 //    {

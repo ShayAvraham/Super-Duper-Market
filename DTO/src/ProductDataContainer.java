@@ -9,7 +9,7 @@ public class ProductDataContainer
     private int numberOfStoresSellProduct;
     private float averagePrice;
     private float numOfProductWasOrdered;
-    private Map<Integer,Float> pricePerStore;
+    private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
 
     public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
@@ -22,7 +22,7 @@ public class ProductDataContainer
         this.numOfProductWasOrdered = numOfProductWasOrdered;
     }
 
-    public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, Map<Integer, Float> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
+    public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
         this.id = id;
         this.name = name;
         this.purchaseForm = purchaseForm;
@@ -54,7 +54,7 @@ public class ProductDataContainer
         return numOfProductWasOrdered;
     }
 
-    public Map<Integer, Float> getPricePerStore() {
+    public Map<Integer, Integer> getPricePerStore() {
         return pricePerStore;
     }
 

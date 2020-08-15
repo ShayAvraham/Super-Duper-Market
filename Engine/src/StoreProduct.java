@@ -2,7 +2,7 @@ import java.util.Objects;
 
 public class StoreProduct extends Product
 {
-    private float price;
+    private int price;
 
     public StoreProduct(Product product, int price)
     {
@@ -17,7 +17,7 @@ public class StoreProduct extends Product
     }
 
 
-    public float getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -25,6 +25,6 @@ public class StoreProduct extends Product
 //        this.product = product;
 //    }
 
-//    public void setPrice(int price) { this.price = price; }
+    public void setPrice(int price) { this.price = price; }
 
 }

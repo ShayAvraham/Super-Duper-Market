@@ -13,6 +13,7 @@ public class OrderDataContainer
     private String storeName;
     private int numOfProductTypes;
     private Map<Integer,Float> amountPerProduct;
+    private int numberOfStoresOrderedFrom = 1;
 
 
     public OrderDataContainer(Date date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
@@ -36,12 +37,24 @@ public class OrderDataContainer
         this.numOfProductTypes = numOfProductTypes;
     }
 
+
     public OrderDataContainer(Date date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) {
         this.date = date;
         this.deliveryCost = deliveryCost;
         this.storeId = storeId;
         this.amountPerProduct = amountPerProduct;
     }
+
+/*
+    //bonus dynamic new order
+    public OrderDataContainer(Date date,float deliveryCost,Map<Integer, Float> amountPerProduct,int numberOfStoresOrderedFrom) {
+        this.date = date;
+        this.deliveryCost = deliveryCost;
+        this.amountPerProduct = amountPerProduct;
+        this.numberOfStoresOrderedFrom = numberOfStoresOrderedFrom;
+    }
+//bonus
+*/
 
     public int getId() {
         return id;

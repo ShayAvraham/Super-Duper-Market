@@ -44,7 +44,6 @@ public class SystemData
                throw new DuplicateValuesException("product", item.getId());
            }
         }
-
     }
 
     private void CreateStoresFromSDMStores(SuperDuperMarketDescriptor marketDescription)
@@ -83,8 +82,7 @@ public class SystemData
     public void addNewOrder(Order newOrder)
     {
         orders.add(newOrder);
-//        stores.
-//        updateStore(newOrder);
+        stores.get(newOrder.getStoreId()).addNewOrder(newOrder);
     }
 
     public Map<Integer,Product> getProducts()
@@ -100,4 +98,24 @@ public class SystemData
     public Set<Order> getOrders() {
         return orders;
     }
+
+
+ //bonus
+    public void removeProductFromStore(int storeId,int productId)
+    {
+        stores.get(storeId).removeProduct(productId);
+    }
+
+    public void addProductToStore(int storeId,int productId,int price)
+    {
+        StoreProduct newStoreProduct = new StoreProduct (products.get(productId),price);
+        stores.get(storeId).addProduct(newStoreProduct);
+    }
+
+    public void updateProductPriceInStore(int storeId, int productId, int newPrice)
+    {
+        stores.get(storeId).updateProductPrice(productId, newPrice);
+    }
+
+    //bonus
 }
