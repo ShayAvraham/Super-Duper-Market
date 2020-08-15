@@ -279,16 +279,46 @@ public class SystemManager
 
 //bonus
 
-    public Collection<StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    public Map<ProductDataContainer,StoreDataContainer>  dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
     {
         Collection<StoreDataContainer> storeToBuyFrom = new ArrayList<>();
+        Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom = new HashMap<>();
 
         for (ProductDataContainer productToPurchase : productsToPurchase)
         {
-
+            Store store = getStoreWithTheCheapestPrice(productToPurchase.getId());
+            storesToBuyFrom.put(productToPurchase,getStoreDataContainer(store));
         }
-        return storeToBuyFrom;
+        return storesToBuyFrom;
     }
+    
+    private Store getStoreWithTheCheapestPrice(int productId)
+    {
+        Store cheapestStore = systemData.getStores().entrySet().iterator().next().getValue();
+        for(Store store : systemData.getStores().values())
+        {
+            if(cheapestStore.getProductById(productId).getPrice() > store.getProductById(productId).getPrice())
+            {
+                cheapestStore = store;
+            }
+        }
+      return cheapestStore;
+    }
+
+    private StoreDataContainer getStoreDataContainer(Store store)
+    {
+        StoreDataContainer storeDataContainer = null;
+        for (StoreDataContainer storeData : allStoresData)
+        {
+            if(storeData.getId() == store.getId())
+            {
+                storeDataContainer = storeData;
+                break;
+            }
+        }
+        return storeDataContainer;
+    }
+
 
 //bonus
 
