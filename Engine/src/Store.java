@@ -153,7 +153,6 @@ public class Store
     public void addNewOrder(Order newOrder)
     {
         storeOrders.add(newOrder);
-
     }
 
 //bonus

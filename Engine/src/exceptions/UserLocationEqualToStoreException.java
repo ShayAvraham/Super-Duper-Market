@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class UserLocationEqualToStoreException extends RuntimeException
 {
-    private final String EXCEPTION_MESSAGE = "Sorry, the location %1$s is same as the store location.";
+    private final String EXCEPTION_MESSAGE = "Sorry, the location [%1$s,%2$s] is same as the store location.";
     private Point userLocation;
     private Point storeLocation;
 
@@ -17,6 +17,6 @@ public class UserLocationEqualToStoreException extends RuntimeException
 
     public String getMessage()
     {
-        return String.format(EXCEPTION_MESSAGE, userLocation);
+        return String.format(EXCEPTION_MESSAGE, userLocation.getX(), userLocation.getY());
     }
 }
