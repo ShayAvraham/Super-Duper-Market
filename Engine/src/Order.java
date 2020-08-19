@@ -8,7 +8,8 @@ public class Order
     private float deliveryCost;
     private Collection<OrderProduct> orderedProducts;
     private static int idNumber = 0;
-    private boolean isMultiStoresOrderedFrom = false;
+    private int numberOfStoresOrderedFrom = 1;
+    private boolean isDynamic = false;
 
 
     public Order(int id, int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
@@ -36,6 +37,20 @@ public class Order
         {
             this.orderedProducts.add(product);
         }
+    }
+
+    public Order(Date date, float deliveryCost, int numberOfStoresOrderedFrom,Collection<OrderProduct> productsInOrder)
+    {
+        this.id = idNumber++;
+        this.orderDate = date;
+        this.deliveryCost = deliveryCost;
+        this.numberOfStoresOrderedFrom = numberOfStoresOrderedFrom;
+        this.orderedProducts = new HashSet<>();
+        for (OrderProduct product: productsInOrder)
+        {
+            this.orderedProducts.add(product);
+        }
+        this.isDynamic = true;
     }
 
 

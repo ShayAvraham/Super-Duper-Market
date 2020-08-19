@@ -49,11 +49,15 @@ public class SystemManager
 
     public void addNewOrder(OrderDataContainer newOrderDataContainer)
     {
-        Order newOrder = new Order(
-                newOrderDataContainer.getStoreId(),
-                newOrderDataContainer.getDate(),
-                newOrderDataContainer.getDeliveryCost(),
-                createOrderProductsFromOrderData(newOrderDataContainer));
+        Order newOrder;
+        if(!newOrderDataContainer.isDynamic())
+        {
+             newOrder = createNewStaticOrder(newOrderDataContainer);
+        }
+        else
+        {
+            newOrder = createNewDynamicOrder(newOrderDataContainer);
+        }
 
         systemData.addNewOrder(newOrder);
         updateDataContainers();
@@ -71,6 +75,24 @@ public class SystemManager
                     newOrderDataContainer.getAmountPerProduct().get(productId)));
         }
         return orderProducts;
+    }
+
+    private Order createNewStaticOrder(OrderDataContainer newOrderDataContainer)
+    {
+        return new Order(
+                newOrderDataContainer.getStoreId(),
+                newOrderDataContainer.getDate(),
+                newOrderDataContainer.getDeliveryCost(),
+                createOrderProductsFromOrderData(newOrderDataContainer));
+    }
+
+    private Order createNewDynamicOrder(OrderDataContainer newOrderDataContainer)
+    {
+        return new Order(
+                newOrderDataContainer.getDate(),
+                newOrderDataContainer.getDeliveryCost(),
+                newOrderDataContainer.getNumberOfStoresOrderedFrom(),
+                createOrderProductsFromOrderData(newOrderDataContainer));
     }
 
     private void updateDataContainers()
