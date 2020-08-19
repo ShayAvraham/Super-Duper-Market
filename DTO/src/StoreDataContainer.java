@@ -56,4 +56,17 @@ public class StoreDataContainer
         return orders;
     }
 
+    public ProductDataContainer getProductDataContainerById(int productId)
+    {
+        ProductDataContainer productDataContainer = null;
+        for (ProductDataContainer productData: products)
+        {
+            if (productData.getId() == productId)
+            {
+                productDataContainer = productData;
+                break;
+            }
+        }
+        return productDataContainer;
+    }
 }

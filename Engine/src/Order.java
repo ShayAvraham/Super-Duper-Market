@@ -7,7 +7,7 @@ public class Order
     private Date orderDate;
     private float deliveryCost;
     private Collection<OrderProduct> orderedProducts;
-    private static int idNumber = 0;
+    private static int idNumber = 1;
     private int numberOfStoresOrderedFrom = 1;
     private boolean isDynamic = false;
 
@@ -107,7 +107,7 @@ public class Order
 
     public float getTotalCostOfOrder()
     {
-       return getCostOfAllProducts() + deliveryCost;
+        return getCostOfAllProducts() + deliveryCost;
     }
 
     public float getProductAmountInOrder(Product product)

@@ -47,12 +47,12 @@ public class SystemManager
         isFileWasLoadSuccessfully = true;
     }
 
-    public void(OrderDataContainer newOrderDataContainer)
+    public void addNewOrder(OrderDataContainer newOrderDataContainer)
     {
         Order newOrder;
         if(!newOrderDataContainer.isDynamic())
         {
-             newOrder = createNewStaticOrder(newOrderDataContainer);
+            newOrder = createNewStaticOrder(newOrderDataContainer);
         }
         else
         {
@@ -63,18 +63,6 @@ public class SystemManager
         updateDataContainers();
 
 
-    }
-
-    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)
-    {
-        Collection<OrderProduct> orderProducts  = new ArrayList<>();
-        for(Integer productId : newOrderDataContainer.getAmountPerProduct().keySet())
-        {
-            orderProducts.add(new OrderProduct(
-                    systemData.getStores().get(newOrderDataContainer.getStoreId()).getProductById(productId),
-                    newOrderDataContainer.getAmountPerProduct().get(productId)));
-        }
-        return orderProducts;
     }
 
     private Order createNewStaticOrder(OrderDataContainer newOrderDataContainer)
@@ -95,6 +83,18 @@ public class SystemManager
                 createOrderProductsFromOrderData(newOrderDataContainer));
     }
 
+    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)
+    {
+        Collection<OrderProduct> orderProducts  = new ArrayList<>();
+        for(Integer productId : newOrderDataContainer.getAmountPerProduct().keySet())
+        {
+            orderProducts.add(new OrderProduct(
+                    systemData.getStores().get(newOrderDataContainer.getStoreId()).getProductById(productId),
+                    newOrderDataContainer.getAmountPerProduct().get(productId)));
+        }
+        return orderProducts;
+    }
+
     private void updateDataContainers()
     {
         createAllStoresData();
@@ -109,10 +109,10 @@ public class SystemManager
         for (Store store: systemData.getStores().values())
         {
             allStoresData.add(new StoreDataContainer(
-                   store.getId(),
-                   store.getName(),
-                   store.getPosition(),
-                   store.getPPK(),
+                    store.getId(),
+                    store.getName(),
+                    store.getPosition(),
+                    store.getPPK(),
                     getStoreTotalIncomeFromDeliveries(store),
                     getStoreProductsData(store),
                     getStoreOrdersData(store)));
@@ -125,7 +125,7 @@ public class SystemManager
 
         for (Order order: store.getStoreOrders())
         {
-            totalIncomeFromDeliveries += order.getTotalCostOfOrder();
+            totalIncomeFromDeliveries += order.getDeliveryCost();
         }
         return totalIncomeFromDeliveries;
     }
@@ -301,7 +301,7 @@ public class SystemManager
 
 //bonus
 
-    public Map<ProductDataContainer,StoreDataContainer>  dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
     {
         Collection<StoreDataContainer> storeToBuyFrom = new ArrayList<>();
         Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom = new HashMap<>();
@@ -313,7 +313,7 @@ public class SystemManager
         }
         return storesToBuyFrom;
     }
-    
+
     private Store getStoreWithTheCheapestPrice(int productId)
     {
         Store cheapestStore = systemData.getStores().entrySet().iterator().next().getValue();
@@ -324,7 +324,7 @@ public class SystemManager
                 cheapestStore = store;
             }
         }
-      return cheapestStore;
+        return cheapestStore;
     }
 
     private StoreDataContainer getStoreDataContainer(Store store)
@@ -339,6 +339,70 @@ public class SystemManager
             }
         }
         return storeDataContainer;
+    }
+
+    public Set<Integer> getAllStoresID()
+    {
+        Set<Integer> allStoresID = new HashSet<>();
+
+        for (StoreDataContainer storeData: getAllStoresData())
+        {
+            allStoresID.add(storeData.getId());
+        }
+        return allStoresID;
+    }
+
+    public Set<Integer> getAllProductsID() {
+        Set<Integer> allProductsID = new HashSet<>();
+
+        for (ProductDataContainer productData : getAllProductsData()) {
+            allProductsID.add(productData.getId());
+        }
+        return allProductsID;
+    }
+
+    public StoreDataContainer getStoreDataById(int storeId)
+    {
+        StoreDataContainer storeDataContainer = null;
+        for (StoreDataContainer storeData : allStoresData)
+        {
+            if(storeData.getId() == storeId)
+            {
+                storeDataContainer = storeData;
+                break;
+            }
+        }
+        return storeDataContainer;
+    }
+
+    public ProductDataContainer getProductDataById(int productId)
+    {
+        ProductDataContainer productDataContainer = null;
+        for (ProductDataContainer productData: getAllProductsData())
+        {
+            if (productData.getId() == productId)
+            {
+                productDataContainer = productData;
+                break;
+            }
+        }
+        return productDataContainer;
+    }
+
+    public float getDeliveryCost(Point userLocation, Collection<Integer> storesId)
+    {
+        float deliveryCost = 0;
+        for (Integer storeId: storesId)
+        {
+            for (Store store: systemData.getStores().values())
+            {
+                if (storeId == store.getId())
+                {
+                    deliveryCost += store.getDeliveryCostByLocation(userLocation);
+                }
+            }
+        }
+        return deliveryCost;
     }
 
 
@@ -387,27 +451,6 @@ public class SystemManager
 //        }
 //    }
 //
-//    public Set<Integer> getAllStoresID()
-//    {
-//        Set<Integer> allStoresID = new HashSet<>();
-//
-//        for (Store store: getAllStores())
-//        {
-//            allStoresID.add(store.getId());
-//        }
-//        return allStoresID;
-//    }
-//
-//    public Set<Integer> getAllProductsID()
-//    {
-//        Set<Integer> allProductsID = new HashSet<>();
-//
-//        for (Product product: getAllProducts())
-//        {
-//            allProductsID.add(product.getId());
-//        }
-//        return allProductsID;
-//    }
 //
 //    public Product getProductById(int productId)
 //    {
