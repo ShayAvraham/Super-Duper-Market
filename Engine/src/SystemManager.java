@@ -47,7 +47,7 @@ public class SystemManager
         isFileWasLoadSuccessfully = true;
     }
 
-    public void addNewOrder(OrderDataContainer newOrderDataContainer)
+    public void(OrderDataContainer newOrderDataContainer)
     {
         Order newOrder;
         if(!newOrderDataContainer.isDynamic())
