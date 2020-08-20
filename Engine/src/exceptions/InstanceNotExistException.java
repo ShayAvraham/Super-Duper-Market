@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class InstanceNotExistException extends RuntimeException
 {
-    private final String EXCEPTION_MESSAGE = "Cause of failure: There is not a %1$s with this id: %2$s";
+    private final String EXCEPTION_MESSAGE = "There is not a %1$s with this id: %2$s";//change
     private int id;
     private String instanceName;
 

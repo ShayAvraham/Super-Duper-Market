@@ -1,23 +1,36 @@
 import com.sun.org.apache.bcel.internal.generic.RETURN;
+import exceptions.DuplicateValuesException;
+import exceptions.InstanceNotExistException;
+import exceptions.StoreDoesNotSellProductException;
 import exceptions.UserLocationEqualToStoreException;
 
 import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class SystemUI
 {
-    private enum StartMenuOptions
+    public enum StartMenuOptions
     {
         LoadFile,
         ShowAllStores,
         ShowAllProducts,
         MakePurchase,
         ViewOrdersHistory,
+        UpdateStoreProducts,
         Quit
+    }
+
+    private enum UpdateProductOptions
+    {
+        RemoveProduct,
+        AddProduct,
+        UpdateProductPrice
     }
 
     private enum OrderTypeOptions
@@ -26,12 +39,12 @@ public class SystemUI
         Dynamic
     }
 
-    private final String WELCOME_MESSAGE = "Hello, welcome to super duper market!";
+    private final String WELCOME_MESSAGE = "\nHello, welcome to super duper market!";
     private final String CHOICE_OUT_OF_RANGE_MESSAGE = "Choice is out of range of valid values";
     private final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
-    private final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number:\n";
-    private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load:\n";
-    private final String LOAD_FILE_FAUILE_MESSAGE = "Unable to load the file";
+    private final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number: ";
+    private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load: ";
+    private final String LOAD_FILE_FAUILE_MESSAGE = "Faild to load the file, Cause of failure:";
     private final String QUIT_MESSAGE = "Bye bye, see you next time!";
     private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
     private final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
@@ -90,70 +103,67 @@ public class SystemUI
 
     public void run()
     {
-        int userStartMenuChoise = 0;
+        int userStartMenuChoice = 0;
 
         System.out.println(WELCOME_MESSAGE);
-        while (userStartMenuChoise != StartMenuOptions.Quit.ordinal())
+        while (userStartMenuChoice != StartMenuOptions.Quit.ordinal())
         {
             displayMenu();
-            userStartMenuChoise = getUserStartMenuChoise();
+            userStartMenuChoice = getUserMenuChoice(StartMenuOptions.class);
             try
             {
-                executeUserSelectedAction(StartMenuOptions.values()[userStartMenuChoise]);
+                executeUserSelectedAction(StartMenuOptions.values()[userStartMenuChoice]);
             }
             catch(Exception ex)
             {
-                String errorMessage = "\n" + ex.getMessage() + "\n";
-                System.out.println(errorMessage);
+                System.out.println("\n" + ex.getMessage());
             }
         }
-        System.out.println(QUIT_MESSAGE);
+        System.out.println("\n" + QUIT_MESSAGE);
     }
 
     private void displayMenu()
     {
-        String menuStr = "Please choose one of the following action:\n" +
+        String menuStr = "\nPlease choose one of the following action:\n" +
         "1. Load data from file.\n" +
         "2. Show all stores details.\n" +
         "3. Show all products in the system.\n" +
         "4. Place an order in the system.\n" +
         "5. View orders history in the system.\n" +
-        "6. Quit.\n" +
-        "The desired action number:\n";
-        System.out.println(menuStr);
+        "6. Update prices/product of a store.\n"+
+        "7. Quit.\n" +
+        "The desired action number: ";
+        System.out.print(menuStr);
     }
 
-    private int getUserStartMenuChoise()
+    private int getUserMenuChoice(Class<? extends Enum> enumClass)
     {
-        int userStartMenuChoise = 0;
-        boolean isInputValid = false;
-
-        while (!isInputValid)
+        while (true)
         {
             try
             {
                 Scanner scanner = new Scanner(System.in);
-                int userStartChoiseInput = scanner.nextInt();
-                userStartMenuChoise = getValidEnumChoise(userStartChoiseInput);
-                isInputValid = true;
+                int userMenuChoice = scanner.nextInt();
+                validateUserChoice(userMenuChoice,enumClass);
+                return userMenuChoice - 1;
             }
-            catch (Exception ex)
+            catch (IndexOutOfBoundsException ex)
             {
-                String errorMessage = "\n" + ex.getMessage() + "\n" + REENTER_ACTION_MESSAGE;
-                System.out.println(errorMessage);
+                System.out.print("\n" + ex.getMessage() + "\n" + REENTER_ACTION_MESSAGE);
+            }
+            catch (InputMismatchException ex)
+            {
+                System.out.print("\n" + "your choice is not in the right format" + "\n" + REENTER_ACTION_MESSAGE);
             }
         }
-
-        return userStartMenuChoise;
     }
 
-    private int getValidEnumChoise(int userStartChoiseInput) throws Exception
+    private void validateUserChoice(int userStartChoiceInput, Class<? extends Enum> enumClass)
     {
-        if (userStartChoiseInput > StartMenuOptions.values().length || userStartChoiseInput < 0)
+        if (userStartChoiceInput > enumClass.getFields().length || userStartChoiceInput < 1)
         {
-            throw new Exception(CHOICE_OUT_OF_RANGE_MESSAGE);
+            throw new IndexOutOfBoundsException(CHOICE_OUT_OF_RANGE_MESSAGE);
         }
-        return userStartChoiseInput - 1;
     }
 
 
@@ -163,7 +173,7 @@ public class SystemUI
         {
             loadDataFromXmlFile();
         }
-        else
+        else if(userStartMenuChoise != StartMenuOptions.Quit)
         {
             if (manager.isFileWasLoadSuccessfully())
             {
@@ -181,8 +191,8 @@ public class SystemUI
                     case ViewOrdersHistory:
                         showAllOrdersHistory();
                         break;
-                    case Quit:
-                        break;
+                    case UpdateStoreProducts:
+                        updateStoreProducts();
                 }
             }
             else
@@ -192,21 +202,161 @@ public class SystemUI
         }
     }
 
+    private void updateStoreProducts()
+    {
+        StoreDataContainer selectedStore = getStoreFromUser();
+        showUpdateStoreProductsMenu(selectedStore.getName());
+        int userMenuChoice = getUserMenuChoice(UpdateProductOptions.class);
+        switch (UpdateProductOptions.values()[userMenuChoice])
+        {
+            case RemoveProduct:
+                removeProduct(selectedStore);
+                break;
+            case AddProduct:
+                addProduct(selectedStore);
+                break;
+            case UpdateProductPrice:
+                updateProductPrice(selectedStore);
+                break;
+        }
+    }
 
-    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException //change1
+    private void showUpdateStoreProductsMenu(String storeName)
+    {
+        System.out.print(String.format(
+                "\nPlease choose one of the following action:\n" +
+                "1. Remove product from %1$s.\n" +
+                "2. Add product to %1$s.\n" +
+                "3. Update price of existing product in %1$s.\n" +
+                "The desired action number: ",storeName));
+    }
+
+    private void removeProduct(StoreDataContainer store)
+    {
+        showStoreProducts(store);
+        ProductDataContainer product = getFromUserProductToUpdate(store,"remove",true);
+        manager.removeProductFromStore(store,product);
+        System.out.println(String.format("\nproduct %1$s remove successfully from %2$s",product.getId(),store.getName()));
+
+    }
+
+    private void showStoreProducts(StoreDataContainer store)
+    {
+        System.out.print(String.format("\n" + ALL_PRODUCTS_OF_STORE_MESSAGE, store.getName(), SEPARATOR_MESSAGE));
+        for(ProductDataContainer product: store.getProducts())
+        {
+            System.out.print(createProductDetails(product));
+        }
+    }
+
+    private ProductDataContainer getFromUserProductToUpdate(StoreDataContainer store, String optionAdjective,boolean productExistInStore)
+    {
+        while (true)
+        {
+            try
+            {
+                System.out.print(String.format("\nPlease select the product you want to %1$s by enter the product id: ",optionAdjective));
+                Scanner scanner = new Scanner(System.in);
+                int userProductChoice = scanner.nextInt();
+                validateUserProductChoice(store, userProductChoice,productExistInStore);
+                return (manager.getProductDataById(userProductChoice));
+            }
+            catch (StoreDoesNotSellProductException | InstanceNotExistException | DuplicateValuesException ex)
+            {
+                System.out.println("\n" + ex.getMessage() + " Please try again");
+            }
+            catch(InputMismatchException ex)
+            {
+                System.out.println("\n" + "your choice is not in the right format, Please try again");
+            }
+        }
+    }
+
+    private void validateUserProductChoice(StoreDataContainer store, int productId,boolean productExistInStore)
+    {
+        boolean foundProduct = productExistInStore;
+        for(ProductDataContainer product : store.getProducts())
+        {
+            if(product.getId() == productId)
+            {
+                foundProduct = !foundProduct;
+                if(!productExistInStore)
+                {
+                    throw new DuplicateValuesException("product",productId);
+                }
+                break;
+            }
+        }
+        if(foundProduct || !productExistInStore)
+        {
+            if(manager.getProductDataById(productId) == null)
+            {
+               throw new InstanceNotExistException("product",productId);
+            }
+            if(productExistInStore)
+            {
+                throw new StoreDoesNotSellProductException();
+            }
+        }
+
+    }
+
+    private void addProduct(StoreDataContainer store)
+    {
+        System.out.print(String.format("\n",ALL_PRODUCTS_MESSAGE,SEPARATOR_MESSAGE));
+        for(ProductDataContainer product : manager.getAllProductsData())
+        {
+            System.out.print(createProductDetails(product));
+        }
+        ProductDataContainer product = getFromUserProductToUpdate(store,"add",false);
+        int productPrice = getFromUserProductPrice();
+
+        manager.addProductToStore(store,product,productPrice);
+        System.out.println(String.format("\nproduct %1$s add successfully to %2$s",product.getId(),store.getName()));
+    }
+
+    private int getFromUserProductPrice()
+    {
+        while (true)
+        {
+            try
+            {
+                System.out.print("\nPlease enter the purchase price: ");
+                Scanner scanner = new Scanner(System.in);
+                int productPrice = scanner.nextInt();
+                return productPrice;
+            }
+            catch(InputMismatchException ex)
+            {
+                System.out.println("\n" + "your choice is not in the right format, Please try again");
+            }
+        }
+    }
+
+
+    private void updateProductPrice(StoreDataContainer store)
+    {
+        showStoreProducts(store);
+        ProductDataContainer product = getFromUserProductToUpdate(store,"update price",true);
+        int productPrice = getFromUserProductPrice();
+        manager.updateProductPriceInStore(store,product,productPrice);
+        System.out.println(String.format("\nproduct %1$s update price successfully in %2$s",product.getId(),store.getName()));
+    }
+
+    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException
     {
         try
         {
-            System.out.println(ENTER_FILE_PATH_MESSAGE);
+            System.out.print("\n" + ENTER_FILE_PATH_MESSAGE);
             Scanner scanner = new Scanner(System.in);
             String xmlFilePath = scanner.nextLine();
             manager.loadDataFromXmlFile(xmlFilePath);
-            System.out.println(FILE_LOADED_SUCCESSFULLY_MESSAGE);
+            System.out.println("\n" + FILE_LOADED_SUCCESSFULLY_MESSAGE);
         }
-        catch(Exception exp)
+        catch(Exception ex)
         {
-            System.out.println(LOAD_FILE_FAUILE_MESSAGE);
-            throw  exp;
+            System.out.print("\n" + LOAD_FILE_FAUILE_MESSAGE);
+            throw ex;
         }
     }
 
@@ -321,7 +471,7 @@ public class SystemUI
     private OrderDataContainer getNewStaticOrderFromUser()
     {
         OrderDataContainer newOrderData = null;
-        int storeId = getStoreIdFromUser();
+        int storeId = getStoreFromUser().getId();
         Date date = getDateFromUser();
         Point userLocation = getLocationFromUser(storeId);
         Collection<Integer> storeIdCollection = new ArrayList<>();
@@ -365,7 +515,7 @@ public class SystemUI
                 System.out.println("Please select product from the list by enter the product number, or press 'q' to finish.");
                 showAvailableProductsToBuy();
                 Scanner scanner = new Scanner(System.in);
-                String userInput = scanner.nextLine();
+                String userInput = scanner.nextLine(); //note why not scanner.nextInt();
                 if (isUserWantToQuitFromOrder(userInput))
                 {
                     isUserFinished = true;
@@ -454,27 +604,28 @@ public class SystemUI
         return OrderTypeOptions.values()[userSelection];
     }
 
-    private int getStoreIdFromUser()
+    private StoreDataContainer getStoreFromUser()
     {
-        int userStoreSelection = 0;
-        boolean isUserFinished = false;
-
-        while (!isUserFinished)
+        StoreDataContainer userStoreSelection = null;
+        while (true)
         {
             try
             {
-                System.out.println("Please select a store from the list by enter the store number, or press 'q' to finish:");
+                System.out.println("\nPlease select a store from the list by enter the store id, or press 'q' to finish:");
                 showAvailableStoresToBuy();
+                System.out.print("The desired store id: ");
                 Scanner scanner = new Scanner(System.in);
-                String userInput = scanner.nextLine();
-                int userSelection = Integer.parseInt(userInput);
-                userStoreSelection = getValidStoreFromUser(userSelection, manager.getAllStoresID());
-                isUserFinished = true;
+                int userSelection = scanner.nextInt();
+                userStoreSelection = getValidStoreFromUser(userSelection);
+                break;
             }
-            catch (Exception e)
+            catch(IndexOutOfBoundsException ex)
             {
-                String errorMessage = "Sorry, your choise is not in the right format.\nPlease try again.";
-                System.out.println(errorMessage);
+                System.out.println("\n" + ex.getMessage() + ", Please try again");
+            }
+            catch (InputMismatchException ex)
+            {
+                System.out.println("\nSorry, your choice is not in the right format, Please try again");
             }
         }
         return userStoreSelection;
@@ -563,13 +714,14 @@ public class SystemUI
         return userLocation;
     }
 
-    private int getValidStoreFromUser(int userSelection, Set<Integer> IdSet)
+    private StoreDataContainer getValidStoreFromUser(int userSelection)
     {
-        if (!IdSet.contains(userSelection))
+
+        if (!manager.getAllStoresID().contains(userSelection))
         {
             throw new IndexOutOfBoundsException(CHOICE_OUT_OF_RANGE_MESSAGE);
         }
-        return userSelection;
+        return manager.getStoreDataById(userSelection);
     }
 
 
@@ -680,7 +832,7 @@ public class SystemUI
             avialableStoresToBuyMsg += String.format(
                     AVAILABLE_STORE_TO_BUY_MESSAGE, storeData.getId(), storeData.getName(), storeData.getPPK());
         }
-        System.out.println(avialableStoresToBuyMsg);
+        System.out.print(avialableStoresToBuyMsg);
     }
 
 
