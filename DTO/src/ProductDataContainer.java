@@ -1,5 +1,6 @@
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProductDataContainer
 {
@@ -60,5 +61,20 @@ public class ProductDataContainer
 
     public Map<Integer, Float> getSoldAmountPerStore() {
         return soldAmountPerStore;
+    }
+
+    @Override
+    public boolean equals(Object o) //change
+    {
+        if (this == o) return true;
+        if (!(o instanceof ProductDataContainer)) return false;
+        ProductDataContainer that = (ProductDataContainer) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() // change
+    {
+        return Objects.hash(getId());
     }
 }

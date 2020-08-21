@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.Collection;
+import java.util.Objects;
 
 public class StoreDataContainer
 {
@@ -68,5 +69,20 @@ public class StoreDataContainer
             }
         }
         return productDataContainer;
+    }
+
+    @Override
+    public boolean equals(Object o)//change
+    {
+        if (this == o) return true;
+        if (!(o instanceof StoreDataContainer)) return false;
+        StoreDataContainer that = (StoreDataContainer) o;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() //change
+    {
+        return Objects.hash(getId());
     }
 }

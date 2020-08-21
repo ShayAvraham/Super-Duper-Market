@@ -5,6 +5,7 @@ import exceptions.StoreDoesNotSellProductException;
 import exceptions.UserLocationEqualToStoreException;
 
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.ValidationException;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
@@ -234,7 +235,7 @@ public class SystemUI
     private void removeProduct(StoreDataContainer store)
     {
         showStoreProducts(store);
-        ProductDataContainer product = getFromUserProductToUpdate(store,"remove",true);
+        ProductDataContainer product = getFromUserProductToUpdate(store,"remove",UpdateProductOptions.RemoveProduct);
         manager.removeProductFromStore(store,product);
         System.out.println(String.format("\nproduct %1$s remove successfully from %2$s",product.getId(),store.getName()));
 
@@ -249,19 +250,19 @@ public class SystemUI
         }
     }
 
-    private ProductDataContainer getFromUserProductToUpdate(StoreDataContainer store, String optionAdjective,boolean productExistInStore)
+    private ProductDataContainer getFromUserProductToUpdate(StoreDataContainer store, String optionDescription,UpdateProductOptions userOptionChoice)
     {
         while (true)
         {
             try
             {
-                System.out.print(String.format("\nPlease select the product you want to %1$s by enter the product id: ",optionAdjective));
+                System.out.print(String.format("\nPlease select the product you want to %1$s by enter the product id: ",optionDescription));
                 Scanner scanner = new Scanner(System.in);
                 int userProductChoice = scanner.nextInt();
-                validateUserProductChoice(store, userProductChoice,productExistInStore);
+                validateUserProductChoice(store, userProductChoice,userOptionChoice);
                 return (manager.getProductDataById(userProductChoice));
             }
-            catch (StoreDoesNotSellProductException | InstanceNotExistException | DuplicateValuesException ex)
+            catch (StoreDoesNotSellProductException | InstanceNotExistException | ValidationException | DuplicateValuesException ex)
             {
                 System.out.println("\n" + ex.getMessage() + " Please try again");
             }
@@ -272,33 +273,47 @@ public class SystemUI
         }
     }
 
-    private void validateUserProductChoice(StoreDataContainer store, int productId,boolean productExistInStore)
+    private void validateUserProductChoice(StoreDataContainer store, int productId,UpdateProductOptions userOptionChoice) throws ValidationException //change
     {
-        boolean foundProduct = productExistInStore;
-        for(ProductDataContainer product : store.getProducts())
+        ProductDataContainer product = manager.getProductDataById(productId);
+        if(product == null)
         {
-            if(product.getId() == productId)
+            throw new InstanceNotExistException("product", productId);
+        }
+        if(userOptionChoice.equals(UpdateProductOptions.AddProduct))
+        {
+            if(store.getProducts().contains(product))
             {
-                foundProduct = !foundProduct;
-                if(!productExistInStore)
-                {
-                    throw new DuplicateValuesException("product",productId);
-                }
-                break;
+                throw new DuplicateValuesException("product", productId);
             }
         }
-        if(foundProduct || !productExistInStore)
+        else
         {
-            if(manager.getProductDataById(productId) == null)
-            {
-               throw new InstanceNotExistException("product",productId);
-            }
-            if(productExistInStore)
+            if(!store.getProducts().contains(product))
             {
                 throw new StoreDoesNotSellProductException();
             }
+            if(userOptionChoice.equals(UpdateProductOptions.RemoveProduct) && !isOthersStoresSellThisProduct(store, product))
+            {
+                throw new ValidationException("Unable to remove this product because its sold only in one store.");
+            }
         }
 
+    }
+
+    private boolean isOthersStoresSellThisProduct(StoreDataContainer selectedStore, ProductDataContainer product) //change
+    {
+        for(StoreDataContainer store: manager.getAllStoresData())
+        {
+            if(!selectedStore.equals(store))
+            {
+                if(store.getProducts().contains(product))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void addProduct(StoreDataContainer store)
@@ -308,7 +323,7 @@ public class SystemUI
         {
             System.out.print(createProductDetails(product));
         }
-        ProductDataContainer product = getFromUserProductToUpdate(store,"add",false);
+        ProductDataContainer product = getFromUserProductToUpdate(store,"add", UpdateProductOptions.AddProduct);
         int productPrice = getFromUserProductPrice();
 
         manager.addProductToStore(store,product,productPrice);
@@ -337,7 +352,7 @@ public class SystemUI
     private void updateProductPrice(StoreDataContainer store)
     {
         showStoreProducts(store);
-        ProductDataContainer product = getFromUserProductToUpdate(store,"update price",true);
+        ProductDataContainer product = getFromUserProductToUpdate(store,"update price", UpdateProductOptions.UpdateProductPrice);
         int productPrice = getFromUserProductPrice();
         manager.updateProductPriceInStore(store,product,productPrice);
         System.out.println(String.format("\nproduct %1$s update price successfully in %2$s",product.getId(),store.getName()));
