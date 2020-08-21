@@ -4,16 +4,21 @@ import java.util.Objects;
 
 public class ProductDataContainer
 {
+    public enum ProductPurchaseForm
+    {
+        WEIGHT, QUANTITY
+    }
+
     private int id;
     private String name;
-    private Product.ProductPurchaseForm purchaseForm;
+    private ProductPurchaseForm purchaseForm;
     private int numberOfStoresSellProduct;
     private float averagePrice;
     private float numOfProductWasOrdered;
     private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
 
-    public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
+    public ProductDataContainer(int id, String name, ProductPurchaseForm purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
         this.id = id;
         this.name = name;
@@ -23,7 +28,7 @@ public class ProductDataContainer
         this.numOfProductWasOrdered = numOfProductWasOrdered;
     }
 
-    public ProductDataContainer(int id, String name, Product.ProductPurchaseForm purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
+    public ProductDataContainer(int id, String name, ProductPurchaseForm purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
         this.id = id;
         this.name = name;
         this.purchaseForm = purchaseForm;
@@ -39,7 +44,7 @@ public class ProductDataContainer
         return name;
     }
 
-    public Product.ProductPurchaseForm getPurchaseForm() {
+    public ProductPurchaseForm getPurchaseForm() {
         return purchaseForm;
     }
 
@@ -64,7 +69,7 @@ public class ProductDataContainer
     }
 
     @Override
-    public boolean equals(Object o) //change
+    public boolean equals(Object o)
     {
         if (this == o) return true;
         if (!(o instanceof ProductDataContainer)) return false;
@@ -73,7 +78,7 @@ public class ProductDataContainer
     }
 
     @Override
-    public int hashCode() // change
+    public int hashCode()
     {
         return Objects.hash(getId());
     }

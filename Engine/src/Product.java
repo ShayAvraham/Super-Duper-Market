@@ -4,20 +4,22 @@ import java.util.Objects;
 
 public class Product
 {
-    public enum ProductPurchaseForm
-    {
-        WEIGHT, QUANTITY
-    }
+//    public enum ProductPurchaseForm
+//    {
+//        WEIGHT, QUANTITY
+//    }
 
     private int id;
     private String name;
-    private ProductPurchaseForm purchaseForm;
+    private ProductDataContainer.ProductPurchaseForm purchaseForm;
 
     public Product(SDMItem item)
     {
         this.id = item.getId();
         this.name = item.getName();
-        this.purchaseForm = (item.getPurchaseCategory().equals("Weight") ? ProductPurchaseForm.WEIGHT : ProductPurchaseForm.QUANTITY);
+        this.purchaseForm = (item.getPurchaseCategory().equals("Weight") ?
+                ProductDataContainer.ProductPurchaseForm.WEIGHT :
+                ProductDataContainer.ProductPurchaseForm.QUANTITY);
     }
 
     protected Product(Product product)
@@ -43,7 +45,7 @@ public class Product
 //        this.name = name;
 //    }
 
-    public ProductPurchaseForm getPurchaseForm() {
+    public ProductDataContainer.ProductPurchaseForm getPurchaseForm() {
         return purchaseForm;
     }
 

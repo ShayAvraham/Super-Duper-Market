@@ -238,7 +238,6 @@ public class SystemUI
         ProductDataContainer product = getFromUserProductToUpdate(store,"remove",UpdateProductOptions.RemoveProduct);
         manager.removeProductFromStore(store,product);
         System.out.println(String.format("\nproduct %1$s remove successfully from %2$s",product.getId(),store.getName()));
-
     }
 
     private void showStoreProducts(StoreDataContainer store)
@@ -273,7 +272,7 @@ public class SystemUI
         }
     }
 
-    private void validateUserProductChoice(StoreDataContainer store, int productId,UpdateProductOptions userOptionChoice) throws ValidationException //change
+    private void validateUserProductChoice(StoreDataContainer store, int productId,UpdateProductOptions userOptionChoice) throws ValidationException
     {
         ProductDataContainer product = manager.getProductDataById(productId);
         if(product == null)
@@ -301,7 +300,7 @@ public class SystemUI
 
     }
 
-    private boolean isOthersStoresSellThisProduct(StoreDataContainer selectedStore, ProductDataContainer product) //change
+    private boolean isOthersStoresSellThisProduct(StoreDataContainer selectedStore, ProductDataContainer product)
     {
         for(StoreDataContainer store: manager.getAllStoresData())
         {
@@ -592,7 +591,7 @@ public class SystemUI
         try
         {
             ProductDataContainer product = manager.getProductDataById(productId);
-            boolean isProductSoldByWieght = (product.getPurchaseForm() == Product.ProductPurchaseForm.WEIGHT);
+            boolean isProductSoldByWieght = (product.getPurchaseForm() == ProductDataContainer.ProductPurchaseForm.WEIGHT);
             if (!isProductSoldByWieght)
             {
                 productAmount = (float) Integer.parseInt(userInput);

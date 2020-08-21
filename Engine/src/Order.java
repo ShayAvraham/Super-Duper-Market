@@ -132,7 +132,7 @@ public class Order
         for (OrderProduct orderProduct: orderedProducts)
         {
             float productQuantity = orderProduct.getAmount();
-            if(orderProduct.getPurchaseForm() == Product.ProductPurchaseForm.WEIGHT)
+            if(orderProduct.getPurchaseForm() == ProductDataContainer.ProductPurchaseForm.WEIGHT)
             {
                 productQuantity = 1;
             }

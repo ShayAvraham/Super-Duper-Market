@@ -72,7 +72,7 @@ public class StoreDataContainer
     }
 
     @Override
-    public boolean equals(Object o)//change
+    public boolean equals(Object o)
     {
         if (this == o) return true;
         if (!(o instanceof StoreDataContainer)) return false;
@@ -81,7 +81,7 @@ public class StoreDataContainer
     }
 
     @Override
-    public int hashCode() //change
+    public int hashCode()
     {
         return Objects.hash(getId());
     }
