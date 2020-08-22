@@ -17,6 +17,6 @@ public class UserLocationEqualToStoreException extends RuntimeException
 
     public String getMessage()
     {
-        return String.format(EXCEPTION_MESSAGE, userLocation.getX(), userLocation.getY());
+        return String.format(EXCEPTION_MESSAGE, (int) userLocation.getX(), (int) userLocation.getY());
     }
 }
