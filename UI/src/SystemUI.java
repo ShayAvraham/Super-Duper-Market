@@ -1,4 +1,3 @@
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import exceptions.DuplicateValuesException;
 import exceptions.InstanceNotExistException;
 import exceptions.StoreDoesNotSellProductException;
@@ -8,7 +7,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,10 +72,10 @@ public class SystemUI
     private final String TOTAL_COST_OF_ORDER_MESSAGE = "Total order cost: %1$s\n";
     private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
     private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
-    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
+    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
     private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
     private final String AVAILABLE_PRODUCT_TO_BUY_MESSAGE = "%1$s. %2$s\n   Purchase form: %3$s\n\n";
-    private final String STORE_NUMBER_MESSAGE = "Store No. %1$s\n";
+//    private final String STORE_NUMBER_MESSAGE = "Store No. %1$s\n";
     private final String PRODUCT_NUMBER_MESSAGE = "Product No. %1$s\n";
     private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
     private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Thers is no orders in the system.\n";
@@ -220,6 +218,12 @@ public class SystemUI
                 updateProductPrice(selectedStore);
                 break;
         }
+    }
+
+    public StoreDataContainer getStoreFrom(Method met)
+    {
+
+        return null;
     }
 
     private void showUpdateStoreProductsMenu(String storeName)
@@ -376,78 +380,50 @@ public class SystemUI
 
     private void showAllStores()
     {
-        String allStoresMsg = "";
+        String allStoresMsg = "\n";
         if (manager.getAllStoresData().size() > 0)
         {
-            int storeIndex = 1;
+           // int storeIndex = 1;
             allStoresMsg += String.format(ALL_STORES_MESSAGE, SEPARATOR_MESSAGE);
+            allStoresMsg += "\n";
             for (StoreDataContainer storeData : manager.getAllStoresData())
             {
-                allStoresMsg += String.format(STORE_NUMBER_MESSAGE, storeIndex);
-                allStoresMsg += createStoreDetails(storeData);
-                if (storeData.getProducts().size() > 0)
-                {
-                    int productIndex = 1;
-                    allStoresMsg += String.format(ALL_PRODUCTS_OF_STORE_MESSAGE, storeData.getName(), SEPARATOR_MESSAGE);
-                    for (ProductDataContainer productData : storeData.getProducts())
-                    {
-                        allStoresMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
-                        allStoresMsg += createProductDetailsForDisplayingAllStores(storeData, productData);
-                        productIndex++;
-                    }
-                }
-                else
-                {
-                    allStoresMsg += NO_PRODUCTS_IN_STORE_MESSAGE;
-                }
-                if (storeData.getOrders().size() > 0)
-                {
-                    int orderIndex = 1;
-                    allStoresMsg += String.format(ALL_ORDERS_OF_STORE_MESSAGE, storeData.getName(), SEPARATOR_MESSAGE);
-                    for (OrderDataContainer orderData : storeData.getOrders())
-                    {
-                        allStoresMsg += String.format(ORDER_NUMBER_MESSAGE, orderIndex);
-                        allStoresMsg += createOrderDetailsForDisplayingAllStores(orderData);
-                        orderIndex++;
-                    }
-                }
-                else
-                {
-                    allStoresMsg += NO_ORDERS_IN_STORE_MESSAGE;
-                }
-                allStoresMsg +=
-                        String.format(PPK_MESSAGE, storeData.getPPK()) +
-                                String.format(TOTAL_INCOME_FROM_DELIVERIES_MESSAGE, storeData.getTotalIncomeFromDeliveries());
+           //   allStoresMsg += String.format(STORE_NUMBER_MESSAGE, storeIndex);
+                allStoresMsg += createAllStoreDetails(storeData);
+                allStoresMsg += createAllStoreProductsDetails(storeData);
+                allStoresMsg += createAllStoreOrdersDetails(storeData);
                 allStoresMsg += SEPARATOR_MESSAGE;
-                storeIndex++;
+                allStoresMsg += "\n";
+             //   storeIndex++;
             }
         }
         else
         {
             allStoresMsg += NO_STORES_MESSAGE;
         }
-        System.out.println(allStoresMsg);
+        System.out.print(allStoresMsg);
     }
 
     private void showAllProducts()
     {
-        String allProductsMsg = "";
+        String allProductsMsg = "\n";
         if (manager.getAllProductsData().size() > 0)
         {
-            int productIndex = 1;
+//            int productIndex = 1;
             allProductsMsg += String.format(ALL_PRODUCTS_MESSAGE, SEPARATOR_MESSAGE);
+            allProductsMsg += "\n";
             for (ProductDataContainer productData : manager.getAllProductsData())
             {
-                allProductsMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
+//                allProductsMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
                 allProductsMsg += createProductDetailsForDisplayingAllProducts(productData);
-                productIndex++;
+//                productIndex++;
             }
         }
         else
         {
             allProductsMsg += NO_PRODUCTS_IN_SYSTEM_MESSAGE;
         }
-        System.out.println(allProductsMsg);
+        System.out.print(allProductsMsg);
     }
 
     private void makeOrder()
@@ -905,25 +881,36 @@ public class SystemUI
     }
 
 
-    private String createStoreDetails(StoreDataContainer storeData)
+    private String createAllStoreDetails(StoreDataContainer storeData)
     {
         String storeDetails = "";
         storeDetails +=
                 String.format(ID_MESSAGE, storeData.getId()) +
-                String.format(NAME_MESSAGE, storeData.getName());
+                String.format(NAME_MESSAGE, storeData.getName())+
+                String.format(PPK_MESSAGE, storeData.getPPK()) +
+                String.format(TOTAL_INCOME_FROM_DELIVERIES_MESSAGE, storeData.getTotalIncomeFromDeliveries());;
         return storeDetails;
     }
 
-    private String createProductDetails(ProductDataContainer productData)
+    private String createAllStoreProductsDetails(StoreDataContainer storeData) //change
     {
-        String productDetails =
-                String.format(ID_MESSAGE, productData.getId()) +
-                String.format(NAME_MESSAGE, productData.getName()) +
-                String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, productData.getPurchaseForm().toString().toLowerCase());
-        return productDetails;
+        String allStoreProductsMsg = "";
+        if (storeData.getProducts().size() > 0)
+        {
+            allStoreProductsMsg += String.format(ALL_PRODUCTS_OF_STORE_MESSAGE, storeData.getName(), "\n");
+            for (ProductDataContainer productData : storeData.getProducts())
+            {
+                allStoreProductsMsg += createProductDetailsForDisplayingAllStores(storeData,productData);
+            }
+        }
+        else
+        {
+            allStoreProductsMsg += NO_PRODUCTS_IN_STORE_MESSAGE;
+        }
+        return allStoreProductsMsg;
     }
 
-    private String createProductDetailsForDisplayingAllStores(StoreDataContainer storeData, ProductDataContainer productData)
+    private String createProductDetailsForDisplayingAllStores(StoreDataContainer storeData, ProductDataContainer productData) //change
     {
         String productStatisticsDetails = createProductDetails(productData);
         productStatisticsDetails += String.format(PRICE_MESSAGE, productData.getPricePerStore().get(storeData.getId()));
@@ -937,12 +924,22 @@ public class SystemUI
         {
             productStatisticsDetails += PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE;
         }
-        productStatisticsDetails += SEPARATOR_MESSAGE;
+        productStatisticsDetails += "\n";
 
         return productStatisticsDetails;
     }
 
-    private String createProductDetailsForDisplayingAllProducts(ProductDataContainer productData)
+
+    private String createProductDetails(ProductDataContainer productData) //change
+    {
+        String productDetails =
+                String.format(ID_MESSAGE, productData.getId()) +
+                String.format(NAME_MESSAGE, productData.getName()) +
+                String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, productData.getPurchaseForm().toString().toLowerCase());
+        return productDetails;
+    }
+
+    private String createProductDetailsForDisplayingAllProducts(ProductDataContainer productData)//change
     {
         String productStatisticsDetails = createProductDetails(productData);
         int numOfStoresSellProduct = productData.getNumberOfStoresSellProduct();
@@ -959,8 +956,27 @@ public class SystemUI
             productStatisticsDetails += PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE;
         }
         productStatisticsDetails += SEPARATOR_MESSAGE;
+        productStatisticsDetails += "\n";
 
         return productStatisticsDetails;
+    }
+
+    private String createAllStoreOrdersDetails(StoreDataContainer storeData) // change
+    {
+        String allStoreOrdersMsg = "";
+        if (storeData.getOrders().size() > 0)
+        {
+            allStoreOrdersMsg += String.format(ALL_ORDERS_OF_STORE_MESSAGE, storeData.getName(), "\n");
+            for (OrderDataContainer orderData : storeData.getOrders())
+            {
+                allStoreOrdersMsg += createOrderDetailsForDisplayingAllStores(orderData);
+            }
+        }
+        else
+        {
+            allStoreOrdersMsg += NO_ORDERS_IN_STORE_MESSAGE;
+        }
+        return allStoreOrdersMsg;
     }
 
     private String createOrderDetailsForDisplayingAllStores(OrderDataContainer orderData)
@@ -971,7 +987,7 @@ public class SystemUI
             String.format(TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE, orderData.getCostOfAllProducts()) +
             String.format(DELIVERY_COST_OF_ORDER_MESSAGE, orderData.getDeliveryCost()) +
             String.format(TOTAL_COST_OF_ORDER_MESSAGE, orderData.getTotalCost()) +
-            SEPARATOR_MESSAGE;
+            "\n";
         return orderDetails;
     }
 }
