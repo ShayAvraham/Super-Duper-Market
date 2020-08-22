@@ -1,4 +1,3 @@
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import exceptions.DuplicateValuesException;
 import exceptions.InstanceNotExistException;
 import exceptions.StoreDoesNotSellProductException;
@@ -8,8 +7,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,9 +38,11 @@ public class SystemUI
     }
 
     private final String WELCOME_MESSAGE = "\nHello, welcome to super duper market!";
-    private final String CHOICE_OUT_OF_RANGE_MESSAGE = "Choice is out of range of valid values";
-    private final String OPTION_NOT_VALID_MESSAGE = "Sorry, this option is not valid! You need to load file before.";
-    private final String REENTER_ACTION_MESSAGE = "Please reenter the desired action number: ";
+    private final String OPTION_NOT_VALID_MESSAGE = "\nSorry, this option is not valid! You need to load file before.";
+    private final String REENTER_INPUT_MESSAGE = "Please reenter the desired %1$s: ";
+    private final String INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE = "\nSorry, the %1$s you entered is not in the correct format. ";
+    private final String INPUT_NOT_IN_CORRECT_RANGE_MESSAGE = "\nSorry, the %1$s you entered is out of range. ";
+    private final String TRY_AGAIN_MESSAGE = "Please try again.\n";
     private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load: ";
     private final String LOAD_FILE_FAUILE_MESSAGE = "Faild to load the file, Cause of failure:";
     private final String QUIT_MESSAGE = "Bye bye, see you next time!";
@@ -51,54 +50,24 @@ public class SystemUI
     private final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
     private final String SEPARATOR_MESSAGE = "=========================\n";
     private final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
-    private static final String ALL_ORDERS_OF_STORE_MESSAGE = "The orders of %1$s store:\n%2$s";
-    private final String PPK_MESSAGE = "PPK: %1$s \n";
-    private final String TOTAL_INCOME_FROM_DELIVERIES_MESSAGE = "Total in come from deliveries: %1$s \n";
     private final String NO_STORES_MESSAGE = "There are no stores in the system.\n";
     private final String NO_PRODUCTS_IN_SYSTEM_MESSAGE = "There are no products in the system.\n";
-    private final String NO_PRODUCTS_IN_STORE_MESSAGE = "This store has no products for sale.\n";
-    private final String NO_ORDERS_IN_STORE_MESSAGE = "This store has no orders.\n";
-    private final String ID_MESSAGE = "ID: %1$s \n";
-    private final String NAME_MESSAGE = "Name: %1$s \n";
-    private final String PURCHASE_FORM_OF_PRODUCT_MESSAGE = "The product is for sale by: %1$s \n";
-    private final String PRICE_MESSAGE = "Price: %1$s \n";
-    private final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_STORE_MESSAGE = "Total amount of this product sold in this store: %1$s \n";
-    private final String PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE = "This product is not sold in any store.\n";
-    private final String NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE = "Number of stores who sell this product: %1$s\n";
-    private final String AVERAGE_PRICE_OF_PRODUCT_MESSAGE = "Average price: %1$s \n";
-    private final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE = "Number of times the product sold in the system: %1$s \n";
-    private final String ORDER_DATE_MESSAGE = "Date: %1$s \n";
-    private final String TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE = "Total amount of products: %1$s\n";
-    private final String TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE = "Total cost of all products: %1$s\n";
-    private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
-    private final String TOTAL_COST_OF_ORDER_MESSAGE = "Total order cost: %1$s\n";
     private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
     private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
-    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "%1$s. %2$s\n   PPK: %3$s\n\n";
+    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
     private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
-    private final String AVAILABLE_PRODUCT_TO_BUY_MESSAGE = "%1$s. %2$s\n   Purchase form: %3$s\n\n";
-    private final String STORE_NUMBER_MESSAGE = "Store No. %1$s\n";
-    private final String PRODUCT_NUMBER_MESSAGE = "Product No. %1$s\n";
     private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
     private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Thers is no orders in the system.\n";
-    private final String NUM_OF_STORES_IN_ORDER_MESSAGE = "Number of stores: %1$s\n";
-    private final String NUM_OF_PRODUCT_TYPES_IN_ORDER_MESSAGE = "Number of product types: %1$s\n";
-    private final String STORE_ID_MESSAGE = "Store id: %1$s\n";
-    private final String STORE_NAME_MESSAGE = "Store name: %1$s\n";
     private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
-    private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "Please select which type of order you want:\n";
+    private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "Please select which type of order you want.\n";
     private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
-    private final String SHOW_OBJECT_MESSAGE = "%1$s. %2$s\n";
     private final String QUIT_CHARACTER = "q";
     private final String FINISH_CHARACTER = "f";
     private final String APPROVE_CHARACTER = "t";
-    private static final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "To proceed with the order press 't', to cancel press 'f':";
     private final String GET_DATE_FROM_USER_MESSAGE = "Please enter date:";
     private final String ORDER_SUMMERY_MESSAGE = "Your order:\n%1$s";
-    private final String PRODUCT_IN_ORDER_SUMMERY_MESSAGE = "ID: %1$s\nName: %2$s\nPurchase form: %3$s\n" +
-                                                             "Price: %4$s\nAmount: %5$s\n" +
-                                                             "Total price: %6$s\n";
-
+    private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
+    private final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "To proceed with the order press 't', to cancel press 'f':";
 
     private SystemManager manager = new SystemManager();
 
@@ -115,7 +84,7 @@ public class SystemUI
             {
                 executeUserSelectedAction(StartMenuOptions.values()[userStartMenuChoice]);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 System.out.println("\n" + ex.getMessage());
             }
@@ -150,11 +119,11 @@ public class SystemUI
             }
             catch (IndexOutOfBoundsException ex)
             {
-                System.out.print("\n" + ex.getMessage() + "\n" + REENTER_ACTION_MESSAGE);
+                System.out.print(ex.getMessage() + String.format(REENTER_INPUT_MESSAGE, "action"));
             }
             catch (InputMismatchException ex)
             {
-                System.out.print("\n" + "your choice is not in the right format" + "\n" + REENTER_ACTION_MESSAGE);
+                System.out.print(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choise") + String.format(REENTER_INPUT_MESSAGE, "action"));
             }
         }
     }
@@ -163,7 +132,7 @@ public class SystemUI
     {
         if (userStartChoiceInput > enumClass.getFields().length || userStartChoiceInput < 1)
         {
-            throw new IndexOutOfBoundsException(CHOICE_OUT_OF_RANGE_MESSAGE);
+            throw new IndexOutOfBoundsException(String.format(INPUT_NOT_IN_CORRECT_RANGE_MESSAGE, "choise"));
         }
     }
 
@@ -245,7 +214,7 @@ public class SystemUI
         System.out.print(String.format("\n" + ALL_PRODUCTS_OF_STORE_MESSAGE, store.getName(), SEPARATOR_MESSAGE));
         for(ProductDataContainer product: store.getProducts())
         {
-            System.out.print(createProductDetails(product));
+            System.out.print(MessagesBuilder.createProductDetails(product));
         }
     }
 
@@ -320,7 +289,7 @@ public class SystemUI
         System.out.print(String.format("\n",ALL_PRODUCTS_MESSAGE,SEPARATOR_MESSAGE));
         for(ProductDataContainer product : manager.getAllProductsData())
         {
-            System.out.print(createProductDetails(product));
+            System.out.print(MessagesBuilder.createProductDetails(product));
         }
         ProductDataContainer product = getFromUserProductToUpdate(store,"add", UpdateProductOptions.AddProduct);
         int productPrice = getFromUserProductPrice();
@@ -374,96 +343,67 @@ public class SystemUI
         }
     }
 
+
     private void showAllStores()
     {
-        String allStoresMsg = "";
+        String allStoresMsg = "\n";
         if (manager.getAllStoresData().size() > 0)
         {
-            int storeIndex = 1;
+            // int storeIndex = 1;
             allStoresMsg += String.format(ALL_STORES_MESSAGE, SEPARATOR_MESSAGE);
+            allStoresMsg += "\n";
             for (StoreDataContainer storeData : manager.getAllStoresData())
             {
-                allStoresMsg += String.format(STORE_NUMBER_MESSAGE, storeIndex);
-                allStoresMsg += createStoreDetails(storeData);
-                if (storeData.getProducts().size() > 0)
-                {
-                    int productIndex = 1;
-                    allStoresMsg += String.format(ALL_PRODUCTS_OF_STORE_MESSAGE, storeData.getName(), SEPARATOR_MESSAGE);
-                    for (ProductDataContainer productData : storeData.getProducts())
-                    {
-                        allStoresMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
-                        allStoresMsg += createProductDetailsForDisplayingAllStores(storeData, productData);
-                        productIndex++;
-                    }
-                }
-                else
-                {
-                    allStoresMsg += NO_PRODUCTS_IN_STORE_MESSAGE;
-                }
-                if (storeData.getOrders().size() > 0)
-                {
-                    int orderIndex = 1;
-                    allStoresMsg += String.format(ALL_ORDERS_OF_STORE_MESSAGE, storeData.getName(), SEPARATOR_MESSAGE);
-                    for (OrderDataContainer orderData : storeData.getOrders())
-                    {
-                        allStoresMsg += String.format(ORDER_NUMBER_MESSAGE, orderIndex);
-                        allStoresMsg += createOrderDetailsForDisplayingAllStores(orderData);
-                        orderIndex++;
-                    }
-                }
-                else
-                {
-                    allStoresMsg += NO_ORDERS_IN_STORE_MESSAGE;
-                }
-                allStoresMsg +=
-                        String.format(PPK_MESSAGE, storeData.getPPK()) +
-                                String.format(TOTAL_INCOME_FROM_DELIVERIES_MESSAGE, storeData.getTotalIncomeFromDeliveries());
+                //   allStoresMsg += String.format(STORE_NUMBER_MESSAGE, storeIndex);
+                allStoresMsg += MessagesBuilder.createAllStoreDetails(storeData);
+                allStoresMsg += MessagesBuilder.createAllStoreProductsDetails(storeData);
+                allStoresMsg += MessagesBuilder.createAllStoreOrdersDetails(storeData);
                 allStoresMsg += SEPARATOR_MESSAGE;
-                storeIndex++;
+                allStoresMsg += "\n";
+                //   storeIndex++;
             }
         }
         else
         {
             allStoresMsg += NO_STORES_MESSAGE;
         }
-        System.out.println(allStoresMsg);
+        System.out.print(allStoresMsg);
     }
 
-    private void showAllProducts()
+    private void showAllProducts()//change
     {
-        String allProductsMsg = "";
+        String allProductsMsg = "\n";
         if (manager.getAllProductsData().size() > 0)
         {
-            int productIndex = 1;
+//            int productIndex = 1;
             allProductsMsg += String.format(ALL_PRODUCTS_MESSAGE, SEPARATOR_MESSAGE);
+            allProductsMsg += "\n";
             for (ProductDataContainer productData : manager.getAllProductsData())
             {
-                allProductsMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
-                allProductsMsg += createProductDetailsForDisplayingAllProducts(productData);
-                productIndex++;
+//                allProductsMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
+                allProductsMsg += MessagesBuilder.createProductDetailsForDisplayingAllProducts(productData);
+//                productIndex++;
             }
         }
         else
         {
             allProductsMsg += NO_PRODUCTS_IN_SYSTEM_MESSAGE;
         }
-        System.out.println(allProductsMsg);
+        System.out.print(allProductsMsg);
     }
 
     private void makeOrder()
     {
-        try
+        OrderTypeOptions orderType = getOrderTypeFromUser();
+        OrderDataContainer newOrderData = getNewOrderFromUser(orderType);
+        if (newOrderData != null)
         {
-            OrderTypeOptions orderType = getOrderTypeFromUser();
-            OrderDataContainer newOrderData = getNewOrderFromUser(orderType);
-            if (newOrderData != null)
-            {
-                manager.addNewOrder(newOrderData);
-            }
+            manager.addNewOrder(newOrderData);
+            System.out.println("Order was successfully placed.");
         }
-        catch (Exception e)
+        else
         {
-            System.out.println(e.getMessage());
+            System.out.println("Order canceled successfully.");
         }
     }
 
@@ -475,9 +415,9 @@ public class SystemUI
             case Static:
                 newOrderData = getNewStaticOrderFromUser();
                 break;
-//            case Dynamic:
-//                newOrderData = getNewDynamicOrderFromUser();
-//                break;
+            case Dynamic:
+                newOrderData = getNewDynamicOrderFromUser();
+                break;
         }
         return newOrderData;
     }
@@ -488,46 +428,105 @@ public class SystemUI
         int storeId = getStoreFromUser().getId();
         Date date = getDateFromUser();
         Point userLocation = getLocationFromUser(storeId);
-        Collection<Integer> storeIdCollection = new ArrayList<>();
-        storeIdCollection.add(storeId);
+        Collection<StoreDataContainer> storeDataCollection = new ArrayList<>();
+        storeDataCollection.add(manager.getStoreDataById(storeId));
         Map<Integer, Float> amountPerProduct = getAllProductsAndQuantitiesInOrderFromUser(storeId);
-        float deliveryCost = manager.getDeliveryCost(userLocation, storeIdCollection);
-        boolean isOrderApproved =  getIsOrderApprovedByCustomer(amountPerProduct, storeId, deliveryCost);
-        if (isOrderApproved)
+        if (amountPerProduct.size() > 0)
         {
-            newOrderData = new OrderDataContainer(date, deliveryCost, storeId, amountPerProduct);
+            float deliveryCost = manager.getDeliveryCost(userLocation, storeDataCollection);
+            boolean isOrderApproved = getIsOrderApprovedByCustomer(amountPerProduct, storeId, deliveryCost);
+            if (isOrderApproved)
+            {
+                newOrderData = new OrderDataContainer(date, deliveryCost, storeId, amountPerProduct);
+            }
         }
         return newOrderData;
     }
 
-    //    private OrderDataContainer getNewDynamicOrderFromUser()
-//    {
-//        OrderDataContainer newOrderData = null;
-//        Date date = getDateFromUser();
-//        Point userLocation = getLocationFromUser();
-//        Collection<ProductDataContainer> productsInOrder = getAllProductsInOrderFromUser();
-//        Map<ProductDataContainer, StoreDataContainer> productPerStore = manager.dynamicStoreAllocation(productsInOrder);
-//        Map<Integer, Float> amountPerProduct = getAmountPerProductInOrder(productsInOrder);
-//        float deliveryCost = getDeliveryCost(userLocation);
-//        boolean isOrderApproved = getIsOrderApprovedByCustomer(productsInOrder);
-//        if (isOrderApproved)
-//        {
-//            newOrderData = new OrderDataContainer(date, deliveryCost,, amountPerProduct);
-//        }
-//        return newOrderData;
-//    }
+        private OrderDataContainer getNewDynamicOrderFromUser()
+    {
+        OrderDataContainer newOrderData = null;
+        Date date = getDateFromUser();
+        Point userLocation = getLocationFromUserForDynamicOrder();
+        Map<Integer, Float> amountPerProduct = getAllProductsAndQuantitiesInOrderFromUserForDynamicOrder();
+        if (amountPerProduct.size() > 0)
+        {
+            Collection<ProductDataContainer> allProductsInOrder = getAllProductsDataInOrder(amountPerProduct.keySet());
+            Map<ProductDataContainer, StoreDataContainer> productsInOrder = manager.dynamicStoreAllocation(allProductsInOrder);
+            Collection<StoreDataContainer> storesDataParticapatesInOrder = getAllStoresParticaptesInOrder(productsInOrder);
+            float deliveryCost = manager.getDeliveryCost(userLocation, storesDataParticapatesInOrder);
+            boolean isOrderApproved = getIsDynamicOrderApprovedByCustomer(amountPerProduct ,productsInOrder, deliveryCost);
+            if (isOrderApproved) {
+                newOrderData = new OrderDataContainer(date, deliveryCost, amountPerProduct, storesDataParticapatesInOrder.size());
+            }
+        }
+        return newOrderData;
+    }
 
-    private Map<Integer, Float> getAllProductsAndQuantitiesInOrderFromUser(int storeId)
+    private boolean getIsDynamicOrderApprovedByCustomer(Map<Integer, Float> amountPerProduct, Map<ProductDataContainer, StoreDataContainer> productsInOrder, float deliveryCost)
+    {
+        boolean isOrderApproved = false;
+        boolean isUserFinished = false;
+
+        while (!isUserFinished)
+        {
+            String orderSummary = MessagesBuilder.createOrderSummaryForDynamicOrder(amountPerProduct, productsInOrder, deliveryCost);
+            System.out.println(orderSummary);
+            Scanner scanner = new Scanner(System.in);
+            String userInput = scanner.nextLine();
+            if (userInput.toLowerCase().equals(QUIT_CHARACTER) || userInput.toLowerCase().equals(FINISH_CHARACTER))
+            {
+                isUserFinished = true;
+            }
+            else
+            {
+                if (userInput.toLowerCase().equals(APPROVE_CHARACTER))
+                {
+                    isOrderApproved = true;
+                    isUserFinished = true;
+                }
+                else
+                {
+                    System.out.println((String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choise")));
+                }
+            }
+        }
+        return isOrderApproved;
+    }
+
+
+    private Collection<StoreDataContainer> getAllStoresParticaptesInOrder(Map<ProductDataContainer, StoreDataContainer> productsInOrder)
+    {
+        Collection<StoreDataContainer> allStoresParticaptesInOrder = new HashSet<>();
+        for (StoreDataContainer storeParticapatesInOrder : productsInOrder.values())
+        {
+            allStoresParticaptesInOrder.add(storeParticapatesInOrder);
+        }
+        return allStoresParticaptesInOrder;
+    }
+
+    private Collection<ProductDataContainer> getAllProductsDataInOrder(Collection<Integer> productsIdInOrder)
+    {
+        Collection<ProductDataContainer> allProductsDataInOrder = new HashSet<>();
+        for (Integer productId: productsIdInOrder)
+        {
+            allProductsDataInOrder.add(manager.getProductDataById(productId));
+        }
+        return allProductsDataInOrder;
+    }
+
+
+    private Map<Integer, Float> getAllProductsAndQuantitiesInOrderFromUserForDynamicOrder()
     {
         Map<Integer, Float> allProductsInOrder = new HashMap<>();
         boolean isUserFinished = false;
-
         while (!isUserFinished)
         {
             try
             {
                 System.out.println("Please select product from the list by enter the product number, or press 'q' to finish.");
                 showAvailableProductsToBuy();
+                System.out.print("The desired product id: ");
                 Scanner scanner = new Scanner(System.in);
                 String userInput = scanner.nextLine(); //note why not scanner.nextInt();
                 if (isUserWantToQuitFromOrder(userInput))
@@ -536,50 +535,137 @@ public class SystemUI
                 }
                 else
                 {
-                    int productId = getValidProductFromUser(userInput, storeId, manager.getAllProductsID());
+                    int productId = getValidProductIdFromUserForDynamicOrder(userInput);
                     float productAmount = getProductAmountFromUser(productId);
-                    allProductsInOrder.put(productId, productAmount);
+                    if (allProductsInOrder.keySet().contains(productId))
+                    {
+                        allProductsInOrder.put(productId, allProductsInOrder.get(productId) + productAmount);
+                    }
+                    allProductsInOrder.putIfAbsent(productId, productAmount);
                 }
-            }
-            catch (NumberFormatException e)
-            {
-                String errorMessage = "Sorry, the id you entered is not in the right format.\nPlease try again.";
-                System.out.println(errorMessage);
             }
             catch (Exception e)
             {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage() + TRY_AGAIN_MESSAGE);
             }
         }
         return allProductsInOrder;
     }
 
-    private float getProductAmountFromUser(int productId)
+    private int getValidProductIdFromUserForDynamicOrder(String userSelection)
     {
-        float productAmount = 0;
-        boolean isUserFinished = false;
+        int productId;
+        try
+        {
+            productId = Integer.parseInt(userSelection);
+            if (!manager.getAllProductsID().contains(productId))
+            {
+                throw new IndexOutOfBoundsException(String.format(INPUT_NOT_IN_CORRECT_RANGE_MESSAGE, "product id"));
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            throw new NumberFormatException("Sorry, your choise is not in the correct format.");
+        }
+        return productId;
+    }
 
+    private Point getLocationFromUserForDynamicOrder()
+    {
+        Point userLocation;
+        while (true)
+        {
+            try
+            {
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Please enter X cordinate:");
+                int xCordinate = scanner.nextInt();
+                System.out.println("Please enter Y cordinate:");
+                int yCordinate = scanner.nextInt();
+                userLocation = new Point(xCordinate, yCordinate);
+                validateUserLocationForDynamicOrder(userLocation);
+                break;
+            }
+            catch (InputMismatchException ex)
+            {
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "cordinate") + TRY_AGAIN_MESSAGE);
+            }
+            catch (Exception ex)
+            {
+                System.out.println(ex.getMessage() + TRY_AGAIN_MESSAGE);
+            }
+        }
+        return userLocation;
+    }
+
+    private void validateUserLocationForDynamicOrder(Point userLocation)
+    {
+        if (userLocation.getX() < 1 || userLocation.getX() > 50 ||
+                userLocation.getY() < 1 || userLocation.getY() > 50)
+        {
+            throw new IllegalArgumentException("Sorry, cordinates of the location must be between 1-50.");
+        }
+    }
+
+
+    private Map<Integer, Float> getAllProductsAndQuantitiesInOrderFromUser(int storeId)
+    {
+        Map<Integer, Float> allProductsInOrder = new HashMap<>();
+        boolean isUserFinished = false;
         while (!isUserFinished)
         {
             try
             {
-                System.out.println("Please enter the amount of this product:");
+                System.out.println("Please select product from the list by enter the product number, or press 'q' to finish.");
+                showAvailableProductsToBuy();
+                System.out.print("The desired product id: ");
                 Scanner scanner = new Scanner(System.in);
-                String userInput = scanner.nextLine();
+                String userInput = scanner.nextLine(); //note why not scanner.nextInt();
                 if (isUserWantToQuitFromOrder(userInput))
                 {
                     isUserFinished = true;
                 }
                 else
                 {
-                    productAmount = getValidProductAmountFromUser(userInput, productId);
-                    isUserFinished = true;
+                    int productId = getValidProductIdFromUserForStaticOrder(userInput, storeId);
+                    float productAmount = getProductAmountFromUser(productId);
+                    if (allProductsInOrder.keySet().contains(productId))
+                    {
+                        allProductsInOrder.put(productId, allProductsInOrder.get(productId) + productAmount);
+                    }
+                    allProductsInOrder.putIfAbsent(productId, productAmount);
                 }
             }
             catch (Exception e)
             {
-                String errorMessage = "Sorry, the amount you entered is not in the right format.\nEnter the date again.";
-                System.out.println(errorMessage);
+                System.out.println(e.getMessage() + TRY_AGAIN_MESSAGE);
+            }
+        }
+        return allProductsInOrder;
+    }
+
+    private boolean isStoreSellProduct(int productId, int storeId)
+    {
+        StoreDataContainer selectedStore = manager.getStoreDataById(storeId);
+        return (selectedStore.getProductDataContainerById(productId) != null);
+    }
+
+    private float getProductAmountFromUser(int productId)
+    {
+        float productAmount;
+        while (true)
+        {
+            try
+            {
+                System.out.print("Please enter the amount of this product: ");
+                Scanner scanner = new Scanner(System.in);
+                String userInput = scanner.nextLine();
+                productAmount = getValidProductAmountFromUser(userInput, productId);
+                break;
+            }
+            catch (Exception e)
+            {
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "amount") + TRY_AGAIN_MESSAGE);
             }
         }
         return productAmount;
@@ -587,23 +673,16 @@ public class SystemUI
 
     private float getValidProductAmountFromUser(String userInput, int productId)
     {
-        float productAmount = 0;
-        try
+        float productAmount;
+        ProductDataContainer product = manager.getProductDataById(productId);
+        boolean isProductSoldByWeight = (product.getPurchaseForm() == ProductDataContainer.ProductPurchaseForm.WEIGHT);
+        if (!isProductSoldByWeight)
         {
-            ProductDataContainer product = manager.getProductDataById(productId);
-            boolean isProductSoldByWieght = (product.getPurchaseForm() == ProductDataContainer.ProductPurchaseForm.WEIGHT);
-            if (!isProductSoldByWieght)
-            {
-                productAmount = (float) Integer.parseInt(userInput);
-            }
-            else
-            {
-                productAmount = Float.parseFloat(userInput);
-            }
+            productAmount = (float) Integer.parseInt(userInput);
         }
-        catch (NumberFormatException e)
+        else
         {
-            System.out.println("This amount is not in the right format.");
+            productAmount = Float.parseFloat(userInput);
         }
         return productAmount;
     }
@@ -611,21 +690,39 @@ public class SystemUI
 
     private OrderTypeOptions getOrderTypeFromUser()
     {
-        showOrderTypeOption();
-        Scanner scanner = new Scanner(System.in);
-        int userInput = scanner.nextInt();
-        int userSelection = getValidOrderTypeFromUser(userInput);
+        int userSelection;
+        while (true)
+        {
+            try
+            {
+                showOrderTypeOption();
+                System.out.print("The desired order type: ");
+                Scanner scanner = new Scanner(System.in);
+                userSelection = scanner.nextInt();
+                validateUserChoice(userSelection, OrderTypeOptions.class);
+                userSelection -= 1;
+                break;
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "order type") + TRY_AGAIN_MESSAGE);
+            }
+            catch (IndexOutOfBoundsException ex)
+            {
+                System.out.println(ex.getMessage() + TRY_AGAIN_MESSAGE);
+            }
+        }
         return OrderTypeOptions.values()[userSelection];
     }
 
     private StoreDataContainer getStoreFromUser()
     {
-        StoreDataContainer userStoreSelection = null;
+        StoreDataContainer userStoreSelection;
         while (true)
         {
             try
             {
-                System.out.println("\nPlease select a store from the list by enter the store id, or press 'q' to finish:");
+                System.out.print("\nPlease select a store from the list by enter the store id.");
                 showAvailableStoresToBuy();
                 System.out.print("The desired store id: ");
                 Scanner scanner = new Scanner(System.in);
@@ -633,26 +730,18 @@ public class SystemUI
                 userStoreSelection = getValidStoreFromUser(userSelection);
                 break;
             }
-            catch(IndexOutOfBoundsException ex)
-            {
-                System.out.println("\n" + ex.getMessage() + ", Please try again");
-            }
             catch (InputMismatchException ex)
             {
-                System.out.println("\nSorry, your choice is not in the right format, Please try again");
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "store id") + TRY_AGAIN_MESSAGE);
+            }
+            catch(IndexOutOfBoundsException ex)
+            {
+                System.out.println(ex.getMessage() + TRY_AGAIN_MESSAGE);
             }
         }
         return userStoreSelection;
     }
 
-    private int getValidOrderTypeFromUser(int userSelection)
-    {
-        if (userSelection < 1 || userSelection > OrderTypeOptions.values().length)
-        {
-            throw new IndexOutOfBoundsException("Sorry, no such option.\nPlease try again.");
-        }
-        return userSelection - 1;
-    }
 
     private void showOrderTypeOption()
     {
@@ -669,13 +758,12 @@ public class SystemUI
 
     private Date getDateFromUser()
     {
-        Date userDate = null;
-        System.out.println(GET_DATE_FROM_USER_MESSAGE);
-
+        Date userDate;
         while (true)
         {
             try
             {
+                System.out.println(GET_DATE_FROM_USER_MESSAGE);
                 Scanner scanner = new Scanner(System.in);
                 String userDateString = scanner.nextLine();
                 userDate = new SimpleDateFormat("dd/mm-hh:mm").parse(userDateString);
@@ -683,8 +771,7 @@ public class SystemUI
             }
             catch (ParseException e)
             {
-                String errorMessage = "Sorry, the date you entered is not in the right format.\nPlease try again.";
-                System.out.println(errorMessage);
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "date") + TRY_AGAIN_MESSAGE);
             }
         }
         return userDate;
@@ -692,7 +779,7 @@ public class SystemUI
 
     private Point getLocationFromUser(int storeId)
     {
-        Point userLocation = null;
+        Point userLocation;
         while (true)
         {
             try
@@ -702,30 +789,34 @@ public class SystemUI
                 int xCordinate = scanner.nextInt();
                 System.out.println("Please enter Y cordinate:");
                 int yCordinate = scanner.nextInt();
-                userLocation = getValidLocationFromUser(new Point(xCordinate, yCordinate), storeId);
+                userLocation = new Point(xCordinate, yCordinate);
+                validateUserLocationForStaticOrder(userLocation, storeId);
                 break;
             }
-            catch (Exception e)
+            catch (InputMismatchException ex)
             {
-                System.out.println(e.getMessage());
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "cordinate") + TRY_AGAIN_MESSAGE);
+            }
+            catch (Exception ex)
+            {
+                System.out.println(ex.getMessage() + TRY_AGAIN_MESSAGE);
             }
         }
         return userLocation;
     }
 
-    private Point getValidLocationFromUser(Point userLocation, int storeId)
+    private void validateUserLocationForStaticOrder(Point userLocation, int storeId)
     {
         if (userLocation.getX() < 1 || userLocation.getX() > 50 ||
                 userLocation.getY() < 1 || userLocation.getY() > 50)
         {
-            throw new IllegalArgumentException("This location is not valid!");
+            throw new IllegalArgumentException("Sorry, cordinates of the location must be between 1-50.");
         }
         Point storeLocation = manager.getStoreDataById(storeId).getPosition();
         if (userLocation.equals(storeLocation))
         {
             throw new UserLocationEqualToStoreException(userLocation, storeLocation);
         }
-        return userLocation;
     }
 
     private StoreDataContainer getValidStoreFromUser(int userSelection)
@@ -733,43 +824,32 @@ public class SystemUI
 
         if (!manager.getAllStoresID().contains(userSelection))
         {
-            throw new IndexOutOfBoundsException(CHOICE_OUT_OF_RANGE_MESSAGE);
+            throw new IndexOutOfBoundsException(String.format(INPUT_NOT_IN_CORRECT_RANGE_MESSAGE, "store id"));
         }
         return manager.getStoreDataById(userSelection);
     }
 
 
-    private int getValidProductFromUser(String userInput, int storeId, Set<Integer> IdSet)
+    private int getValidProductIdFromUserForStaticOrder(String userSelection, int storeId)
     {
-        int userSelection = 0;
-
+        int productId;
         try
         {
-            userSelection = Integer.parseInt(userInput);
-            if (!IdSet.contains(userSelection))
+            productId = Integer.parseInt(userSelection);
+            if (!manager.getAllProductsID().contains(productId))
             {
-                throw new IndexOutOfBoundsException(CHOICE_OUT_OF_RANGE_MESSAGE);
+                throw new IndexOutOfBoundsException(String.format(INPUT_NOT_IN_CORRECT_RANGE_MESSAGE, "product id"));
             }
-            StoreDataContainer store = manager.getStoreDataById(storeId);
-            Set<Integer> storeProductsId = new HashSet<>();
-            for (ProductDataContainer productData: store.getProducts())
+            if (!isStoreSellProduct(productId, storeId))
             {
-                storeProductsId.add(productData.getId());
-            }
-            if (!storeProductsId.contains(userSelection))
-            {
-                throw new NoSuchElementException("This product is not for sale in this store.");
+                throw new NoSuchElementException("The store you choosen does not sell this product.");
             }
         }
         catch (NumberFormatException e)
         {
-            System.out.println("Sorry, your choise is not in the right format.\nPlease try again.");
+            throw new NumberFormatException("Sorry, your choise is not in the correct format.");
         }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return userSelection;
+        return productId;
     }
 
 
@@ -795,6 +875,10 @@ public class SystemUI
                     isOrderApproved = true;
                     isUserFinished = true;
                 }
+                else
+                {
+                    System.out.println((String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choise")));
+                }
             }
         }
         return isOrderApproved;
@@ -810,13 +894,8 @@ public class SystemUI
             int productPrice = manager.getStoreDataById(storeId).getProductDataContainerById(productId)
                     .getPricePerStore().get(storeId);
             float totalPriceForProduct = productPrice * amountPerProduct.get(productId);
-            orderSummaryMsg += String.format(PRODUCT_NUMBER_MESSAGE, productIndex);
-            orderSummaryMsg += String.format(PRODUCT_IN_ORDER_SUMMERY_MESSAGE,
-                    productData.getId(), productData.getName(),
-                    productData.getPurchaseForm().toString().toLowerCase(),
-                    productPrice, amountPerProduct.get(productId), totalPriceForProduct);
-            orderSummaryMsg += SEPARATOR_MESSAGE;
-            productIndex++;
+            float totalAmountFromProduct = amountPerProduct.get(productId);
+            orderSummaryMsg += MessagesBuilder.createProductDetailsInOrderSummary(productData, productPrice, totalAmountFromProduct, totalPriceForProduct, productIndex);
         }
         orderSummaryMsg += String.format(DELIVERY_COST_OF_ORDER_MESSAGE, deliveryCost);
         orderSummaryMsg += SEPARATOR_MESSAGE;
@@ -826,20 +905,18 @@ public class SystemUI
 
     private void showAvailableProductsToBuy()
     {
-        String avialableProductsToBuyMsg = "";
+        String avialableProductsToBuyMsg = "\n";
         avialableProductsToBuyMsg += String.format(ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
         for (ProductDataContainer productData: manager.getAllProductsData())
         {
-            avialableProductsToBuyMsg += String.format(
-                    AVAILABLE_PRODUCT_TO_BUY_MESSAGE, productData.getId(), productData.getName(),
-                    productData.getPurchaseForm().toString().toLowerCase());
+            avialableProductsToBuyMsg += MessagesBuilder.createProductDetails(productData);
         }
         System.out.println(avialableProductsToBuyMsg);
     }
 
     private void showAvailableStoresToBuy()
     {
-        String avialableStoresToBuyMsg = "";
+        String avialableStoresToBuyMsg = "\n";
         avialableStoresToBuyMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
         for (StoreDataContainer storeData: manager.getAllStoresData())
         {
@@ -852,7 +929,7 @@ public class SystemUI
 
     private void showAllOrdersHistory()
     {
-        String allOrdersMsg = "";
+        String allOrdersMsg = "\n";
         if (manager.getAllOrdersData().size() > 0)
         {
             int orderIndex = 1;
@@ -860,7 +937,7 @@ public class SystemUI
             for (OrderDataContainer orderData: manager.getAllOrdersData())
             {
                 allOrdersMsg += String.format(ORDER_NUMBER_MESSAGE, orderIndex);
-                allOrdersMsg += createOrderDetailsForDisplayingAllOrdersHistory(orderData);
+                allOrdersMsg += MessagesBuilder.createOrderDetailsForDisplayingAllOrdersHistory(orderData);
                 orderIndex++;
             }
         }
@@ -878,100 +955,5 @@ public class SystemUI
             return true;
         }
         return false;
-    }
-
-    private String createOrderDetailsForDisplayingAllOrdersHistory(OrderDataContainer orderData)
-    {
-        String orderDetails =
-                String.format(ID_MESSAGE, orderData.getId()) +
-                        String.format(ORDER_DATE_MESSAGE, orderData.getDate());
-        if (orderData.isDynamic())
-        {
-            orderDetails += String.format(NUM_OF_STORES_IN_ORDER_MESSAGE, orderData.getNumOfProducts());
-        }
-        else
-        {
-            orderDetails += String.format(STORE_ID_MESSAGE, orderData.getStoreId());
-            orderDetails += String.format(STORE_NAME_MESSAGE, orderData.getStoreName());
-        }
-        orderDetails +=
-                String.format(NUM_OF_PRODUCT_TYPES_IN_ORDER_MESSAGE, orderData.getNumOfProductTypes()) +
-                        String.format(TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE, orderData.getNumOfProducts()) +
-                        String.format(TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE, orderData.getCostOfAllProducts()) +
-                        String.format(DELIVERY_COST_OF_ORDER_MESSAGE, orderData.getDeliveryCost()) +
-                        String.format(TOTAL_COST_OF_ORDER_MESSAGE, orderData.getTotalCost()) +
-                        SEPARATOR_MESSAGE;
-        return orderDetails;
-    }
-
-
-    private String createStoreDetails(StoreDataContainer storeData)
-    {
-        String storeDetails = "";
-        storeDetails +=
-                String.format(ID_MESSAGE, storeData.getId()) +
-                String.format(NAME_MESSAGE, storeData.getName());
-        return storeDetails;
-    }
-
-    private String createProductDetails(ProductDataContainer productData)
-    {
-        String productDetails =
-                String.format(ID_MESSAGE, productData.getId()) +
-                String.format(NAME_MESSAGE, productData.getName()) +
-                String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, productData.getPurchaseForm().toString().toLowerCase());
-        return productDetails;
-    }
-
-    private String createProductDetailsForDisplayingAllStores(StoreDataContainer storeData, ProductDataContainer productData)
-    {
-        String productStatisticsDetails = createProductDetails(productData);
-        productStatisticsDetails += String.format(PRICE_MESSAGE, productData.getPricePerStore().get(storeData.getId()));
-        float howManyTimesProductSoldByStore = productData.getSoldAmountPerStore().get(storeData.getId());
-
-        if (howManyTimesProductSoldByStore > 0)
-        {
-            productStatisticsDetails += String.format(TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_STORE_MESSAGE, howManyTimesProductSoldByStore);
-        }
-        else
-        {
-            productStatisticsDetails += PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE;
-        }
-        productStatisticsDetails += SEPARATOR_MESSAGE;
-
-        return productStatisticsDetails;
-    }
-
-    private String createProductDetailsForDisplayingAllProducts(ProductDataContainer productData)
-    {
-        String productStatisticsDetails = createProductDetails(productData);
-        int numOfStoresSellProduct = productData.getNumberOfStoresSellProduct();
-
-        if (numOfStoresSellProduct > 0)
-        {
-            productStatisticsDetails +=
-                String.format(NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE, productData.getNumberOfStoresSellProduct()) +
-                String.format(AVERAGE_PRICE_OF_PRODUCT_MESSAGE, productData.getAveragePrice()) +
-                String.format(TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE, productData.getNumOfProductWasOrdered());
-        }
-        else
-        {
-            productStatisticsDetails += PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE;
-        }
-        productStatisticsDetails += SEPARATOR_MESSAGE;
-
-        return productStatisticsDetails;
-    }
-
-    private String createOrderDetailsForDisplayingAllStores(OrderDataContainer orderData)
-    {
-        String orderDetails =
-            String.format(ORDER_DATE_MESSAGE, orderData.getDate()) +
-            String.format(TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE, orderData.getNumOfProducts()) +
-            String.format(TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE, orderData.getCostOfAllProducts()) +
-            String.format(DELIVERY_COST_OF_ORDER_MESSAGE, orderData.getDeliveryCost()) +
-            String.format(TOTAL_COST_OF_ORDER_MESSAGE, orderData.getTotalCost()) +
-            SEPARATOR_MESSAGE;
-        return orderDetails;
     }
 }

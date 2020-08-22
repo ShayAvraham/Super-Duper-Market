@@ -61,8 +61,6 @@ public class SystemManager
 
         systemData.addNewOrder(newOrder);
         updateDataContainers();
-
-
     }
 
     private Order createNewStaticOrder(OrderDataContainer newOrderDataContainer)
@@ -389,14 +387,14 @@ public class SystemManager
         return productDataContainer;
     }
 
-    public float getDeliveryCost(Point userLocation, Collection<Integer> storesId)
+    public float getDeliveryCost(Point userLocation, Collection<StoreDataContainer> storesParticapatesInOrder)
     {
         float deliveryCost = 0;
-        for (Integer storeId: storesId)
+        for (StoreDataContainer storeData: storesParticapatesInOrder)
         {
             for (Store store: systemData.getStores().values())
             {
-                if (storeId == store.getId())
+                if (storeData.getId() == store.getId())
                 {
                     deliveryCost += store.getDeliveryCostByLocation(userLocation);
                 }
