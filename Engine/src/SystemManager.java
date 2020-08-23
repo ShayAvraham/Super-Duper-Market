@@ -16,8 +16,8 @@ public class SystemManager
     private Collection<StoreDataContainer> allStoresData;
     private Collection<ProductDataContainer> allProductsData;
     private Collection<OrderDataContainer> allOrdersData;
-    private Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom;
     private boolean isFileWasLoadSuccessfully = false;
+    private Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom;
 
     public SystemManager()
     {
@@ -51,11 +51,11 @@ public class SystemManager
     public void addNewOrder(OrderDataContainer newOrderDataContainer)//change
     {
         Order newOrder;
-        Map <Integer,Order> newSubOrders = null;
+        Map <Integer,Order> newSubOrders = new HashMap<>();
         if(!newOrderDataContainer.isDynamic())
         {
             newOrder = createNewStaticOrder(newOrderDataContainer);
-            newSubOrders.put(newOrder.getStoreId(),newOrder);
+            newSubOrders.put(newOrder.getStoreId(), newOrder);
         }
         else
         {
@@ -67,7 +67,6 @@ public class SystemManager
         storesToBuyFrom = null;
         updateDataContainers();
     }
-
 
     private Order createNewStaticOrder(OrderDataContainer newOrderDataContainer)
     {
@@ -103,7 +102,7 @@ public class SystemManager
         return orderProducts;
     }
 
-    private Map<Integer,Order> createSubOrders(Order newOrder) //change new
+    private Map<Integer,Order> createSubOrders(Order newOrder)
     {
         Map <Integer,Order> subOrders = new HashMap<>();
         for(ProductDataContainer product : storesToBuyFrom.keySet())
@@ -119,7 +118,7 @@ public class SystemManager
         return subOrders;
     }
 
-    private Order createSubOrder(Order newOrder, int storeId, int productId)//change new
+    private Order createSubOrder(Order newOrder, int storeId, int productId)
     {
         Collection<OrderProduct> orderProducts = new ArrayList<>();
         orderProducts.add(new OrderProduct(
@@ -132,7 +131,6 @@ public class SystemManager
                 newOrder.getOrderDate(),
                 newOrder.getDeliveryCost(),
                 orderProducts);
-
     }
 
     private void updateDataContainers()
@@ -302,7 +300,7 @@ public class SystemManager
         }
     }
 
-    private OrderDataContainer createOrderData(Order order)//change
+    private OrderDataContainer createOrderData(Order order)
     {
         String storeName = order.isDynamic()?
                 "Multy store order":
@@ -340,12 +338,7 @@ public class SystemManager
         updateDataContainers();
     }
 
-
-//bonus
-
-//bonus
-
-    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)//change
     {
         storesToBuyFrom = new HashMap<>();
         for (ProductDataContainer productToPurchase : productsToPurchase)
@@ -356,7 +349,7 @@ public class SystemManager
         return storesToBuyFrom;
     }
 
-    private Store getStoreWithTheCheapestPrice(int productId)
+    private Store getStoreWithTheCheapestPrice(int productId)//change
     {
         Store cheapestStore = null;
         for(Store store : systemData.getStores().values())
@@ -376,7 +369,6 @@ public class SystemManager
         }
         return cheapestStore;
     }
-
 
     private StoreDataContainer getStoreDataContainer(Store store)
     {
