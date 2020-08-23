@@ -110,19 +110,29 @@ public class Order
         return getCostOfAllProducts() + deliveryCost;
     }
 
+    public boolean isDynamic()
+    {
+        return isDynamic;
+    }
+
     public float getProductAmountInOrder(Product product)
     {
         float productAmountInOrder = 0;
 
         for (OrderProduct orderProduct: orderedProducts)
         {
-            if(orderProduct.equals(product))
+            if(orderProduct.getId() == product.getId())
             {
                 productAmountInOrder = orderProduct.getAmount();
                 break;
             }
         }
         return productAmountInOrder;
+    }
+
+    public void addOrderProduct(OrderProduct productToAdd)
+    {
+        orderedProducts.add(productToAdd);
     }
 
     public int getAllOrderedProductsQuantity()

@@ -17,6 +17,7 @@ public class SystemManager
     private Collection<ProductDataContainer> allProductsData;
     private Collection<OrderDataContainer> allOrdersData;
     private boolean isFileWasLoadSuccessfully = false;
+    private Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom;
 
     public SystemManager()
     {
@@ -47,19 +48,23 @@ public class SystemManager
         isFileWasLoadSuccessfully = true;
     }
 
-    public void addNewOrder(OrderDataContainer newOrderDataContainer)
+    public void addNewOrder(OrderDataContainer newOrderDataContainer)//change
     {
         Order newOrder;
+        Map <Integer,Order> newSubOrders = new HashMap<>();
         if(!newOrderDataContainer.isDynamic())
         {
             newOrder = createNewStaticOrder(newOrderDataContainer);
+            newSubOrders.put(newOrder.getStoreId(), newOrder);
         }
         else
         {
             newOrder = createNewDynamicOrder(newOrderDataContainer);
+            newSubOrders = createSubOrders(newOrder);
         }
 
-        systemData.addNewOrder(newOrder);
+        systemData.addNewOrder(newOrder,newSubOrders);
+        storesToBuyFrom = null;
         updateDataContainers();
     }
 
@@ -81,16 +86,51 @@ public class SystemManager
                 createOrderProductsFromOrderData(newOrderDataContainer));
     }
 
-    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)
+    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)//change
     {
         Collection<OrderProduct> orderProducts  = new ArrayList<>();
         for(Integer productId : newOrderDataContainer.getAmountPerProduct().keySet())
         {
+            int storeId = newOrderDataContainer.isDynamic()?
+                    storesToBuyFrom.get(getProductDataById(productId)).getId():
+                    newOrderDataContainer.getStoreId();
+
             orderProducts.add(new OrderProduct(
-                    systemData.getStores().get(newOrderDataContainer.getStoreId()).getProductById(productId),
+                    systemData.getStores().get(storeId).getProductById(productId),
                     newOrderDataContainer.getAmountPerProduct().get(productId)));
         }
         return orderProducts;
+    }
+
+    private Map<Integer,Order> createSubOrders(Order newOrder)
+    {
+        Map <Integer,Order> subOrders = new HashMap<>();
+        for(ProductDataContainer product : storesToBuyFrom.keySet())
+        {
+            int storeId = storesToBuyFrom.get(product).getId();
+            Order subOrder = createSubOrder(newOrder, storeId, product.getId());
+            Order orderSucceed = subOrders.putIfAbsent(storeId,subOrder);
+            if(orderSucceed != null)
+            {
+                subOrders.get(storeId).addOrderProduct(subOrder.getOrderedProducts().stream().findFirst().get());
+            }
+        }
+        return subOrders;
+    }
+
+    private Order createSubOrder(Order newOrder, int storeId, int productId)
+    {
+        Collection<OrderProduct> orderProducts = new ArrayList<>();
+        orderProducts.add(new OrderProduct(
+                systemData.getStores().get(storeId).getProductById(productId),
+                newOrder.getProductAmountInOrder(systemData.getProducts().get(productId))));
+
+        return new Order(
+                newOrder.getId(),
+                storeId,
+                newOrder.getOrderDate(),
+                newOrder.getDeliveryCost(),
+                orderProducts);
     }
 
     private void updateDataContainers()
@@ -262,11 +302,15 @@ public class SystemManager
 
     private OrderDataContainer createOrderData(Order order)
     {
+        String storeName = order.isDynamic()?
+                "Multy store order":
+                systemData.getStores().get(order.getStoreId()).getName();
+
         return new OrderDataContainer(
                 order.getId(),
                 order.getOrderDate(),
                 order.getStoreId(),
-                systemData.getStores().get(order.getStoreId()).getName(),
+                storeName,
                 order.getOrderedProducts().size(),
                 order.getAllOrderedProductsQuantity(),
                 order.getCostOfAllProducts(),
@@ -294,16 +338,9 @@ public class SystemManager
         updateDataContainers();
     }
 
-
-//bonus
-
-//bonus
-
-    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)//change
     {
-        Collection<StoreDataContainer> storeToBuyFrom = new ArrayList<>();
-        Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom = new HashMap<>();
-
+        storesToBuyFrom = new HashMap<>();
         for (ProductDataContainer productToPurchase : productsToPurchase)
         {
             Store store = getStoreWithTheCheapestPrice(productToPurchase.getId());
@@ -312,14 +349,22 @@ public class SystemManager
         return storesToBuyFrom;
     }
 
-    private Store getStoreWithTheCheapestPrice(int productId)
+    private Store getStoreWithTheCheapestPrice(int productId)//change
     {
-        Store cheapestStore = systemData.getStores().entrySet().iterator().next().getValue();
+        Store cheapestStore = null;
         for(Store store : systemData.getStores().values())
         {
-            if(cheapestStore.getProductById(productId).getPrice() > store.getProductById(productId).getPrice())
+            StoreProduct product = store.getProductById(productId);
+            if(product != null)
             {
-                cheapestStore = store;
+                if(cheapestStore == null)
+                {
+                    cheapestStore = store;
+                }
+                else if(cheapestStore.getProductById(productId).getPrice() > product.getPrice())
+                {
+                    cheapestStore = store;
+                }
             }
         }
         return cheapestStore;

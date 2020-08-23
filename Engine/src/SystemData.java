@@ -79,10 +79,13 @@ public class SystemData
         return productsInStore;
     }
 
-    public void addNewOrder(Order newOrder)
+    public void addNewOrder(Order newOrder, Map <Integer,Order> newSubOrders)
     {
         orders.add(newOrder);
-        stores.get(newOrder.getStoreId()).addNewOrder(newOrder);
+        for(Integer storeId : newSubOrders.keySet())
+        {
+            stores.get(storeId).addNewOrder(newSubOrders.get(storeId));
+        }
     }
 
     public Map<Integer,Product> getProducts()
