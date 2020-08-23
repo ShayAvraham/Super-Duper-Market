@@ -1,6 +1,8 @@
+import java.util.Locale;
 import java.util.Map;
 
-public final class MessagesBuilder {
+public final class MessagesBuilder
+{
     private static final String ALL_ORDERS_OF_STORE_MESSAGE = "The orders of %1$s store:\n%2$s";
     private static final String PPK_MESSAGE = "PPK: %1$s \n";
     private static final String TOTAL_INCOME_FROM_DELIVERIES_MESSAGE = "Total in come from deliveries: %1$s \n";
@@ -20,28 +22,24 @@ public final class MessagesBuilder {
     private static final String TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE = "Total cost of all products: %1$s\n";
     private static final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
     private static final String TOTAL_COST_OF_ORDER_MESSAGE = "Total order cost: %1$s\n";
-    private static final String AVAILABLE_PRODUCT_TO_BUY_MESSAGE = "%1$s. %2$s\n   Purchase form: %3$s\n\n";
-    private static final String STORE_NUMBER_MESSAGE = "Store No. %1$s\n";
-    private static final String PRODUCT_NUMBER_MESSAGE = "Product No. %1$s\n";
     private static final String NUM_OF_STORES_IN_ORDER_MESSAGE = "Number of stores: %1$s\n";
     private static final String NUM_OF_PRODUCT_TYPES_IN_ORDER_MESSAGE = "Number of product types: %1$s\n";
     private static final String STORE_ID_MESSAGE = "Store id: %1$s\n";
     private static final String STORE_NAME_MESSAGE = "Store name: %1$s\n";
-    private static final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "To proceed with the order press 't', to cancel press 'f':";
-    private static final String ORDER_SUMMERY_MESSAGE = "Your order:\n%1$s";
-    private static final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
     private static final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
     private static final String SEPARATOR_MESSAGE = "=========================\n";
+    private static final String STORE_DETAILS_FOR_ORDER_SUMMARY_MESSAGE = "Store id: %1$s\nStore name: %2$s\n";
     private static final String PRODUCT_IN_ORDER_SUMMERY_MESSAGE = "ID: %1$s\nName: %2$s\nPurchase form: %3$s\n" +
-            "Price: %4$s\nAmount: %5$s\n" +
-            "Total price: %6$s\n";
+                                                                    "Price: %4$s\nAmount: %5$s\n" +
+                                                                    "Total price: %6$s\n";
 
 
     private MessagesBuilder()
     {
     }
 
-    public static String createOrderDetailsForDisplayingAllOrdersHistory(OrderDataContainer orderData) {
+    public static String createOrderDetailsForDisplayingAllOrdersHistory(OrderDataContainer orderData)
+    {
         String orderDetails =
                 String.format(ID_MESSAGE, orderData.getId()) +
                         String.format(ORDER_DATE_MESSAGE, orderData.getDate());
@@ -61,7 +59,8 @@ public final class MessagesBuilder {
         return orderDetails;
     }
 
-    public static String createAllStoreDetails(StoreDataContainer storeData) {
+    public static String createAllStoreDetails(StoreDataContainer storeData)
+    {
         String storeDetails = "";
         storeDetails +=
                 String.format(ID_MESSAGE, storeData.getId()) +
@@ -72,7 +71,7 @@ public final class MessagesBuilder {
         return storeDetails;
     }
 
-    public static String createAllStoreProductsDetails(StoreDataContainer storeData) //change
+    public static String createAllStoreProductsDetails(StoreDataContainer storeData)
     {
         String allStoreProductsMsg = "";
         if (storeData.getProducts().size() > 0) {
@@ -86,7 +85,7 @@ public final class MessagesBuilder {
         return allStoreProductsMsg;
     }
 
-    public static String createProductDetailsForDisplayingAllStores(StoreDataContainer storeData, ProductDataContainer productData) //change
+    public static String createProductDetailsForDisplayingAllStores(StoreDataContainer storeData, ProductDataContainer productData)
     {
         String productStatisticsDetails = createProductDetails(productData);
         productStatisticsDetails += String.format(PRICE_MESSAGE, productData.getPricePerStore().get(storeData.getId()));
@@ -102,16 +101,16 @@ public final class MessagesBuilder {
         return productStatisticsDetails;
     }
 
-    public static String createProductDetails(ProductDataContainer productData) //change
+    public static String createProductDetails(ProductDataContainer productData)
     {
         String productDetails =
                 String.format(ID_MESSAGE, productData.getId()) +
-                        String.format(NAME_MESSAGE, productData.getName()) +
-                        String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, productData.getPurchaseForm().toString().toLowerCase());
+                String.format(NAME_MESSAGE, productData.getName()) +
+                String.format(PURCHASE_FORM_OF_PRODUCT_MESSAGE, productData.getPurchaseForm().toString().toLowerCase());
         return productDetails;
     }
 
-    public static String createProductDetailsForDisplayingAllProducts(ProductDataContainer productData)//change
+    public static String createProductDetailsForDisplayingAllProducts(ProductDataContainer productData)
     {
         String productStatisticsDetails = createProductDetails(productData);
         int numOfStoresSellProduct = productData.getNumberOfStoresSellProduct();
@@ -130,7 +129,7 @@ public final class MessagesBuilder {
         return productStatisticsDetails;
     }
 
-    public static String createAllStoreOrdersDetails(StoreDataContainer storeData) // change
+    public static String createAllStoreOrdersDetails(StoreDataContainer storeData)
     {
         String allStoreOrdersMsg = "";
         if (storeData.getOrders().size() > 0) {
@@ -160,7 +159,7 @@ public final class MessagesBuilder {
         String storeDetails = "";
         if (storeData[0] != null)
         {
-            storeDetails += String.format("Store id: %1$s\nStore name: %2$s\n", storeData[0].getId(), storeData[0].getName());
+            storeDetails += String.format(STORE_DETAILS_FOR_ORDER_SUMMARY_MESSAGE, storeData[0].getId(), storeData[0].getName());
         }
         return storeDetails;
     }

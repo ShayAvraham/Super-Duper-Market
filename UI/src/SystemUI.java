@@ -1,5 +1,4 @@
 import exceptions.*;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
@@ -34,37 +33,58 @@ public class SystemUI
         Dynamic
     }
 
-    private final String WELCOME_MESSAGE = "\nHello, welcome to super duper market!";
-    private final String OPTION_NOT_VALID_MESSAGE = "\nSorry, this option is not valid! You need to load file before.";
-    private final String REENTER_INPUT_MESSAGE = "Please reenter the desired %1$s: ";
-    private final String INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE = "\nSorry, the %1$s you entered is not in the correct format. ";
-    private final String INPUT_NOT_IN_CORRECT_RANGE_MESSAGE = "\nSorry, the %1$s you entered is out of range. ";
-    private final String TRY_AGAIN_MESSAGE = "Please try again.\n";
+    // option 1 in menu messages
+    private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
     private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load: ";
     private final String LOAD_FILE_FAUILE_MESSAGE = "Faild to load the file, Cause of failure:";
-    private final String QUIT_MESSAGE = "Bye bye, see you next time!";
+    // option 2 in menu messages
     private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
-    private final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
-    private final String SEPARATOR_MESSAGE = "=========================\n";
     private final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
     private final String NO_STORES_MESSAGE = "There are no stores in the system.\n";
+    // option 3 in menu messages
     private final String NO_PRODUCTS_IN_SYSTEM_MESSAGE = "There are no products in the system.\n";
-    private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
-    private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
-    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
-    private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
-    private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
-    private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Thers is no orders in the system.\n";
-    private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
-    private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "Please select which type of order you want.\n";
-    private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
+    private final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
+    // option 4 in menu messages
     private final String QUIT_CHARACTER = "q";
     private final String FINISH_CHARACTER = "f";
     private final String APPROVE_CHARACTER = "t";
     private final String GET_DATE_FROM_USER_MESSAGE = "Please enter date:";
-    private final String ORDER_SUMMERY_MESSAGE = "Your order:\n%1$s";
-    private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
+    private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "Please select which type of order you want.\n";
     private final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "To proceed with the order press 't', to cancel press 'f':";
+    private final String GET_STORE_FROM_USER_MESSAGE = "\nPlease select a store from the list by enter the store id.";
+    private final String GET_PRODUCT_AMOUNT_FROM_USER_MESSAGE = "Please enter the amount of this product: ";
+    private final String GET_CORDINATE_FROM_USER_MESSAGE = "Please enter %1$s cordinate: ";
+    private final String DESIRED_MESSAGE = "The desired %1$s: ";
+    private final String SELECT_PRODUCT_FROM_LIST_MESSAGE = "Please select product from the list by enter the product id, or press 'q' to finish.";
+    private final String PLACED_ORDER_MESSAGE = "Order was successfully  %1$s.";
+    private final String STORE_DONT_SELL_PRODUCT_MESSAGE = "Sorry, the store you have choosen does not sell this product.";
+    private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
+    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
+    private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
+    private final String ORDER_SUMMERY_MESSAGE = "Your order:\n%1$s";
+    private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
+    // option 5 in menu messages
+    private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
+    private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Thers is no orders in the system.\n";
+    private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
+    private final String GET_PURCHASE_PRICE_FROM_USER_MESSAGE = "\nPlease enter the purchase price: ";
+    private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "\nproduct %1$s update price successfully in %2$s";
+    private final String GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE = "\nPlease select the product you want to %1$s by enter the product id: ";
+    // option 6 in menu messages
+    private final String PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE = "\nproduct %1$s removed successfully from %2$s";
+    private final String UNABLE_TO_REMOVE_PRODUCT_MESSAGE = "Unable to remove this product because its sold only in one store.";
+    private final String PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = "\nproduct %1$s add successfully to %2$s";
+    // generic messages
+    private final String SEPARATOR_MESSAGE = "=========================\n";
+    private final String WELCOME_MESSAGE = "\nHello, welcome to super duper market!";
+    private final String OPTION_NOT_VALID_MESSAGE = "\nSorry, this option is not valid! You need to load file before.";
+    private final String INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE = "\nSorry, the %1$s you entered is not in the correct format. ";
+    private final String INPUT_NOT_IN_CORRECT_RANGE_MESSAGE = "\nSorry, the %1$s you entered is out of range. ";
+    private final String QUIT_MESSAGE = "Bye bye, see you next time!";
+    private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
+    private final String REENTER_INPUT_MESSAGE = "Please reenter the desired %1$s: ";
+    private final String TRY_AGAIN_MESSAGE = "Please try again.\n";
+
 
     private SystemManager manager = new SystemManager();
 
@@ -133,7 +153,6 @@ public class SystemUI
         }
     }
 
-
     private void executeUserSelectedAction(StartMenuOptions userStartMenuChoise) throws Exception
     {
         if (userStartMenuChoise == StartMenuOptions.LoadFile)
@@ -153,7 +172,7 @@ public class SystemUI
                         showAllProducts();
                         break;
                     case MakePurchase:
-                        makeOrder();
+                        placeOrder();
                         break;
                     case ViewOrdersHistory:
                         showAllOrdersHistory();
@@ -203,7 +222,7 @@ public class SystemUI
         showStoreProducts(store);
         ProductDataContainer product = getFromUserProductToUpdate(store,"remove",UpdateProductOptions.RemoveProduct);
         manager.removeProductFromStore(store,product);
-        System.out.println(String.format("\nproduct %1$s remove successfully from %2$s",product.getId(),store.getName()));
+        System.out.println(String.format(PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE,product.getId(),store.getName()));
     }
 
     private void showStoreProducts(StoreDataContainer store)
@@ -221,7 +240,7 @@ public class SystemUI
         {
             try
             {
-                System.out.print(String.format("\nPlease select the product you want to %1$s by enter the product id: ",optionDescription));
+                System.out.print(String.format(GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE,optionDescription));
                 Scanner scanner = new Scanner(System.in);
                 int userProductChoice = scanner.nextInt();
                 validateUserProductChoice(store, userProductChoice,userOptionChoice);
@@ -229,11 +248,11 @@ public class SystemUI
             }
             catch (StoreDoesNotSellProductException | InstanceNotExistException | ValidationException | DuplicateValuesException ex)
             {
-                System.out.println("\n" + ex.getMessage() + " Please try again");
+                System.out.println("\n" + ex.getMessage() + TRY_AGAIN_MESSAGE);
             }
             catch(InputMismatchException ex)
             {
-                System.out.println("\n" + "your choice is not in the right format, Please try again");
+                System.out.println("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE);
             }
         }
     }
@@ -260,7 +279,7 @@ public class SystemUI
             }
             if(userOptionChoice.equals(UpdateProductOptions.RemoveProduct) && !isOthersStoresSellThisProduct(store, product))
             {
-                throw new ValidationException("Unable to remove this product because its sold only in one store.");
+                throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_MESSAGE);
             }
         }
 
@@ -292,7 +311,7 @@ public class SystemUI
         int productPrice = getFromUserProductPrice();
 
         manager.addProductToStore(store,product,productPrice);
-        System.out.println(String.format("\nproduct %1$s add successfully to %2$s",product.getId(),store.getName()));
+        System.out.println(String.format(PRODUCT_ADDED_SUCCESSFULLY_MESSAGE,product.getId(),store.getName()));
     }
 
     private int getFromUserProductPrice()
@@ -301,14 +320,14 @@ public class SystemUI
         {
             try
             {
-                System.out.print("\nPlease enter the purchase price: ");
+                System.out.print(GET_PURCHASE_PRICE_FROM_USER_MESSAGE);
                 Scanner scanner = new Scanner(System.in);
                 int productPrice = scanner.nextInt();
                 return productPrice;
             }
             catch(InputMismatchException ex)
             {
-                System.out.println("\n" + "your choice is not in the right format, Please try again");
+                System.out.println("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE);
             }
         }
     }
@@ -320,7 +339,7 @@ public class SystemUI
         ProductDataContainer product = getFromUserProductToUpdate(store,"update price", UpdateProductOptions.UpdateProductPrice);
         int productPrice = getFromUserProductPrice();
         manager.updateProductPriceInStore(store,product,productPrice);
-        System.out.println(String.format("\nproduct %1$s update price successfully in %2$s",product.getId(),store.getName()));
+        System.out.println(String.format(PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE,product.getId(),store.getName()));
     }
 
     private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException
@@ -383,18 +402,18 @@ public class SystemUI
         System.out.print(allProductsMsg);
     }
 
-    private void makeOrder()
+    private void placeOrder()
     {
         OrderTypeOptions orderType = getOrderTypeFromUser();
         OrderDataContainer newOrderData = createNewOrder(orderType);
         if (newOrderData != null)
         {
             manager.addNewOrder(newOrderData);
-            System.out.println("Order was successfully placed.");
+            System.out.println(String.format(PLACED_ORDER_MESSAGE, "placed"));
         }
         else
         {
-            System.out.println("Order canceled successfully.");
+            System.out.println(String.format(PLACED_ORDER_MESSAGE, "canceled"));
         }
     }
 
@@ -488,9 +507,9 @@ public class SystemUI
         {
             try
             {
-                System.out.println("Please select product from the list by enter the product number, or press 'q' to finish.");
+                System.out.println(SELECT_PRODUCT_FROM_LIST_MESSAGE);
                 showAvailableProductsToBuy();
-                System.out.print("The desired product id: ");
+                System.out.print(String.format(DESIRED_MESSAGE, "product id"));
                 Scanner scanner = new Scanner(System.in);
                 String userInput = scanner.nextLine();
                 if (isUserWantToQuitFromOrder(userInput))
@@ -535,13 +554,13 @@ public class SystemUI
             {
                 if (!isStoreSellProduct(productId, storeId[0]))
                 {
-                    throw new NoSuchElementException("The store you choosen does not sell this product.");
+                    throw new NoSuchElementException(STORE_DONT_SELL_PRODUCT_MESSAGE);
                 }
             }
         }
         catch (NumberFormatException e)
         {
-            throw new NumberFormatException("Sorry, your choise is not in the correct format.");
+            throw new NumberFormatException(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "product amount"));
         }
         return productId;
     }
@@ -554,9 +573,9 @@ public class SystemUI
             try
             {
                 Scanner scanner = new Scanner(System.in);
-                System.out.println("Please enter X cordinate:");
+                System.out.println(String.format(GET_CORDINATE_FROM_USER_MESSAGE, "x"));
                 int xCordinate = scanner.nextInt();
-                System.out.println("Please enter Y cordinate:");
+                System.out.println(String.format(GET_CORDINATE_FROM_USER_MESSAGE, "y"));
                 int yCordinate = scanner.nextInt();
                 userLocation = new Point(xCordinate, yCordinate);
                 validateUserLocation(userLocation, storeId[0]);
@@ -624,7 +643,7 @@ public class SystemUI
         {
             try
             {
-                System.out.print("Please enter the amount of this product: ");
+                System.out.print(GET_PRODUCT_AMOUNT_FROM_USER_MESSAGE);
                 Scanner scanner = new Scanner(System.in);
                 String userInput = scanner.nextLine();
                 productAmount = getValidProductAmountFromUser(userInput, productId);
@@ -663,7 +682,7 @@ public class SystemUI
             try
             {
                 showOrderTypeOption();
-                System.out.print("The desired order type: ");
+                System.out.print(String.format(DESIRED_MESSAGE, "order type"));
                 Scanner scanner = new Scanner(System.in);
                 userSelection = scanner.nextInt();
                 validateUserChoice(userSelection, OrderTypeOptions.class);
@@ -689,9 +708,9 @@ public class SystemUI
         {
             try
             {
-                System.out.print("\nPlease select a store from the list by enter the store id.");
+                System.out.print(GET_STORE_FROM_USER_MESSAGE);
                 showAvailableStoresToBuy();
-                System.out.print("The desired store id: ");
+                System.out.print(String.format(DESIRED_MESSAGE, "store id"));
                 Scanner scanner = new Scanner(System.in);
                 int userSelection = scanner.nextInt();
                 userStoreSelection = getValidStoreFromUser(userSelection);
@@ -762,14 +781,11 @@ public class SystemUI
             int productPrice = storeSellTheProduct.getProductDataContainerById(productId).getPricePerStore().get(storeSellTheProduct.getId());
             float totalPriceForProduct = productPrice * amountPerProduct.get(productId);
             float totalAmountFromProduct = amountPerProduct.get(productId);
-            if (orderType == OrderTypeOptions.Dynamic)
+            if (orderType == OrderTypeOptions.Static)
             {
-                orderSummaryMsg += MessagesBuilder.createProductDetailsInOrderSummary(productData, productPrice, totalAmountFromProduct, totalPriceForProduct, storeSellTheProduct);
+                storeSellTheProduct = null;
             }
-            else
-            {
-                orderSummaryMsg += MessagesBuilder.createProductDetailsInOrderSummary(productData, productPrice, totalAmountFromProduct, totalPriceForProduct);
-            }
+            orderSummaryMsg += MessagesBuilder.createProductDetailsInOrderSummary(productData, productPrice, totalAmountFromProduct, totalPriceForProduct, storeSellTheProduct);
         }
         orderSummaryMsg += String.format(DELIVERY_COST_OF_ORDER_MESSAGE, deliveryCost);
         orderSummaryMsg += SEPARATOR_MESSAGE;
