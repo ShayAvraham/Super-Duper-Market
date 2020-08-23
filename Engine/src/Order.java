@@ -110,19 +110,24 @@ public class Order
         return getCostOfAllProducts() + deliveryCost;
     }
 
-    public float getProductAmountInOrder(Product product)
+    public float getProductAmountInOrder(Product product)//change
     {
         float productAmountInOrder = 0;
 
         for (OrderProduct orderProduct: orderedProducts)
         {
-            if(orderProduct.equals(product))
+            if(orderProduct.getId() == product.getId())
             {
                 productAmountInOrder = orderProduct.getAmount();
                 break;
             }
         }
         return productAmountInOrder;
+    }
+
+    public void addOrderProduct(OrderProduct productToAdd)//change new
+    {
+        orderedProducts.add(productToAdd);
     }
 
     public int getAllOrderedProductsQuantity()
@@ -136,10 +141,14 @@ public class Order
             {
                 productQuantity = 1;
             }
-            allOrderedProductsQuantity += productQuantity;
+            allOrderedProductsQuantity += (int)productQuantity;
 
         }
         return allOrderedProductsQuantity;
+    }
+
+    public boolean isDynamic() {
+        return isDynamic;
     }
 
     @Override
