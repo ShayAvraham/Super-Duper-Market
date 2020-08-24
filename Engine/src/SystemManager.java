@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.text.CollationElementIterator;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.jar.JarException;
 
@@ -19,6 +20,7 @@ public class SystemManager
     private Collection<OrderDataContainer> allOrdersData;
     private boolean isFileWasLoadSuccessfully = false;
     private Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom;
+    private Map <Integer,Float> deliveryCostFromStores;
 
     public SystemManager()
     {
@@ -130,7 +132,7 @@ public class SystemManager
                 newOrder.getId(),
                 storeId,
                 newOrder.getOrderDate(),
-                newOrder.getDeliveryCost(),
+                deliveryCostFromStores.get(storeId),
                 orderProducts);
     }
 
@@ -316,10 +318,9 @@ public class SystemManager
                 order.getAllOrderedProductsQuantity(),
                 order.getCostOfAllProducts(),
                 order.getDeliveryCost(),
-                order.getTotalCostOfOrder());
+                order.getTotalCostOfOrder(),
+                order.isDynamic());
     }
-
-//bonus add/remove/set price product
 
     public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)
     {
@@ -436,6 +437,7 @@ public class SystemManager
     public float getDeliveryCost(Point userLocation, Collection<StoreDataContainer> storesParticapatesInOrder)
     {
         float deliveryCost = 0;
+        deliveryCostFromStores = new HashMap<>();
         for (StoreDataContainer storeData: storesParticapatesInOrder)
         {
             for (Store store: systemData.getStores().values())
@@ -443,9 +445,15 @@ public class SystemManager
                 if (storeData.getId() == store.getId())
                 {
                     deliveryCost += store.getDeliveryCostByLocation(userLocation);
+                    deliveryCostFromStores.put(store.getId(),store.getDeliveryCostByLocation(userLocation));
                 }
             }
         }
         return deliveryCost;
+    }
+
+    public float getDistanceBetweenStoreAndCustomer(Point userLocation, StoreDataContainer store)
+    {
+        return systemData.getStores().get(store.getId()).getDistanceToCustomer(userLocation);
     }
 }

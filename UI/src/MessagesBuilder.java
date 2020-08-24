@@ -1,3 +1,6 @@
+import java.awt.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Map;
 
@@ -13,7 +16,7 @@ public final class MessagesBuilder
     private static final String PURCHASE_FORM_OF_PRODUCT_MESSAGE = "The product is for sale by: %1$s \n";
     private static final String PRICE_MESSAGE = "Price: %1$s \n";
     private static final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_STORE_MESSAGE = "Total amount of this product sold in this store: %1$s \n";
-    private static final String PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE = "This product is not sold in any store.\n";
+    private static final String PRODUCT_NOT_SOLD_IN_ANY_STORE_MESSAGE = "This product is not sold yet.\n";
     private static final String NUMBER_OF_STORES_SELL_PRODUCT_MESSAGE = "Number of stores who sell this product: %1$s\n";
     private static final String AVERAGE_PRICE_OF_PRODUCT_MESSAGE = "Average price: %1$s \n";
     private static final String TOTAL_AMOUNT_OF_PRODUCT_SOLD_IN_SYSTEM_MESSAGE = "Number of times the product sold in the system: %1$s \n";
@@ -28,11 +31,21 @@ public final class MessagesBuilder
     private static final String STORE_NAME_MESSAGE = "Store name: %1$s\n";
     private static final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
     private static final String SEPARATOR_MESSAGE = "=========================\n";
+    private static final String ORDER_PPK_MESSAGE = "PPK: %1$s\n";
+    private static final String DISTANCE_BETWEEN_CUSTOMER_AND_STORE_MESSAGE = "Distance to store: %1$s\n";
+    private static final String TOTAL_ORDER_COST_MESSAGE = "Total to pay: %1$s\n";
     private static final String STORE_DETAILS_FOR_ORDER_SUMMARY_MESSAGE = "Store id: %1$s\nStore name: %2$s\n";
     private static final String PRODUCT_IN_ORDER_SUMMERY_MESSAGE = "ID: %1$s\nName: %2$s\nPurchase form: %3$s\n" +
                                                                     "Price: %4$s\nAmount: %5$s\n" +
                                                                     "Total price: %6$s\n";
 
+    private static final DateFormat DATE_FORMAT;
+
+    static
+    {
+        DATE_FORMAT = new SimpleDateFormat("dd/MM-HH:mm");
+        DATE_FORMAT.setLenient(false);
+    }
 
     private MessagesBuilder()
     {
@@ -42,9 +55,9 @@ public final class MessagesBuilder
     {
         String orderDetails =
                 String.format(ID_MESSAGE, orderData.getId()) +
-                        String.format(ORDER_DATE_MESSAGE, orderData.getDate());
+                        String.format(ORDER_DATE_MESSAGE, DATE_FORMAT.format(orderData.getDate()));
         if (orderData.isDynamic()) {
-            orderDetails += String.format(NUM_OF_STORES_IN_ORDER_MESSAGE, orderData.getNumOfProducts());
+            orderDetails += String.format(NUM_OF_STORES_IN_ORDER_MESSAGE, orderData.getNumberOfStoresOrderedFrom());
         } else {
             orderDetails += String.format(STORE_ID_MESSAGE, orderData.getStoreId());
             orderDetails += String.format(STORE_NAME_MESSAGE, orderData.getStoreName());
@@ -143,9 +156,10 @@ public final class MessagesBuilder
         return allStoreOrdersMsg;
     }
 
-    public static String createOrderDetailsForDisplayingAllStores(OrderDataContainer orderData) {
+    public static String createOrderDetailsForDisplayingAllStores(OrderDataContainer orderData)
+    {
         String orderDetails =
-                String.format(ORDER_DATE_MESSAGE, orderData.getDate()) +
+                String.format(ORDER_DATE_MESSAGE, DATE_FORMAT.format(orderData.getDate())) +
                         String.format(TOTAL_AMOUNT_OF_PRODUCT_IN_ORDER_MESSAGE, orderData.getNumOfProducts()) +
                         String.format(TOTAL_COST_OF_ALL_PRODUCTS_IN_ORDER_MESSAGE, orderData.getCostOfAllProducts()) +
                         String.format(DELIVERY_COST_OF_ORDER_MESSAGE, orderData.getDeliveryCost()) +
@@ -174,5 +188,18 @@ public final class MessagesBuilder
         productInOrderMsg += createStoreDetailsForOrderSummary(storeData[0]);
         productInOrderMsg += SEPARATOR_MESSAGE;
         return productInOrderMsg;
+    }
+
+    public static String createDeliveryAndCostDetailsInOrderSummary(float deliveryCost, float distanceFromStore, float totalOrderCost, StoreDataContainer... storeOrderFrom)
+    {
+        String orderDetailsMsg = "";
+        if (storeOrderFrom[0] != null)
+        {
+            orderDetailsMsg += String.format(ORDER_PPK_MESSAGE, storeOrderFrom[0].getPPK());
+            orderDetailsMsg += String.format(DISTANCE_BETWEEN_CUSTOMER_AND_STORE_MESSAGE, distanceFromStore);
+        }
+        orderDetailsMsg += String.format(DELIVERY_COST_OF_ORDER_MESSAGE, deliveryCost);
+        orderDetailsMsg += String.format(TOTAL_ORDER_COST_MESSAGE, totalOrderCost);
+        return orderDetailsMsg;
     }
 }

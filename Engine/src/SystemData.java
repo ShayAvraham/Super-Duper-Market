@@ -6,8 +6,9 @@ import java.util.*;
 
 public class SystemData
 {
-    private final String NOT_ALL_PRODUCTS_IN_STORE = "Error: There is a product that is not sold in any store";
-    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with this id: %1$s in the system";
+    private final String NOT_ALL_PRODUCTS_IN_STORE = "The products with this i.d are not sold in any store: %1$s.";
+    private final String PRODUCT_NOT_EXIST_MESSAGE = "Unable to sold the product with this id: %1$s," +
+            " this product not defined in the system.";
 
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
@@ -31,7 +32,15 @@ public class SystemData
     {
         if(productsOnSale.size()!=products.size())
         {
-            throw new RuntimeException(NOT_ALL_PRODUCTS_IN_STORE);
+            Collection<Integer> notSoldProducts = new ArrayList<>();
+            for (Product product : products.values())
+            {
+                if (!productsOnSale.contains(product))
+                {
+                    notSoldProducts.add(product.getId());
+                }
+            }
+            throw new RuntimeException(String.format(NOT_ALL_PRODUCTS_IN_STORE,notSoldProducts.toString()));
         }
     }
 
@@ -41,10 +50,10 @@ public class SystemData
         SDMItems generatedItems = marketDescription.getSDMItems();
         for(SDMItem item: generatedItems.getSDMItem())
         {
-           if(products.putIfAbsent(item.getId(),new Product(item)) != null)
-           {
-               throw new DuplicateValuesException("product", item.getId());
-           }
+            if(products.putIfAbsent(item.getId(),new Product(item)) != null)
+            {
+                throw new DuplicateValuesException("product", item.getId());
+            }
         }
     }
 
@@ -53,15 +62,15 @@ public class SystemData
         SDMStores generatedIStores = marketDescription.getSDMStores();
         for(SDMStore store: generatedIStores.getSDMStore())
         {
-            Collection<StoreProduct> productsInStore = CreateProductsInStore(store.getSDMPrices());
-           if(stores.putIfAbsent(store.getId(),new Store(store,productsInStore)) != null)
-           {
-               throw new DuplicateValuesException("store", store.getId());
-           }
+            Collection<StoreProduct> productsInStore = CreateProductsInStore(store.getSDMPrices(),store.getId());
+            if(stores.putIfAbsent(store.getId(),new Store(store,productsInStore)) != null)
+            {
+                throw new DuplicateValuesException("store", store.getId());
+            }
         }
     }
 
-    private Collection<StoreProduct> CreateProductsInStore(SDMPrices generatedPrices) throws InstanceNotFoundException
+    private Collection<StoreProduct> CreateProductsInStore(SDMPrices generatedPrices,int storeId) throws InstanceNotFoundException
     {
         Collection<StoreProduct> productsInStore = new HashSet<>();
         for (SDMSell itemInStore : generatedPrices.getSDMSell())
@@ -74,7 +83,8 @@ public class SystemData
             productsOnSale.add(product);
             if(!productsInStore.add(new StoreProduct(product, itemInStore.getPrice())))
             {
-                throw new DuplicateValuesException("product in the store", product.getId());
+                String messageToException = String.format("product in store %1$s",storeId);
+                throw new DuplicateValuesException(messageToException, product.getId());
             }
 
         }
@@ -83,7 +93,8 @@ public class SystemData
 
     public void addNewOrder(Order newOrder, Map <Integer,Order> newSubOrders)
     {
-        orders.add(newOrder);
+
+        boolean check = orders.add(newOrder);
         for(Integer storeId : newSubOrders.keySet())
         {
             stores.get(storeId).addNewOrder(newSubOrders.get(storeId));
