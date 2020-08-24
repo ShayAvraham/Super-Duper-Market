@@ -1,9 +1,10 @@
 import jaxb.generated.SuperDuperMarketDescriptor;
-
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -26,7 +27,8 @@ public class XmlSystemDataBuilder
     private InputStream createInputStreamFromPath() throws FileNotFoundException
     {
         validateXmlFileFormat();
-        InputStream inputStream = XmlSystemDataBuilder.class.getResourceAsStream(xmlFilePath);
+        //InputStream inputStream = XmlSystemDataBuilder.class.getResourceAsStream(xmlFilePath);
+        InputStream inputStream = new FileInputStream(new File(xmlFilePath));
         if (inputStream == null)
         {
             throw new FileNotFoundException(FILE_NOT_EXIST_ERROR_MSG + xmlFilePath);
@@ -34,12 +36,11 @@ public class XmlSystemDataBuilder
         return inputStream;
     }
 
-    private void validateXmlFileFormat()//new change
+    private void validateXmlFileFormat()
     {
         if(!xmlFilePath.endsWith(".xml"))
         {
             throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
         }
     }
-
 }
