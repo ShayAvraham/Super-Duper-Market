@@ -11,7 +11,7 @@ public class Store
 {
     private final int MIN_BOUND = 1;
     private final int MAX_BOUND = 50;
-    private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "Error: The store position is out of the bounds of [%1$s,%2$s]";
+    private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "Error: The store with i.d %1$s position is out of the bounds of [%2$s,%3$s]";
 
 
     private int id;
@@ -37,7 +37,7 @@ public class Store
         Point position = new Point(storeLocation.getX(),storeLocation.getY());
         if((position.getX() > MAX_BOUND)||(position.getX() < MIN_BOUND)||(position.getY() > MAX_BOUND)||(position.getY() < MIN_BOUND))
         {
-            throw new IndexOutOfBoundsException(String.format(POSITION_VALUES_OUT_OF_BOUNDS_MSG,MIN_BOUND,MAX_BOUND));
+            throw new IndexOutOfBoundsException(String.format(POSITION_VALUES_OUT_OF_BOUNDS_MSG,id,MIN_BOUND,MAX_BOUND));
         }
         return position;
     }

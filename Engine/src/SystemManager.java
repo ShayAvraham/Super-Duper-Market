@@ -19,6 +19,7 @@ public class SystemManager
     private Collection<OrderDataContainer> allOrdersData;
     private boolean isFileWasLoadSuccessfully = false;
     private Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom;
+    private Map <Integer,Float> deliveryCostFromStores;
 
     public SystemManager()
     {
@@ -66,6 +67,7 @@ public class SystemManager
 
         systemData.addNewOrder(newOrder,newSubOrders);
         storesToBuyFrom = null;
+        deliveryCostFromStores = null;
         updateDataContainers();
     }
 
@@ -130,7 +132,7 @@ public class SystemManager
                 newOrder.getId(),
                 storeId,
                 newOrder.getOrderDate(),
-                newOrder.getDeliveryCost(),
+                deliveryCostFromStores.get(storeId),
                 orderProducts);
     }
 
@@ -316,7 +318,8 @@ public class SystemManager
                 order.getAllOrderedProductsQuantity(),
                 order.getCostOfAllProducts(),
                 order.getDeliveryCost(),
-                order.getTotalCostOfOrder());
+                order.getTotalCostOfOrder(),
+                order.isDynamic());
     }
 
 //bonus add/remove/set price product
@@ -436,6 +439,7 @@ public class SystemManager
     public float getDeliveryCost(Point userLocation, Collection<StoreDataContainer> storesParticapatesInOrder)
     {
         float deliveryCost = 0;
+        deliveryCostFromStores = new HashMap<>();
         for (StoreDataContainer storeData: storesParticapatesInOrder)
         {
             for (Store store: systemData.getStores().values())
@@ -443,6 +447,7 @@ public class SystemManager
                 if (storeData.getId() == store.getId())
                 {
                     deliveryCost += store.getDeliveryCostByLocation(userLocation);
+                    deliveryCostFromStores.put(store.getId(),store.getDeliveryCostByLocation(userLocation));
                 }
             }
         }

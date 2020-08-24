@@ -5,6 +5,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -86,7 +87,7 @@ public class SystemUI
     private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
     private final String REENTER_INPUT_MESSAGE = "Please reenter the desired %1$s: ";
     private final String TRY_AGAIN_MESSAGE = "Please try again.\n";
-    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with this id: %1$s in the system";
+    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with this id: %1$s in the system.";
 
 
     private SystemManager manager = new SystemManager();
@@ -115,9 +116,9 @@ public class SystemUI
     private void displayMenu()
     {
         String menuStr = "\nPlease choose one of the following action:\n" +
-        "1. Load data from file.\n" +
+        "1. Load data from xml file.\n" +
         "2. Show all stores details.\n" +
-        "3. Show all products in the system.\n" +
+        "3. Show all products details.\n" +
         "4. Place an order in the system.\n" +
         "5. View orders history in the system.\n" +
         "6. Update prices/product of a store.\n"+
@@ -255,7 +256,7 @@ public class SystemUI
             }
             catch(InputMismatchException ex)
             {
-                System.out.println("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE);
+                System.out.println(String.format("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE,"product id"));
             }
         }
     }
@@ -330,7 +331,7 @@ public class SystemUI
             }
             catch(InputMismatchException ex)
             {
-                System.out.println("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE);
+                System.out.println(String.format("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE, "price"));
             }
         }
     }
@@ -754,7 +755,11 @@ public class SystemUI
                 System.out.println(GET_DATE_FROM_USER_MESSAGE);
                 Scanner scanner = new Scanner(System.in);
                 String userDateString = scanner.nextLine();
-                userDate = new SimpleDateFormat("dd/mm-hh:mm").parse(userDateString);
+//                userDate = new SimpleDateFormat("dd/mm-hh:mm").parse(userDateString);
+
+                DateFormat inputFormat = new SimpleDateFormat("DD/MM-HH:MM");
+                userDate = inputFormat.parse(userDateString);
+
                 break;
             }
             catch (ParseException e)
