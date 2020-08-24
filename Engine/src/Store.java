@@ -155,7 +155,7 @@ public class Store
         storeOrders.add(newOrder);
     }
 
-//bonus
+
     public void removeProduct(int productId)
     {
         Product productToRemove = getProductById(productId);
@@ -172,7 +172,7 @@ public class Store
         getProductById(productId).setPrice(newPrice);
     }
 
-//bonus
+
 
 
     @Override

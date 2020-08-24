@@ -1,4 +1,6 @@
 import exceptions.*;
+
+import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
@@ -84,6 +86,7 @@ public class SystemUI
     private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
     private final String REENTER_INPUT_MESSAGE = "Please reenter the desired %1$s: ";
     private final String TRY_AGAIN_MESSAGE = "Please try again.\n";
+    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with this id: %1$s in the system";
 
 
     private SystemManager manager = new SystemManager();
@@ -140,7 +143,7 @@ public class SystemUI
             }
             catch (InputMismatchException ex)
             {
-                System.out.print(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choise") + String.format(REENTER_INPUT_MESSAGE, "action"));
+                System.out.print(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choice") + String.format(REENTER_INPUT_MESSAGE, "action"));
             }
         }
     }
@@ -149,21 +152,21 @@ public class SystemUI
     {
         if (userStartChoiceInput > enumClass.getFields().length || userStartChoiceInput < 1)
         {
-            throw new IndexOutOfBoundsException(String.format(INPUT_NOT_IN_CORRECT_RANGE_MESSAGE, "choise"));
+            throw new IndexOutOfBoundsException(String.format(INPUT_NOT_IN_CORRECT_RANGE_MESSAGE, "choice"));
         }
     }
 
-    private void executeUserSelectedAction(StartMenuOptions userStartMenuChoise) throws Exception
+    private void executeUserSelectedAction(StartMenuOptions userStartMenuChoice) throws Exception
     {
-        if (userStartMenuChoise == StartMenuOptions.LoadFile)
+        if (userStartMenuChoice == StartMenuOptions.LoadFile)
         {
             loadDataFromXmlFile();
         }
-        else if(userStartMenuChoise != StartMenuOptions.Quit)
+        else if(userStartMenuChoice != StartMenuOptions.Quit)
         {
             if (manager.isFileWasLoadSuccessfully())
             {
-                switch (userStartMenuChoise)
+                switch (userStartMenuChoice)
                 {
                     case ShowAllStores:
                         showAllStores();
@@ -183,7 +186,7 @@ public class SystemUI
             }
             else
             {
-                throw new Exception(OPTION_NOT_VALID_MESSAGE);
+                throw new IllegalArgumentException(OPTION_NOT_VALID_MESSAGE);
             }
         }
     }
@@ -246,7 +249,7 @@ public class SystemUI
                 validateUserProductChoice(store, userProductChoice,userOptionChoice);
                 return (manager.getProductDataById(userProductChoice));
             }
-            catch (StoreDoesNotSellProductException | InstanceNotExistException | ValidationException | DuplicateValuesException ex)
+            catch (StoreDoesNotSellProductException | InstanceNotFoundException | ValidationException | DuplicateValuesException ex)
             {
                 System.out.println("\n" + ex.getMessage() + TRY_AGAIN_MESSAGE);
             }
@@ -257,12 +260,12 @@ public class SystemUI
         }
     }
 
-    private void validateUserProductChoice(StoreDataContainer store, int productId,UpdateProductOptions userOptionChoice) throws ValidationException
+    private void validateUserProductChoice(StoreDataContainer store, int productId,UpdateProductOptions userOptionChoice) throws ValidationException, InstanceNotFoundException
     {
         ProductDataContainer product = manager.getProductDataById(productId);
         if(product == null)
         {
-            throw new InstanceNotExistException("product", productId);
+            throw new InstanceNotFoundException(String.format(PRODUCT_NOT_EXIST_MESSAGE,productId));
         }
         if(userOptionChoice.equals(UpdateProductOptions.AddProduct))
         {
@@ -342,7 +345,7 @@ public class SystemUI
         System.out.println(String.format(PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE,product.getId(),store.getName()));
     }
 
-    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException
+    private void loadDataFromXmlFile() throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         try
         {
@@ -476,7 +479,7 @@ public class SystemUI
                 }
                 else
                 {
-                    System.out.println((String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choise")));
+                    System.out.println((String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choice")));
                 }
             }
         }

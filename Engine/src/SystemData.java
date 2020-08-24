@@ -1,18 +1,20 @@
 import exceptions.DuplicateValuesException;
-import exceptions.InstanceNotExistException;
 import jaxb.generated.*;
 
+import javax.management.InstanceNotFoundException;
 import java.util.*;
 
 public class SystemData
 {
     private final String NOT_ALL_PRODUCTS_IN_STORE = "Error: There is a product that is not sold in any store";
+    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with this id: %1$s in the system";
+
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
     private Set<Order> orders;
     private Set<Product>productsOnSale;
 
-    public SystemData(SuperDuperMarketDescriptor marketDescription)
+    public SystemData(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
     {
         orders = new HashSet<>();
         products = new HashMap<>();
@@ -46,7 +48,7 @@ public class SystemData
         }
     }
 
-    private void CreateStoresFromSDMStores(SuperDuperMarketDescriptor marketDescription)
+    private void CreateStoresFromSDMStores(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
     {
         SDMStores generatedIStores = marketDescription.getSDMStores();
         for(SDMStore store: generatedIStores.getSDMStore())
@@ -59,7 +61,7 @@ public class SystemData
         }
     }
 
-    private Collection<StoreProduct> CreateProductsInStore(SDMPrices generatedPrices)
+    private Collection<StoreProduct> CreateProductsInStore(SDMPrices generatedPrices) throws InstanceNotFoundException
     {
         Collection<StoreProduct> productsInStore = new HashSet<>();
         for (SDMSell itemInStore : generatedPrices.getSDMSell())
@@ -67,7 +69,7 @@ public class SystemData
             Product product = products.get(itemInStore.getItemId());
             if(product == null)
             {
-                throw new InstanceNotExistException("product",itemInStore.getItemId());
+                throw new InstanceNotFoundException(String.format(PRODUCT_NOT_EXIST_MESSAGE,itemInStore.getItemId()));
             }
             productsOnSale.add(product);
             if(!productsInStore.add(new StoreProduct(product, itemInStore.getPrice())))
@@ -103,7 +105,7 @@ public class SystemData
     }
 
 
- //bonus
+
     public void removeProductFromStore(int storeId,int productId)
     {
         stores.get(storeId).removeProduct(productId);
@@ -120,5 +122,5 @@ public class SystemData
         stores.get(storeId).updateProductPrice(productId, newPrice);
     }
 
-    //bonus
+
 }

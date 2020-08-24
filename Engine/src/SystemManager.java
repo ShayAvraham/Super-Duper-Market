@@ -2,6 +2,7 @@ import exceptions.StoreDoesNotSellProductException;
 import exceptions.UserLocationEqualToStoreException;
 import exceptions.UserLocationNotValidException;
 
+import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
@@ -40,7 +41,7 @@ public class SystemManager
         return isFileWasLoadSuccessfully;
     }
 
-    public void loadDataFromXmlFile(String xmlFilePath) throws JAXBException, FileNotFoundException
+    public void loadDataFromXmlFile(String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
         systemData = newSystemData;
@@ -48,7 +49,7 @@ public class SystemManager
         isFileWasLoadSuccessfully = true;
     }
 
-    public void addNewOrder(OrderDataContainer newOrderDataContainer)//change
+    public void addNewOrder(OrderDataContainer newOrderDataContainer)
     {
         Order newOrder;
         Map <Integer,Order> newSubOrders = new HashMap<>();
@@ -86,7 +87,7 @@ public class SystemManager
                 createOrderProductsFromOrderData(newOrderDataContainer));
     }
 
-    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)//change
+    private Collection<OrderProduct> createOrderProductsFromOrderData(OrderDataContainer newOrderDataContainer)
     {
         Collection<OrderProduct> orderProducts  = new ArrayList<>();
         for(Integer productId : newOrderDataContainer.getAmountPerProduct().keySet())
@@ -338,7 +339,7 @@ public class SystemManager
         updateDataContainers();
     }
 
-    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)//change
+    public Map<ProductDataContainer,StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
     {
         storesToBuyFrom = new HashMap<>();
         for (ProductDataContainer productToPurchase : productsToPurchase)
@@ -349,7 +350,7 @@ public class SystemManager
         return storesToBuyFrom;
     }
 
-    private Store getStoreWithTheCheapestPrice(int productId)//change
+    private Store getStoreWithTheCheapestPrice(int productId)
     {
         Store cheapestStore = null;
         for(Store store : systemData.getStores().values())
@@ -447,75 +448,4 @@ public class SystemManager
         }
         return deliveryCost;
     }
-
-
-//bonus
-
-//    public int getTotalAmountOfProductsInOrder(Order order)
-//    {
-//        int totalAmountOfProducts = 0;
-//
-//        for (OrderProduct product: order.getOrderedProducts())
-//        {
-//            totalAmountOfProducts += product.getAmount();
-//        }
-//        return totalAmountOfProducts;
-//    }
-
-//    public float getTotalCostOfAllProductsInOrder(Order order)
-//    {
-//        float totalCostOfAllProducts = 0;
-//
-//        for (OrderProduct product: order.getProductsInOrder())
-//        {
-//            totalCostOfAllProducts += product.getAmount() * product.getStoreProduct().getPrice();
-//        }
-//        return totalCostOfAllProducts;
-//    }
-
-//    public float getTotalCostOfOrder(Order order)
-//    {
-//        return getTotalCostOfAllProductsInOrder(order) + order.getDeliveryCost();
-//    }
-
-
-//    public void checkIsUserLocationValid(Point userLocation, int storeId)
-//    {
-//        if (userLocation.getX() < 1 || userLocation.getX() > 50 ||
-//                userLocation.getY() < 1 || userLocation.getY() > 50)
-//        {
-//            throw new UserLocationNotValidException(userLocation);
-//        }
-//
-//        Point storeLocation = getStoreById(storeId).getPosition();
-//        if (userLocation.equals(storeLocation))
-//        {
-//            throw new UserLocationEqualToStoreException(userLocation, storeLocation);
-//        }
-//    }
-//
-//
-//    public Product getProductById(int productId)
-//    {
-//        Product product = null;
-//
-//        for (Product currentProduct: getAllProducts())
-//        {
-//            if (currentProduct.getId() == productId)
-//            {
-//                product = currentProduct;
-//                break;
-//            }
-//        }
-//        return product;
-//    }
-//
-//    public void checkIsStoreSellProduct(int productId, int storeId)
-//    {
-//        Store store = getStoreById(storeId);
-//        if (store.getProductById(productId) == null)
-//        {
-//            throw new StoreDoesNotSellProductException();
-//        }
-//    }
 }
