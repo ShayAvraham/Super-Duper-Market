@@ -12,7 +12,7 @@ public class Store
     private final int MIN_BOUND = 1;
     private final int MAX_BOUND = 50;
     private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "Error: The store with i.d %1$s position is out of the bounds of [%2$s,%3$s]";
-
+    private static DecimalFormat DECIMAL_FORMAT;
 
     private int id;
     private String name;
@@ -21,6 +21,10 @@ public class Store
     private float ppk;
     private Point position;
 
+    static
+    {
+        DECIMAL_FORMAT = new DecimalFormat("#.##");
+    }
 
     public Store(SDMStore store ,Collection<StoreProduct> productsInStore)
     {
@@ -104,24 +108,16 @@ public class Store
         return storeProduct;
     }
 
-    float getDeliveryCostByLocation(Point customerPosition)
+    float getDistanceToCustomer(Point customerPosition)
     {
-        float deliveryCostByLocation = (float) position.distance(customerPosition);
-        DecimalFormat df = new DecimalFormat("#.##");
-        deliveryCostByLocation *= ppk;
-        return Float.valueOf(df.format(deliveryCostByLocation));
+        float distanceToCustomer = Math.abs((float) position.distance(customerPosition));
+        return Float.valueOf(DECIMAL_FORMAT.format(distanceToCustomer));
     }
 
-    float getAllDeliveriesCost()
+    float getDeliveryCostByLocation(Point customerPosition)
     {
-        float allDeliveriesCost = 0;
-
-        for (Order order: storeOrders)
-        {
-            allDeliveriesCost += order.getDeliveryCost();
-        }
-
-        return allDeliveriesCost;
+        float deliveryCost = getDistanceToCustomer(customerPosition) * ppk;
+        return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
     }
 
     float getHowManyTimesProductSold(Product product)
@@ -155,7 +151,6 @@ public class Store
         storeOrders.add(newOrder);
     }
 
-
     public void removeProduct(int productId)
     {
         Product productToRemove = getProductById(productId);
@@ -171,9 +166,6 @@ public class Store
     {
         getProductById(productId).setPrice(newPrice);
     }
-
-
-
 
     @Override
     public String toString() {

@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.text.CollationElementIterator;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.jar.JarException;
 
@@ -322,8 +323,6 @@ public class SystemManager
                 order.isDynamic());
     }
 
-//bonus add/remove/set price product
-
     public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)
     {
         systemData.removeProductFromStore(store.getId(),productToRemove.getId());
@@ -452,5 +451,10 @@ public class SystemManager
             }
         }
         return deliveryCost;
+    }
+
+    public float getDistanceBetweenStoreAndCustomer(Point userLocation, StoreDataContainer store)
+    {
+        return systemData.getStores().get(store.getId()).getDistanceToCustomer(userLocation);
     }
 }

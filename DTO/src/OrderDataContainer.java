@@ -25,7 +25,7 @@ public class OrderDataContainer
         this.totalCost = totalCost;
     }
 
-    public OrderDataContainer(int id, Date date, int storeId, String storeName, int numOfProductTypes, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost,boolean isDynamic)
+    public OrderDataContainer(int id, Date date, int storeId, String storeName, int numOfProductTypes, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost, boolean isDynamic)
     {
         this.id = id;
         this.date = date;

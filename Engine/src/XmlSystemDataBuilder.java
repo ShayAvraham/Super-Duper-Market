@@ -21,7 +21,6 @@ public class XmlSystemDataBuilder
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
         return new SystemData((SuperDuperMarketDescriptor) u.unmarshal(inputStream));
-
     }
 
     private InputStream createInputStreamFromPath() throws FileNotFoundException

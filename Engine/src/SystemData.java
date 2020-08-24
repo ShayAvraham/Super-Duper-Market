@@ -3,7 +3,6 @@ import jaxb.generated.*;
 
 import javax.management.InstanceNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SystemData
 {
@@ -51,10 +50,10 @@ public class SystemData
         SDMItems generatedItems = marketDescription.getSDMItems();
         for(SDMItem item: generatedItems.getSDMItem())
         {
-           if(products.putIfAbsent(item.getId(),new Product(item)) != null)
-           {
-               throw new DuplicateValuesException("product", item.getId());
-           }
+            if(products.putIfAbsent(item.getId(),new Product(item)) != null)
+            {
+                throw new DuplicateValuesException("product", item.getId());
+            }
         }
     }
 
@@ -64,10 +63,10 @@ public class SystemData
         for(SDMStore store: generatedIStores.getSDMStore())
         {
             Collection<StoreProduct> productsInStore = CreateProductsInStore(store.getSDMPrices(),store.getId());
-           if(stores.putIfAbsent(store.getId(),new Store(store,productsInStore)) != null)
-           {
-               throw new DuplicateValuesException("store", store.getId());
-           }
+            if(stores.putIfAbsent(store.getId(),new Store(store,productsInStore)) != null)
+            {
+                throw new DuplicateValuesException("store", store.getId());
+            }
         }
     }
 
@@ -94,7 +93,8 @@ public class SystemData
 
     public void addNewOrder(Order newOrder, Map <Integer,Order> newSubOrders)
     {
-        orders.add(newOrder);
+
+        boolean check = orders.add(newOrder);
         for(Integer storeId : newSubOrders.keySet())
         {
             stores.get(storeId).addNewOrder(newSubOrders.get(storeId));
