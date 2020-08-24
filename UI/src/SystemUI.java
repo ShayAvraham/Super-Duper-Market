@@ -38,7 +38,7 @@ public class SystemUI
     // option 1 in menu messages
     private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
     private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load: ";
-    private final String LOAD_FILE_FAUILE_MESSAGE = "Faild to load the file, Cause of failure:";
+    private final String LOAD_FILE_FAUILE_MESSAGE = "Failed to load the file, Cause of failure:";
     // option 2 in menu messages
     private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
     private final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
@@ -55,11 +55,11 @@ public class SystemUI
     private final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "To proceed with the order press 't', to cancel press 'f':";
     private final String GET_STORE_FROM_USER_MESSAGE = "\nPlease select a store from the list by enter the store id.";
     private final String GET_PRODUCT_AMOUNT_FROM_USER_MESSAGE = "Please enter the amount of this product: ";
-    private final String GET_CORDINATE_FROM_USER_MESSAGE = "Please enter %1$s cordinate: ";
+    private final String GET_CORDINATE_FROM_USER_MESSAGE = "Please enter %1$s coordinate: ";
     private final String DESIRED_MESSAGE = "The desired %1$s: ";
     private final String SELECT_PRODUCT_FROM_LIST_MESSAGE = "Please select product from the list by enter the product id, or press 'q' to finish.";
     private final String PLACED_ORDER_MESSAGE = "Order was successfully  %1$s.";
-    private final String STORE_DONT_SELL_PRODUCT_MESSAGE = "Sorry, the store you have choosen does not sell this product.";
+    private final String STORE_DONT_SELL_PRODUCT_MESSAGE = "Sorry, the store you have chosen does not sell this product.";
     private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
     private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
     private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
@@ -67,7 +67,7 @@ public class SystemUI
     private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
     // option 5 in menu messages
     private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
-    private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Thers is no orders in the system.\n";
+    private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "Theirs is no orders in the system.\n";
     private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
     private final String GET_PURCHASE_PRICE_FROM_USER_MESSAGE = "\nPlease enter the purchase price: ";
     private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "\nproduct %1$s update price successfully in %2$s";
