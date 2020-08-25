@@ -35,21 +35,17 @@ public class SystemUI
         Dynamic
     }
 
-    // option 1 in menu messages
     private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully.";
     private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load: ";
     private final String LOAD_FILE_FAUILE_MESSAGE = "Failed to load the file. cause of failure:\n";
-    // option 2 in menu messages
     private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
     private final String NO_STORES_MESSAGE = "There are no stores in the system.\n";
-    // option 3 in menu messages
     private final String NO_PRODUCTS_IN_SYSTEM_MESSAGE = "There are no products in the system.\n";
     private final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
-    // option 4 in menu messages
     private final String QUIT_CHARACTER = "q";
     private final String FINISH_CHARACTER = "f";
     private final String APPROVE_CHARACTER = "t";
-    private final String GET_DATE_FROM_USER_MESSAGE = "\nPlease enter date in the format 'day/month-hour:minute': ";
+    private final String GET_DATE_FROM_USER_MESSAGE = "\nPlease enter date in the format 'dd/mm-hh:mm': ";
     private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "\nPlease select which type of order you want.\n";
     private final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "\nTo proceed with the order press 't', to cancel press 'f':";
     private final String GET_STORE_FROM_USER_MESSAGE = "\nPlease select a store from the list by enter the store id.";
@@ -63,18 +59,15 @@ public class SystemUI
     private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
     private final String ORDER_SUMMERY_MESSAGE = "\nYour order:\n%1$s";
     private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
-    // option 5 in menu messages
     private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
     private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "There is no orders in the system.\n";
     private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
     private final String GET_PURCHASE_PRICE_FROM_USER_MESSAGE = "\nPlease enter the purchase price: ";
     private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "\nProduct %1$s update price successfully in %2$s.";
     private final String GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE = "Please select the product you want to %1$s by enter the product id: ";
-    // option 6 in menu messages
     private final String PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE = "\nProduct %1$s removed successfully from %2$s.";
     private final String UNABLE_TO_REMOVE_PRODUCT_MESSAGE = "\nUnable to remove this product because its sold only in one store.";
     private final String PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = "\nProduct %1$s add successfully to %2$s.";
-    // generic messages
     private final String SEPARATOR_MESSAGE = "=========================\n";
     private final String WELCOME_MESSAGE = "\nHello, welcome to super duper market!";
     private final String OPTION_NOT_VALID_MESSAGE = "\nSorry, this option is not valid! you need to load file before.";
