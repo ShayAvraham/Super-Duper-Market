@@ -41,7 +41,6 @@ public class SystemUI
     private final String LOAD_FILE_FAUILE_MESSAGE = "Failed to load the file. cause of failure:\n";
     // option 2 in menu messages
     private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
-    private final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
     private final String NO_STORES_MESSAGE = "There are no stores in the system.\n";
     // option 3 in menu messages
     private final String NO_PRODUCTS_IN_SYSTEM_MESSAGE = "There are no products in the system.\n";
@@ -61,8 +60,6 @@ public class SystemUI
     private final String PLACED_ORDER_MESSAGE = "\nOrder was successfully %1$s.";
     private final String THANK_YOU_FOR_BUYING_MESSAGE = "\nThank you for buying in super duper market!";
     private final String STORE_DONT_SELL_PRODUCT_MESSAGE = "\nSorry, the store you have chosen does not sell this product. ";
-    private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
-    private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
     private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
     private final String ORDER_SUMMERY_MESSAGE = "\nYour order:\n%1$s";
     private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
@@ -72,7 +69,7 @@ public class SystemUI
     private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
     private final String GET_PURCHASE_PRICE_FROM_USER_MESSAGE = "\nPlease enter the purchase price: ";
     private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "\nProduct %1$s update price successfully in %2$s.";
-    private final String GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE = "\nPlease select the product you want to %1$s by enter the product id: ";
+    private final String GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE = "Please select the product you want to %1$s by enter the product id: ";
     // option 6 in menu messages
     private final String PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE = "\nProduct %1$s removed successfully from %2$s.";
     private final String UNABLE_TO_REMOVE_PRODUCT_MESSAGE = "\nUnable to remove this product because its sold only in one store.";
@@ -200,7 +197,7 @@ public class SystemUI
 
     private void updateStoreProducts()
     {
-        StoreDataContainer selectedStore = getStoreFromUser();
+        StoreDataContainer selectedStore = getStoreFromUser(MessagesBuilder.createAvailableStoreDetailsToUpdateProduct(manager.getAllStoresData()));
         showUpdateStoreProductsMenu(selectedStore.getName());
         int userMenuChoice = getUserMenuChoice(UpdateProductOptions.class);
         switch (UpdateProductOptions.values()[userMenuChoice])
@@ -229,27 +226,19 @@ public class SystemUI
 
     private void removeProduct(StoreDataContainer store)
     {
-        showStoreProducts(store);
-        ProductDataContainer product = getProductToUpdateFromUser(store,"remove",UpdateProductOptions.RemoveProduct);
+        String storeProductsToShow = MessagesBuilder.createStoreProductsDetailsToRemoveProduct(store);
+        ProductDataContainer product = getProductToUpdateFromUser(store,"remove",UpdateProductOptions.RemoveProduct,storeProductsToShow);
         manager.removeProductFromStore(store,product);
         System.out.println(String.format(PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE,product.getId(),store.getName()));
     }
 
-    private void showStoreProducts(StoreDataContainer store)
-    {
-        System.out.print(String.format("\n" + ALL_PRODUCTS_OF_STORE_MESSAGE, store.getName(), SEPARATOR_MESSAGE));
-        for(ProductDataContainer product: store.getProducts())
-        {
-            System.out.print(MessagesBuilder.createProductDetails(product));
-        }
-    }
-
-    private ProductDataContainer getProductToUpdateFromUser(StoreDataContainer store, String optionDescription, UpdateProductOptions userOptionChoice)
+    private ProductDataContainer getProductToUpdateFromUser(StoreDataContainer store, String optionDescription, UpdateProductOptions userOptionChoice,String productsToShow)
     {
         while (true)
         {
             try
             {
+                System.out.print(productsToShow);
                 System.out.print(String.format(GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE,optionDescription));
                 Scanner scanner = new Scanner(System.in);
                 int userProductChoice = scanner.nextInt();
@@ -312,12 +301,8 @@ public class SystemUI
 
     private void addProduct(StoreDataContainer store)
     {
-        System.out.print(String.format("\n",ALL_PRODUCTS_MESSAGE,SEPARATOR_MESSAGE));
-        for(ProductDataContainer product : manager.getAllProductsData())
-        {
-            System.out.print(MessagesBuilder.createProductDetails(product));
-        }
-        ProductDataContainer product = getProductToUpdateFromUser(store,"add", UpdateProductOptions.AddProduct);
+        String productsToShow = MessagesBuilder.createProductsDetailsToAddProductToStore(manager.getAllProductsData());
+        ProductDataContainer product = getProductToUpdateFromUser(store,"add", UpdateProductOptions.AddProduct,productsToShow);
         int productPrice = getProductPriceFromUser();
 
         manager.addProductToStore(store,product,productPrice);
@@ -333,20 +318,33 @@ public class SystemUI
                 System.out.print(GET_PURCHASE_PRICE_FROM_USER_MESSAGE);
                 Scanner scanner = new Scanner(System.in);
                 int productPrice = scanner.nextInt();
+                validateUserProductPrice(productPrice);
                 return productPrice;
             }
             catch(InputMismatchException ex)
             {
-                System.out.println(String.format("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE, "price"));
+                System.out.print(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE, "price"));
             }
+            catch (IllegalArgumentException ex)
+            {
+                System.out.print("\n" + ex.getMessage() + TRY_AGAIN_MESSAGE);
+            }
+        }
+    }
+
+    private void validateUserProductPrice(int productPrice)
+    {
+        if(productPrice <= 0)
+        {
+            throw new IllegalArgumentException("The price must be bigger than 0. ");
         }
     }
 
 
     private void updateProductPrice(StoreDataContainer store)
     {
-        showStoreProducts(store);
-        ProductDataContainer product = getProductToUpdateFromUser(store,"update price", UpdateProductOptions.UpdateProductPrice);
+        String storeProductsToShow = MessagesBuilder.createStoreProductsDetailsToUpdateProductPrice(store);
+        ProductDataContainer product = getProductToUpdateFromUser(store,"update price", UpdateProductOptions.UpdateProductPrice,storeProductsToShow);
         int productPrice = getProductPriceFromUser();
         manager.updateProductPriceInStore(store,product,productPrice);
         System.out.println(String.format(PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE,product.getId(),store.getName()));
@@ -432,7 +430,7 @@ public class SystemUI
         Integer storeId = null;
         if (orderType == OrderTypeOptions.Static)
         {
-            storeId = getStoreFromUser().getId();
+            storeId = getStoreFromUser(MessagesBuilder.createAvailableStoreDetailsToAddOrder(manager.getAllStoresData())).getId();
         }
         return getNewOrderFromUser(orderType, storeId);
     }
@@ -712,7 +710,7 @@ public class SystemUI
         return OrderTypeOptions.values()[userSelection];
     }
 
-    private StoreDataContainer getStoreFromUser()
+    private StoreDataContainer getStoreFromUser(String storesToShow)
     {
         StoreDataContainer userStoreSelection;
         while (true)
@@ -720,7 +718,7 @@ public class SystemUI
             try
             {
                 System.out.print(GET_STORE_FROM_USER_MESSAGE);
-                showAvailableStoresToBuy();
+                System.out.print(storesToShow);
                 System.out.print(String.format(DESIRED_MESSAGE, "store id"));
                 Scanner scanner = new Scanner(System.in);
                 int userSelection = scanner.nextInt();
@@ -820,18 +818,6 @@ public class SystemUI
             avialableProductsToBuyMsg += MessagesBuilder.createProductDetails(productData);
         }
         System.out.println(avialableProductsToBuyMsg);
-    }
-
-    private void showAvailableStoresToBuy()
-    {
-        String avialableStoresToBuyMsg = "\n";
-        avialableStoresToBuyMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
-        for (StoreDataContainer storeData: manager.getAllStoresData())
-        {
-            avialableStoresToBuyMsg += String.format(
-                    AVAILABLE_STORE_TO_BUY_MESSAGE, storeData.getId(), storeData.getName(), storeData.getPPK());
-        }
-        System.out.print(avialableStoresToBuyMsg);
     }
 
     private void showAllOrdersHistory()

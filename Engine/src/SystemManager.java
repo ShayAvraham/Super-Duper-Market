@@ -320,7 +320,8 @@ public class SystemManager
                 order.getCostOfAllProducts(),
                 order.getDeliveryCost(),
                 order.getTotalCostOfOrder(),
-                order.isDynamic());
+                order.isDynamic(),
+                order.getNumberOfStoresOrderedFrom());
     }
 
     public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)

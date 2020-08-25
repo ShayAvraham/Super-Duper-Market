@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public final class MessagesBuilder
     private static final String ORDER_PPK_MESSAGE = "PPK: %1$s\n";
     private static final String DISTANCE_BETWEEN_CUSTOMER_AND_STORE_MESSAGE = "Distance to store: %1$s\n";
     private static final String TOTAL_ORDER_COST_MESSAGE = "Total to pay: %1$s\n";
+    private static final String ALL_PRODUCTS_MESSAGE = "The products in the system:\n%1$s";
+    private static final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
+    private static final String AVAILABLE_STORE_TO_UPDATE_PRODUCT_MESSAGE = "ID: %1$s \nName: %2$s\n\n";
+    private static final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
     private static final String STORE_DETAILS_FOR_ORDER_SUMMARY_MESSAGE = "Store id: %1$s\nStore name: %2$s\n";
     private static final String PRODUCT_IN_ORDER_SUMMERY_MESSAGE = "ID: %1$s\nName: %2$s\nPurchase form: %3$s\n" +
                                                                     "Price: %4$s\nAmount: %5$s\n" +
@@ -202,4 +207,64 @@ public final class MessagesBuilder
         orderDetailsMsg += String.format(TOTAL_ORDER_COST_MESSAGE, totalOrderCost);
         return orderDetailsMsg;
     }
+
+    public static String createStoreProductsDetailsToUpdateProductPrice(StoreDataContainer store)
+    {
+        String storeProductsDetails = String.format("\n" + ALL_PRODUCTS_OF_STORE_MESSAGE, store.getName(), SEPARATOR_MESSAGE);
+        for(ProductDataContainer product: store.getProducts())
+        {
+            storeProductsDetails += createProductDetails(product);
+            storeProductsDetails += "Price: " + product.getPricePerStore().get(store.getId()) +"\n";
+            storeProductsDetails += "\n";
+        }
+        return storeProductsDetails;
+    }
+
+    public static String createStoreProductsDetailsToRemoveProduct(StoreDataContainer store)
+    {
+        String storeProductsDetails = String.format("\n" + ALL_PRODUCTS_OF_STORE_MESSAGE, store.getName(), SEPARATOR_MESSAGE);
+        for(ProductDataContainer product: store.getProducts())
+        {
+            storeProductsDetails += createProductDetails(product);
+            storeProductsDetails += "\n";
+        }
+        return storeProductsDetails;
+    }
+
+    public static String createProductsDetailsToAddProductToStore(Collection<ProductDataContainer> products)
+    {
+        String productsDetails = String.format("\n" + ALL_PRODUCTS_MESSAGE,SEPARATOR_MESSAGE);
+        for(ProductDataContainer product : products)
+        {
+            productsDetails += MessagesBuilder.createProductDetails(product);
+            productsDetails += "\n";
+        }
+        return productsDetails;
+    }
+
+    public static String createAvailableStoreDetailsToAddOrder(Collection<StoreDataContainer> stores)
+    {
+        String availableStoresToBuyMsg = "\n";
+        availableStoresToBuyMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
+        for (StoreDataContainer storeData: stores)
+        {
+            availableStoresToBuyMsg += String.format(
+                    AVAILABLE_STORE_TO_BUY_MESSAGE, storeData.getId(), storeData.getName(), storeData.getPPK());
+        }
+        return availableStoresToBuyMsg;
+    }
+
+    public static String createAvailableStoreDetailsToUpdateProduct(Collection<StoreDataContainer> stores)
+    {
+        String availableStoresMsg = "\n";
+        availableStoresMsg += String.format(ALL_AVAILABLE_STORES_TO_BUY_MESSAGE, SEPARATOR_MESSAGE);
+        for (StoreDataContainer storeData: stores)
+        {
+            availableStoresMsg += String.format(
+                    AVAILABLE_STORE_TO_UPDATE_PRODUCT_MESSAGE, storeData.getId(), storeData.getName());
+        }
+        return availableStoresMsg;
+    }
+
+
 }

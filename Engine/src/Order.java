@@ -93,6 +93,10 @@ public class Order
         this.orderedProducts = orderedProducts;
     }
 
+    public int getNumberOfStoresOrderedFrom() {
+        return numberOfStoresOrderedFrom;
+    }
+
     public float getCostOfAllProducts()
     {
         float costOfAllProducts = 0;

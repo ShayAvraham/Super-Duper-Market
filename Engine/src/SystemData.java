@@ -94,7 +94,7 @@ public class SystemData
     public void addNewOrder(Order newOrder, Map <Integer,Order> newSubOrders)
     {
 
-        boolean check = orders.add(newOrder);
+        orders.add(newOrder);
         for(Integer storeId : newSubOrders.keySet())
         {
             stores.get(storeId).addNewOrder(newSubOrders.get(storeId));
