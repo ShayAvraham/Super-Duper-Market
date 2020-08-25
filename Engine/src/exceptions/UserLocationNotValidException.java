@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class UserLocationNotValidException extends RuntimeException
 {
-    private final String EXCEPTION_MESSAGE = "Sorry, the location [%1$s,%2$s] is not within the allowable range.";
+    private final String EXCEPTION_MESSAGE = "\nSorry, the location [%1$s,%2$s] is not within the allowable range.";
     private Point userLocation;
 
 

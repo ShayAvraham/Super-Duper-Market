@@ -1,5 +1,4 @@
 import exceptions.*;
-
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
@@ -37,9 +36,9 @@ public class SystemUI
     }
 
     // option 1 in menu messages
-    private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully!";
+    private final String FILE_LOADED_SUCCESSFULLY_MESSAGE = "File loaded successfully.";
     private final String ENTER_FILE_PATH_MESSAGE = "Please enter the path of the desired xml file to load: ";
-    private final String LOAD_FILE_FAUILE_MESSAGE = "Failed to load the file, Cause of failure:";
+    private final String LOAD_FILE_FAUILE_MESSAGE = "Failed to load the file. cause of failure:\n";
     // option 2 in menu messages
     private final String ALL_STORES_MESSAGE = "The stores in the system:\n%1$s";
     private final String ALL_PRODUCTS_OF_STORE_MESSAGE = "The products in %1$s store:\n%2$s";
@@ -51,43 +50,43 @@ public class SystemUI
     private final String QUIT_CHARACTER = "q";
     private final String FINISH_CHARACTER = "f";
     private final String APPROVE_CHARACTER = "t";
-    private final String GET_DATE_FROM_USER_MESSAGE = "Please enter date in the format 'dd/mm-hh:mm': ";
-    private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "Please select which type of order you want.\n";
-    private final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "To proceed with the order press 't', to cancel press 'f':";
+    private final String GET_DATE_FROM_USER_MESSAGE = "\nPlease enter date in the format 'day/month-hour:minute': ";
+    private final String GET_TYPE_OF_ORDER_FROM_USER_MESSAGE = "\nPlease select which type of order you want.\n";
+    private final String GET_APPROVE_ORDER_FROM_USER_MESSAGE = "\nTo proceed with the order press 't', to cancel press 'f':";
     private final String GET_STORE_FROM_USER_MESSAGE = "\nPlease select a store from the list by enter the store id.";
-    private final String GET_PRODUCT_AMOUNT_FROM_USER_MESSAGE = "Please enter the amount of this product: ";
-    private final String GET_CORDINATE_FROM_USER_MESSAGE = "Please enter %1$s coordinate: ";
+    private final String GET_PRODUCT_AMOUNT_FROM_USER_MESSAGE = "\nPlease enter the amount of this product: ";
+    private final String GET_CORDINATE_FROM_USER_MESSAGE = "\nPlease enter %1$s coordinate: ";
     private final String DESIRED_MESSAGE = "The desired %1$s: ";
     private final String SELECT_PRODUCT_FROM_LIST_MESSAGE = "Please select product from the list by enter the product id, or press 'q' to finish.";
-    private final String PLACED_ORDER_MESSAGE = "Order was successfully %1$s.";
-    private final String STORE_DONT_SELL_PRODUCT_MESSAGE = "Sorry, the store you have chosen does not sell this product.";
+    private final String PLACED_ORDER_MESSAGE = "\nOrder was successfully %1$s.";
+    private final String THANK_YOU_FOR_BUYING_MESSAGE = "\nThank you for buying in super duper market!";
+    private final String STORE_DONT_SELL_PRODUCT_MESSAGE = "\nSorry, the store you have chosen does not sell this product. ";
     private final String ALL_AVAILABLE_STORES_TO_BUY_MESSAGE = "All available stores in the system:\n%1$s";
     private final String AVAILABLE_STORE_TO_BUY_MESSAGE = "ID: %1$s \nName: %2$s\nPPK: %3$s\n\n";
     private final String ALL_AVAILABLE_PRODUCTS_TO_BUY_MESSAGE = "All available products in the system:\n%1$s";
-    private final String ORDER_SUMMERY_MESSAGE = "Your order:\n%1$s";
+    private final String ORDER_SUMMERY_MESSAGE = "\nYour order:\n%1$s";
     private final String ORDER_TYPE_MESSAGE = "%1$s. %2$s\n";
     // option 5 in menu messages
     private final String ORDER_NUMBER_MESSAGE = "Order No. %1$s\n";
     private final String NO_ORDERS_IN_SYSTEM_MESSAGE = "There is no orders in the system.\n";
     private final String ALL_ORDERS_IN_SYSTEM_MESSAGE = "The orders in the system:\n%1$s";
     private final String GET_PURCHASE_PRICE_FROM_USER_MESSAGE = "\nPlease enter the purchase price: ";
-    private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "\nproduct %1$s update price successfully in %2$s.";
+    private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "\nProduct %1$s update price successfully in %2$s.";
     private final String GET_PRODUCT_TO_UPDATE_FROM_USER_MESSAGE = "\nPlease select the product you want to %1$s by enter the product id: ";
     // option 6 in menu messages
-    private final String PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE = "\nproduct %1$s removed successfully from %2$s";
-    private final String UNABLE_TO_REMOVE_PRODUCT_MESSAGE = "Unable to remove this product because its sold only in one store.";
-    private final String PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = "\nproduct %1$s add successfully to %2$s";
+    private final String PRODUCT_REMOVED_SUCCESSFULLY_MESSAGE = "\nProduct %1$s removed successfully from %2$s.";
+    private final String UNABLE_TO_REMOVE_PRODUCT_MESSAGE = "\nUnable to remove this product because its sold only in one store.";
+    private final String PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = "\nProduct %1$s add successfully to %2$s.";
     // generic messages
     private final String SEPARATOR_MESSAGE = "=========================\n";
     private final String WELCOME_MESSAGE = "\nHello, welcome to super duper market!";
-    private final String OPTION_NOT_VALID_MESSAGE = "\nSorry, this option is not valid! You need to load file before.";
-    private final String INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE = "\nSorry, the %1$s you entered is not in the correct format.";
+    private final String OPTION_NOT_VALID_MESSAGE = "\nSorry, this option is not valid! you need to load file before.";
+    private final String INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE = "\nSorry, the %1$s you entered is not in the correct format. ";
     private final String INPUT_NOT_IN_CORRECT_RANGE_MESSAGE = "\nSorry, the %1$s you entered is out of range. ";
-    private final String QUIT_MESSAGE = "Bye bye, see you next time!";
-    private final String DELIVERY_COST_OF_ORDER_MESSAGE = "Delivery cost: %1$s\n";
-    private final String REENTER_INPUT_MESSAGE = "please reenter the desired %1$s: ";
-    private final String TRY_AGAIN_MESSAGE = "please try again.\n";
-    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with this id: %1$s in the system.";
+    private final String QUIT_MESSAGE = "\nBye bye, see you next time!";
+    private final String REENTER_INPUT_MESSAGE = "\nPlease reenter the desired %1$s: ";
+    private final String TRY_AGAIN_MESSAGE = "\nPlease try again.\n";
+    private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with the id: %1$s in the system. ";
 
     private static final DateFormat DATE_FORMAT;
 
@@ -114,10 +113,10 @@ public class SystemUI
             }
             catch (Exception ex)
             {
-                System.out.println("\n" + ex.getMessage());
+                System.out.println(ex.getMessage());
             }
         }
-        System.out.println("\n" + QUIT_MESSAGE);
+        System.out.println(QUIT_MESSAGE);
     }
 
     private void displayMenu()
@@ -259,11 +258,11 @@ public class SystemUI
             }
             catch (StoreDoesNotSellProductException | InstanceNotFoundException | ValidationException | DuplicateValuesException ex)
             {
-                System.out.println("\n" + ex.getMessage() + TRY_AGAIN_MESSAGE);
+                System.out.println(ex.getMessage() + TRY_AGAIN_MESSAGE);
             }
             catch(InputMismatchException ex)
             {
-                System.out.println(String.format("\n" + INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE,"product id"));
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE + TRY_AGAIN_MESSAGE,"product id"));
             }
         }
     }
@@ -420,7 +419,7 @@ public class SystemUI
         if (newOrderData != null)
         {
             manager.addNewOrder(newOrderData);
-            System.out.println(String.format(PLACED_ORDER_MESSAGE, "placed"));
+            System.out.println(String.format(PLACED_ORDER_MESSAGE, "placed") + THANK_YOU_FOR_BUYING_MESSAGE);
         }
         else
         {
@@ -703,7 +702,7 @@ public class SystemUI
             }
             catch (InputMismatchException e)
             {
-                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "order type") + TRY_AGAIN_MESSAGE);
+                System.out.println(String.format(INPUT_NOT_IN_CORRECT_FORMAT_MESSAGE, "choise") + TRY_AGAIN_MESSAGE);
             }
             catch (IndexOutOfBoundsException ex)
             {
