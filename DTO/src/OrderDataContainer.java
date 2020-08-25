@@ -39,15 +39,12 @@ public class OrderDataContainer
         this.isDynamic = isDynamic;
     }
 
-
     public OrderDataContainer(Date date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) {
         this.date = date;
         this.deliveryCost = deliveryCost;
         this.storeId = storeId;
         this.amountPerProduct = amountPerProduct;
     }
-
-
 
     public OrderDataContainer(Date date,float deliveryCost,Map<Integer, Float> amountPerProduct,int numberOfStoresOrderedFrom)
     {
@@ -57,7 +54,6 @@ public class OrderDataContainer
         this.numberOfStoresOrderedFrom = numberOfStoresOrderedFrom;
         this.isDynamic = true;
     }
-
 
     public int getId() {
         return id;

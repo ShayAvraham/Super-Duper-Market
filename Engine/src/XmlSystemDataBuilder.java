@@ -12,7 +12,7 @@ public class XmlSystemDataBuilder
 {
     private final String JAXB_PACKAGE_NAME = "jaxb.generated";
     private final String FILE_NOT_EXIST_ERROR_MSG = "No xml file was found in this path: ";
-    private final String FILE_NOT_XML_ERROR_MSG = "The file in the path is not xml file ";
+    private final String FILE_NOT_XML_ERROR_MSG = "The file in the path is not xml file.";
 
     private String xmlFilePath;
 
@@ -27,7 +27,6 @@ public class XmlSystemDataBuilder
     private InputStream createInputStreamFromPath() throws FileNotFoundException
     {
         validateXmlFileFormat();
-        //InputStream inputStream = XmlSystemDataBuilder.class.getResourceAsStream(xmlFilePath);
         InputStream inputStream = new FileInputStream(new File(xmlFilePath));
         if (inputStream == null)
         {

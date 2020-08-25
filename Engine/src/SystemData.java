@@ -115,8 +115,6 @@ public class SystemData
         return orders;
     }
 
-
-
     public void removeProductFromStore(int storeId,int productId)
     {
         stores.get(storeId).removeProduct(productId);
@@ -132,6 +130,4 @@ public class SystemData
     {
         stores.get(storeId).updateProductPrice(productId, newPrice);
     }
-
-
 }

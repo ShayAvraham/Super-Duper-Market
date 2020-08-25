@@ -174,5 +174,4 @@ public class Store
                 "Name: " + name + "\n" +
                 "Price per kilometer: " + ppk + "\n";
     }
-
 }

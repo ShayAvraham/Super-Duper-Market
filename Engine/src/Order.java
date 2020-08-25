@@ -53,8 +53,6 @@ public class Order
         this.isDynamic = true;
     }
 
-
-
     public int getId() {
         return id;
     }
