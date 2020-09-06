@@ -13,9 +13,4 @@ public class OrderProduct extends StoreProduct
     public float getAmount() {
         return amount;
     }
-
-//    public void setAmount(int amount) {
-//        this.amount = amount;
-//    }
-
 }

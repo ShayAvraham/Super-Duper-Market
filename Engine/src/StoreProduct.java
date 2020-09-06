@@ -16,15 +16,9 @@ public class StoreProduct extends Product
         this.price = storeProduct.price;
     }
 
-
     public int getPrice() {
         return price;
     }
 
-//    public void setProduct(Product product) {
-//        this.product = product;
-//    }
-
     public void setPrice(int price) { this.price = price; }
-
 }
