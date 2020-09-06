@@ -1,7 +1,6 @@
 import exceptions.StoreDoesNotSellProductException;
 import exceptions.UserLocationEqualToStoreException;
 import exceptions.UserLocationNotValidException;
-
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
