@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="502.0" prefWidth="693.0">
+         <left>
+            <fx:include source="../menuButtons/MenuButtons.fxml" />
+         </left>
+         <center>
+            <fx:include source="../menuData/MenuData.fxml" />
+         </center>
+      </BorderPane>
+   </content>
+</ScrollPane>
