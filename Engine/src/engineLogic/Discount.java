@@ -7,21 +7,38 @@ public class Discount
 {
     public enum DiscountType
     {
-        ONE_OF, ALL_OR_NOTHING
+        ONE_OF, ALL_OR_NOTHING, IRRELEVANT
     }
 
     private String name;
     private DiscountProduct product;
     private Collection <OfferProduct> productsToOffer;
-    private DiscountType type;
+    private DiscountType discountType;
 
-    public Discount(String name, DiscountProduct product, Collection<OfferProduct> productsToOffer, DiscountType type)
+    public Discount(String name,String discountType,DiscountProduct product, Collection<OfferProduct> productsToOffer)
     {
         this.name = name;
         this.product = product;
         this.productsToOffer = productsToOffer;
-        this.type = type;
+        createDiscountType(discountType);
     }
+
+    private void createDiscountType(String discountType)
+    {
+        switch (discountType)
+        {
+            case "ONE-OF":
+                this.discountType = DiscountType.ONE_OF;
+                break;
+            case "ALL-OR-NOTHING":
+                this.discountType = DiscountType.ALL_OR_NOTHING;
+                break;
+            default:
+                this.discountType = DiscountType.IRRELEVANT;
+
+        }
+    }
+
 
     public String getName()
     {
@@ -38,9 +55,8 @@ public class Discount
         return productsToOffer;
     }
 
-    public DiscountType getType()
-    {
-        return type;
+    public DiscountType getDiscountType() {
+        return discountType;
     }
 
     @Override

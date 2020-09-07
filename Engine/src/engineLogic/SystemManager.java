@@ -175,7 +175,7 @@ public class SystemManager
     private Collection<ProductDataContainer> getStoreProductsData(Store store)
     {
         Collection<ProductDataContainer> allProductsData = new ArrayList<>();
-        for (StoreProduct product: store.getProductsInStore())
+        for (StoreProduct product: store.getStoreProducts())
         {
             allProductsData.add(new ProductDataContainer(
                     product.getId(),
@@ -214,7 +214,7 @@ public class SystemManager
         Map<Integer,Integer> productPricePerStore = new HashMap<>();
         for (Store store: systemData.getStores().values())
         {
-            for (StoreProduct storeProduct: store.getProductsInStore())
+            for (StoreProduct storeProduct: store.getStoreProducts())
             {
                 if (selectedProduct.equals(storeProduct))
                 {

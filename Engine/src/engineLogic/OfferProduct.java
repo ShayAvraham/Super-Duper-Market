@@ -3,9 +3,9 @@ package engineLogic;
 public class OfferProduct extends StoreProduct
 {
     private int offerPrice;
-    private float offerAmount;
+    private double offerAmount;
 
-    public OfferProduct(StoreProduct storeProduct,int offerPrice,float offerAmount)
+    public OfferProduct(StoreProduct storeProduct,int offerPrice,double offerAmount)
     {
         super(storeProduct);
         this.offerPrice = offerPrice;
@@ -17,7 +17,7 @@ public class OfferProduct extends StoreProduct
         return offerPrice;
     }
 
-    public float getOfferAmount()
+    public double getOfferAmount()
     {
         return offerAmount;
     }

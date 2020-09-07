@@ -2,15 +2,15 @@ package engineLogic;
 
 public class DiscountProduct extends StoreProduct
 {
-    private float amountForDiscount;
+    private double amountForDiscount;
 
-    public DiscountProduct(StoreProduct storeProduct, float amountForDiscount)
+    public DiscountProduct(StoreProduct storeProduct, double amountForDiscount)
     {
         super(storeProduct);
         this.amountForDiscount = amountForDiscount;
     }
 
-    public float getAmountForDiscount()
+    public double getAmountForDiscount()
     {
         return amountForDiscount;
     }

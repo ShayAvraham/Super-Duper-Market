@@ -1,5 +1,8 @@
 package engineLogic;
 
+import jaxb.generated.Location;
+import jaxb.generated.SDMCustomer;
+
 import java.awt.*;
 import java.util.Objects;
 
@@ -9,10 +12,10 @@ public class Customer
     private String name;
     private Point position;
 
-    public Customer(int id, String name, Point position)
+    public Customer (SDMCustomer customer,Point position)
     {
-        this.id = id;
-        this.name = name;
+        this.id = customer.getId();
+        this.name = customer.getName();
         this.position = position;
     }
 

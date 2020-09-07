@@ -1,6 +1,6 @@
 package engineLogic;
 
-import jaxb.generated.Location;
+import jaxb.generated.SDMDiscounts;
 import jaxb.generated.SDMStore;
 
 import java.awt.*;
@@ -11,14 +11,11 @@ import static java.lang.Math.round;
 
 public class Store
 {
-    private final int MIN_BOUND = 1;
-    private final int MAX_BOUND = 50;
-    private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "Error: The store with i.d %1$s position is out of the bounds of [%2$s,%3$s]";
     private static DecimalFormat DECIMAL_FORMAT;
 
     private int id;
     private String name;
-    private Collection<StoreProduct> productsInStore;
+    private Collection<StoreProduct> storeProducts;
     private Collection<Order> storeOrders;
     private Collection<Discount> storeDiscounts;
     private float ppk;
@@ -29,24 +26,15 @@ public class Store
         DECIMAL_FORMAT = new DecimalFormat("#.##");
     }
 
-    public Store(SDMStore store ,Collection<StoreProduct> productsInStore)
+    public Store(SDMStore store,Point position, Collection<StoreProduct> storeProducts,Collection<Discount>storeDiscounts)
     {
         this.id = store.getId();
         this.name = store.getName();
-        this.position = createPosition(store.getLocation());
+        this.position = position;
         this.ppk = store.getDeliveryPpk();
-        this.productsInStore = productsInStore;
+        this.storeProducts = storeProducts;
+        this.storeDiscounts = storeDiscounts;
         this.storeOrders = new HashSet<>();
-    }
-
-    private Point createPosition(Location storeLocation)
-    {
-        Point position = new Point(storeLocation.getX(),storeLocation.getY());
-        if((position.getX() > MAX_BOUND)||(position.getX() < MIN_BOUND)||(position.getY() > MAX_BOUND)||(position.getY() < MIN_BOUND))
-        {
-            throw new IndexOutOfBoundsException(String.format(POSITION_VALUES_OUT_OF_BOUNDS_MSG,id,MIN_BOUND,MAX_BOUND));
-        }
-        return position;
     }
 
     public int getId() {
@@ -89,12 +77,12 @@ public class Store
         this.storeOrders = storeOrders;
     }
 
-    public Collection<StoreProduct> getProductsInStore() {
-        return productsInStore;
+    public Collection<StoreProduct> getStoreProducts() {
+        return storeProducts;
     }
 
-    public void setProductsInStore(Collection<StoreProduct> productsInStore) {
-        this.productsInStore = productsInStore;
+    public void setStoreProducts(Collection<StoreProduct> storeProducts) {
+        this.storeProducts = storeProducts;
     }
 
     public Collection<Discount> getStoreDiscounts() {
@@ -104,7 +92,7 @@ public class Store
     public StoreProduct getProductById(int productId)
     {
         StoreProduct storeProduct = null;
-        for (StoreProduct currentProduct: productsInStore)
+        for (StoreProduct currentProduct: storeProducts)
         {
             if(currentProduct.getId() == productId)
             {
@@ -142,7 +130,7 @@ public class Store
     public boolean isProductInStore(Product selectedProduct)
     {
         boolean isProductInStore = false;
-        for (StoreProduct product: productsInStore)
+        for (StoreProduct product: storeProducts)
         {
             if (product.getId() == selectedProduct.getId())
             {
@@ -161,12 +149,12 @@ public class Store
     public void removeProduct(int productId)
     {
         Product productToRemove = getProductById(productId);
-        productsInStore.remove(productToRemove);
+        storeProducts.remove(productToRemove);
     }
 
     public void addProduct(StoreProduct productToAdd)
     {
-        productsInStore.add(productToAdd);
+        storeProducts.add(productToAdd);
     }
 
     public void updateProductPrice(int productId, int newPrice)
