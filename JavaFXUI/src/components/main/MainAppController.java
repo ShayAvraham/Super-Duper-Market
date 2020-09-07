@@ -14,7 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+import exceptions.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,7 +30,7 @@ public class MainAppController
     private UpdateProductsController updateProductsController;
     private PlaceOrderController placeOrderController;
 
-    private Engine systemManager;
+
     private Stage stage;
 
     @FXML
