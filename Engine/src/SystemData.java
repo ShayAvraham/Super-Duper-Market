@@ -12,6 +12,7 @@ public class SystemData
 
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
+    private Map<Integer,Customer> customers;
     private Set<Order> orders;
     private Set<Product>productsOnSale;
 

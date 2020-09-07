@@ -17,6 +17,7 @@ public class SystemManager
     private Collection<StoreDataContainer> allStoresData;
     private Collection<ProductDataContainer> allProductsData;
     private Collection<OrderDataContainer> allOrdersData;
+    private Collection<CustomerDataContainer> allCustomersData;
     private boolean isFileWasLoadSuccessfully = false;
     private Map <ProductDataContainer,StoreDataContainer> storesToBuyFrom;
     private Map <Integer,Float> deliveryCostFromStores;
@@ -36,6 +37,10 @@ public class SystemManager
 
     public Collection<OrderDataContainer> getAllOrdersData() {
         return allOrdersData;
+    }
+
+    public Collection<CustomerDataContainer> getAllCustomersData() {
+        return allCustomersData;
     }
 
     public boolean isFileWasLoadSuccessfully() {

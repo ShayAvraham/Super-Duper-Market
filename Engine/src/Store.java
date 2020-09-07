@@ -18,6 +18,7 @@ public class Store
     private String name;
     private Collection<StoreProduct> productsInStore;
     private Collection<Order> storeOrders;
+    private Collection<Discount> storeDiscounts;
     private float ppk;
     private Point position;
 
@@ -92,6 +93,10 @@ public class Store
 
     public void setProductsInStore(Collection<StoreProduct> productsInStore) {
         this.productsInStore = productsInStore;
+    }
+
+    public Collection<Discount> getStoreDiscounts() {
+        return storeDiscounts;
     }
 
     public StoreProduct getProductById(int productId)

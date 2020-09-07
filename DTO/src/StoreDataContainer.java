@@ -10,6 +10,7 @@ public class StoreDataContainer
     private float totalIncomeFromDeliveries;
     private Collection<ProductDataContainer> products;
     private Collection<OrderDataContainer> orders;
+    private Collection<OrderDataContainer> discounts;
     private Point position;
 
     public StoreDataContainer(int id, String name, Point position, float ppk, float totalIncomeFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders)
@@ -55,6 +56,10 @@ public class StoreDataContainer
     public Collection<OrderDataContainer> getOrders()
     {
         return orders;
+    }
+
+    public Collection<OrderDataContainer> getDiscounts() {
+        return discounts;
     }
 
     public ProductDataContainer getProductDataContainerById(int productId)

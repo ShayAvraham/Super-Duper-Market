@@ -44,7 +44,7 @@ public final class MessagesBuilder
                                                                     "Price: %4$s\nAmount: %5$s\n" +
                                                                     "Total price: %6$s\n";
 
-    private static final DateFormat DATE_FORMAT;
+/*    private static final DateFormat DATE_FORMAT;
 
     static
     {
@@ -264,7 +264,7 @@ public final class MessagesBuilder
                     AVAILABLE_STORE_TO_UPDATE_PRODUCT_MESSAGE, storeData.getId(), storeData.getName());
         }
         return availableStoresMsg;
-    }
+    }*/
 
 
 }
