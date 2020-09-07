@@ -1,5 +1,4 @@
 package components.main;
-import com.sun.xml.internal.ws.api.pipe.Engine;
 import components.loadXml.LoadXmlController;
 import components.placeOrder.PlaceOrderController;
 import components.showAllCustomers.ShowAllCustomersController;
@@ -14,10 +13,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import exceptions.*;
-
 import java.io.IOException;
 import java.net.URL;
+import engineLogic.*;
 
 public class MainAppController
 {
@@ -30,7 +28,7 @@ public class MainAppController
     private UpdateProductsController updateProductsController;
     private PlaceOrderController placeOrderController;
 
-
+    private SystemManager systemManager;
     private Stage stage;
 
     @FXML
@@ -64,10 +62,18 @@ public class MainAppController
     private Button showMapButton;
 
 
-    public MainAppController() {
+    public MainAppController() 
+    {
         try
         {
-            this.loadXmlController = initializeLoadXMLController();
+            this.systemManager = new SystemManager();
+            this.loadXmlController = initializeLoadXMLController(this.systemManager);
+            this.showAllCustomersController = initializeShowAllCustomersController(this.systemManager);
+            this.showAllProductsController = initializeShowAllProductsController(this.systemManager);
+            this.showAllStoresController = initializeShowAllStoresController(this.systemManager);
+            this.showMapController = initializeShowMapController(this.systemManager);
+            this.updateProductsController = initializeUpdateProductsController(this.systemManager);
+            this.placeOrderController = initializePlaceOrderController(this.systemManager);
         }
         catch (Exception e)
         {
@@ -75,7 +81,7 @@ public class MainAppController
         }
     }
 
-    private LoadXmlController initializeLoadXMLController() throws IOException
+    private LoadXmlController initializeLoadXMLController(SystemManager systemManager) throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
         URL mainFXML = getClass().getResource("/components/loadXml/LoadXml.fxml");
@@ -83,8 +89,92 @@ public class MainAppController
         loader.load();
         LoadXmlController xmlLoadController = loader.getController();
         xmlLoadController.setMainController(this);
-
+        xmlLoadController.setSystemLogic(systemManager);
         return xmlLoadController;
+    }
+
+    private ShowAllCustomersController initializeShowAllCustomersController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/showAllCustomers/ShowAllCustomers.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        ShowAllCustomersController showAllCustomersController = loader.getController();
+        showAllCustomersController.setMainController(this);
+        showAllCustomersController.setSystemLogic(systemManager);
+        return showAllCustomersController;
+    }
+
+    private ShowAllStoresController initializeShowAllStoresController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/showAllStores/ShowAllStores.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        ShowAllStoresController showAllStoresController = loader.getController();
+        showAllStoresController.setMainController(this);
+        showAllStoresController.setSystemLogic(systemManager);
+        return showAllStoresController;
+    }
+
+    private ShowAllProductsController initializeShowAllProductsController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/showAllProducts/ShowAllProducts.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        ShowAllProductsController showAllProductsController = loader.getController();
+        showAllProductsController.setMainController(this);
+        showAllProductsController.setSystemLogic(systemManager);
+        return showAllProductsController;
+    }
+
+    private ShowOrdersHistoryController initializeShowOrdersHistoryController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/showOrdersHistory/ShowOrdersHistoryController.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        ShowOrdersHistoryController showOrdersHistoryController = loader.getController();
+        showOrdersHistoryController.setMainController(this);
+        showOrdersHistoryController.setSystemLogic(systemManager);
+        return showOrdersHistoryController;
+    }
+
+    private ShowMapController initializeShowMapController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/showMapController/ShowMapController.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        ShowMapController showMapController = loader.getController();
+        showMapController.setMainController(this);
+        showMapController.setSystemLogic(systemManager);
+        return showMapController;
+    }
+
+    private UpdateProductsController initializeUpdateProductsController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/updateProductsController/UpdateProductsController.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        UpdateProductsController updateProductsController = loader.getController();
+        updateProductsController.setMainController(this);
+        updateProductsController.setSystemLogic(systemManager);
+        return updateProductsController;
+    }
+
+    private PlaceOrderController initializePlaceOrderController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/placeOrderController/PlaceOrderController.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        PlaceOrderController placeOrderController = loader.getController();
+        placeOrderController.setMainController(this);
+        placeOrderController.setSystemLogic(systemManager);
+        return placeOrderController;
     }
 
 

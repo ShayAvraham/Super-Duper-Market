@@ -38,7 +38,7 @@
                         <Button fx:id="showAllProductsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllProducts" prefHeight="45.0" prefWidth="260.0" text="Show All Products" GridPane.rowIndex="4" />
                         <Button fx:id="showOrdersHistoryButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showOrdersHistory" prefHeight="45.0" prefWidth="260.0" text="Show Orders History" GridPane.rowIndex="5" />
                         <Button fx:id="updateProductsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#updateProducts" prefHeight="45.0" prefWidth="260.0" text="Update Products" GridPane.rowIndex="6" />
-                        <Button fx:id="placeOrderButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#placeOrder" prefHeight="45.0" prefWidth="260.0" text="Place Order " GridPane.rowIndex="7" />
+                        <Button fx:id="placeOrderButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#placeOrder" prefHeight="45.0" prefWidth="260.0" text="Place engineLogic.Order " GridPane.rowIndex="7" />
                         <Button fx:id="showMapButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showMap" prefHeight="45.0" prefWidth="260.0" text="Show Map" GridPane.rowIndex="8" />
                      </children>
                   </GridPane>

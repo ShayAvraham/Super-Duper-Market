@@ -1,5 +1,6 @@
 package components.loadXml;
 import components.main.MainAppController;
+import engineLogic.SystemManager;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 
@@ -9,6 +10,7 @@ public class LoadXmlController
 
     @FXML
     private AnchorPane rootPane;
+    private SystemManager systemLogic;
 
     public AnchorPane getRootPane()
     {
@@ -18,5 +20,10 @@ public class LoadXmlController
     public void setMainController(MainAppController mainAppController)
     {
         this.mainAppController = mainAppController;
+    }
+
+    public void setSystemLogic(SystemManager systemManager)
+    {
+        this.systemLogic = systemManager;
     }
 }
