@@ -10,6 +10,7 @@ public class Order
     private static int idNumber = 1;
     private int numberOfStoresOrderedFrom = 1;
     private boolean isDynamic = false;
+    private Customer customer;
 
 
     public Order(int id, int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
@@ -91,6 +92,10 @@ public class Order
 
     public void setOrderedProducts(Collection<OrderProduct> orderedProducts) {
         this.orderedProducts = orderedProducts;
+    }
+
+    public Customer getCustomer() {
+        return customer;
     }
 
     public int getNumberOfStoresOrderedFrom() {
