@@ -11,10 +11,10 @@ public class StoreDataContainer
     private float totalIncomeFromDeliveries;
     private Collection<ProductDataContainer> products;
     private Collection<OrderDataContainer> orders;
-    private Collection<OrderDataContainer> discounts;
+    private Collection<DiscountDataContainer> discounts;
     private Point position;
 
-    public StoreDataContainer(int id, String name, Point position, float ppk, float totalIncomeFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders)
+    public StoreDataContainer(int id, String name, Point position, float ppk, float totalIncomeFromDeliveries, Collection<ProductDataContainer> products, Collection<OrderDataContainer> orders, Collection<DiscountDataContainer> discounts)
     {
         this.id = id;
         this.name = name;
@@ -23,7 +23,7 @@ public class StoreDataContainer
         this.totalIncomeFromDeliveries = totalIncomeFromDeliveries;
         this.products = products;
         this.orders = orders;
-
+        this.discounts = discounts;
     }
 
     public int getId()
@@ -59,7 +59,7 @@ public class StoreDataContainer
         return orders;
     }
 
-    public Collection<OrderDataContainer> getDiscounts() {
+    public Collection<DiscountDataContainer> getDiscounts() {
         return discounts;
     }
 

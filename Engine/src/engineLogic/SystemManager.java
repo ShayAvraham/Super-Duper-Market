@@ -142,6 +142,7 @@ public class SystemManager
         createAllStoresData();
         createAllProductsData();
         createAllOrdersData();
+        createAllCustomersData();
     }
 
 
@@ -157,7 +158,8 @@ public class SystemManager
                     store.getPPK(),
                     getStoreTotalIncomeFromDeliveries(store),
                     getStoreProductsData(store),
-                    getStoreOrdersData(store)));
+                    getStoreOrdersData(store),
+                    getStoreDiscountsData(store)));
         }
     }
 
@@ -188,27 +190,6 @@ public class SystemManager
         return allProductsData;
     }
 
-    private Collection<OrderDataContainer> getStoreOrdersData(Store store)
-    {
-        Collection<OrderDataContainer> allOrdersData = new ArrayList<>();
-        for (Order order: store.getStoreOrders())
-        {
-            allOrdersData.add(createStoreOrderData(order));
-        }
-
-        return allOrdersData;
-    }
-
-    private OrderDataContainer createStoreOrderData(Order order)
-    {
-        return new OrderDataContainer(
-                order.getOrderDate(),
-                order.getAllOrderedProductsQuantity(),
-                order.getCostOfAllProducts(),
-                order.getDeliveryCost(),
-                order.getTotalCostOfOrder());
-    }
-
     private Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct)
     {
         Map<Integer,Integer> productPricePerStore = new HashMap<>();
@@ -236,6 +217,44 @@ public class SystemManager
             soldAmountPerStore.put(store.getId(),soldAmount);
         }
         return soldAmountPerStore;
+    }
+
+    private Collection<OrderDataContainer> getStoreOrdersData(Store store)
+    {
+        Collection<OrderDataContainer> allOrdersData = new ArrayList<>();
+        for (Order order: store.getStoreOrders())
+        {
+            allOrdersData.add(createStoreOrderData(order));
+        }
+
+        return allOrdersData;
+    }
+
+    private OrderDataContainer createStoreOrderData(Order order)
+    {
+        return new OrderDataContainer(
+                order.getOrderDate(),
+                order.getAllOrderedProductsQuantity(),
+                order.getCostOfAllProducts(),
+                order.getDeliveryCost(),
+                order.getTotalCostOfOrder());
+    }
+
+
+    private Collection<DiscountDataContainer> getStoreDiscountsData(Store store)
+    {
+        Collection<DiscountDataContainer> allDiscountData = new ArrayList<>();
+        for (Discount discount: store.getStoreDiscounts())
+        {
+            allDiscountData.add(createStoreDiscountData(discount));
+        }
+
+        return allDiscountData;
+    }
+
+    private DiscountDataContainer createStoreDiscountData(Discount discount)
+    {
+        return null;
     }
 
     private void createAllProductsData()
@@ -322,6 +341,69 @@ public class SystemManager
                 order.getTotalCostOfOrder(),
                 order.isDynamic(),
                 order.getNumberOfStoresOrderedFrom());
+    }
+
+    private void createAllCustomersData()
+    {
+        allCustomersData = new ArrayList<>();
+        for (Customer customer: systemData.getCustomers().values())
+        {
+            allCustomersData.add(createCustomerData(customer));
+        }
+    }
+
+    private CustomerDataContainer createCustomerData(Customer customer)
+    {
+        return new CustomerDataContainer(
+                customer.getId(),
+                customer.getName(),
+                getCustomerNumOfOrders(customer),
+                getCustomerOrderCostAvg(customer),
+                getCustomerDeliveryCostAvg(customer),
+                customer.getPosition());
+    }
+
+    private int getCustomerNumOfOrders(Customer customer)
+    {
+        int numOfOrders = 0;
+        for(Order order: systemData.getOrders())
+        {
+            if(order.getCustomer().equals(customer))
+            {
+                numOfOrders++;
+            }
+        }
+        return numOfOrders;
+    }
+
+    private float getCustomerOrderCostAvg(Customer customer)
+    {
+        float orderCostSum = 0;
+        int numOfOrders = 0;
+        for(Order order: systemData.getOrders())
+        {
+            if(order.getCustomer().equals(customer))
+            {
+                orderCostSum += order.getCostOfAllProducts();
+                numOfOrders++;
+            }
+        }
+        return orderCostSum/numOfOrders;
+    }
+
+    private float getCustomerDeliveryCostAvg(Customer customer)
+    {
+        int deliveryCostSum = 0;
+        int numOfOrders = 0;
+        for(Order order: systemData.getOrders())
+        {
+            if(order.getCustomer().equals(customer))
+            {
+                deliveryCostSum += order.getDeliveryCost();
+                numOfOrders++;
+            }
+        }
+        return deliveryCostSum/numOfOrders;
     }
 
     public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)

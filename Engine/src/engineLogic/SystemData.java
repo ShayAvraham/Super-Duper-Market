@@ -202,7 +202,12 @@ public class SystemData
         return orders;
     }
 
-    public void removeProductFromStore(int storeId,int productId)
+    public Map<Integer, Customer> getCustomers()
+    {
+        return customers;
+    }
+
+    public void removeProductFromStore(int storeId, int productId)
     {
         stores.get(storeId).removeProduct(productId);
     }

@@ -7,18 +7,18 @@ public class CustomerDataContainer
 {
     private int id;
     private String name;
-    private float numeOfOrders;
+    private int numOfOrders;
     private float orderCostAvg;
-    private float deliveryContAvg;
+    private float deliveryCostAvg;
     private Point position;
 
-    public CustomerDataContainer(int id, String name, float numeOfOrders, float orderCostAvg, float deliveryContAvg, Point position)
+    public CustomerDataContainer(int id, String name, int numOfOrders, float orderCostAvg, float deliveryCostAvg, Point position)
     {
         this.id = id;
         this.name = name;
-        this.numeOfOrders = numeOfOrders;
+        this.numOfOrders = numOfOrders;
         this.orderCostAvg = orderCostAvg;
-        this.deliveryContAvg = deliveryContAvg;
+        this.deliveryCostAvg = deliveryCostAvg;
         this.position = position;
     }
 
@@ -30,16 +30,16 @@ public class CustomerDataContainer
         return name;
     }
 
-    public float getNumeOfOrders() {
-        return numeOfOrders;
+    public int getNumOfOrders() {
+        return numOfOrders;
     }
 
     public float getOrderCostAvg() {
         return orderCostAvg;
     }
 
-    public float getDeliveryContAvg() {
-        return deliveryContAvg;
+    public float getDeliveryCostAvg() {
+        return deliveryCostAvg;
     }
 
     public Point getPosition() {
