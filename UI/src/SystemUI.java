@@ -1,4 +1,4 @@
-import exceptions.*;
+//import exceptions.*;
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
@@ -78,7 +78,7 @@ public class SystemUI
     private final String TRY_AGAIN_MESSAGE = "\nPlease try again.\n";
     private final String PRODUCT_NOT_EXIST_MESSAGE = "There is not a product with the id: %1$s in the system. ";
 
-    private static final DateFormat DATE_FORMAT;
+/*    private static final DateFormat DATE_FORMAT;
 
     static
     {
@@ -841,5 +841,5 @@ public class SystemUI
             return true;
         }
         return false;
-    }
+    }*/
 }
