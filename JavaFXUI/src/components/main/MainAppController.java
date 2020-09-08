@@ -66,14 +66,15 @@ public class MainAppController
     {
         try
         {
-            this.systemManager = new SystemManager();
-            this.loadXmlController = initializeLoadXMLController(this.systemManager);
-            this.showAllCustomersController = initializeShowAllCustomersController(this.systemManager);
-            this.showAllProductsController = initializeShowAllProductsController(this.systemManager);
-            this.showAllStoresController = initializeShowAllStoresController(this.systemManager);
-            this.showMapController = initializeShowMapController(this.systemManager);
-            this.updateProductsController = initializeUpdateProductsController(this.systemManager);
-            this.placeOrderController = initializePlaceOrderController(this.systemManager);
+            systemManager = new SystemManager();
+            loadXmlController = initializeLoadXMLController(this.systemManager);
+            showAllCustomersController = initializeShowAllCustomersController(this.systemManager);
+            showAllProductsController = initializeShowAllProductsController(this.systemManager);
+            showAllStoresController = initializeShowAllStoresController(this.systemManager);
+            showMapController = initializeShowMapController(this.systemManager);
+            updateProductsController = initializeUpdateProductsController(this.systemManager);
+            placeOrderController = initializePlaceOrderController(this.systemManager);
+            showOrdersHistoryController = initializeShowOrdersHistoryController(this.systemManager);
         }
         catch (Exception e)
         {
@@ -132,7 +133,7 @@ public class MainAppController
     private ShowOrdersHistoryController initializeShowOrdersHistoryController(SystemManager systemManager) throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
-        URL mainFXML = getClass().getResource("/components/showOrdersHistory/ShowOrdersHistoryController.fxml");
+        URL mainFXML = getClass().getResource("/components/showOrdersHistory/ShowOrdersHistory.fxml");
         loader.setLocation(mainFXML);
         loader.load();
         ShowOrdersHistoryController showOrdersHistoryController = loader.getController();
@@ -144,7 +145,7 @@ public class MainAppController
     private ShowMapController initializeShowMapController(SystemManager systemManager) throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
-        URL mainFXML = getClass().getResource("/components/showMapController/ShowMapController.fxml");
+        URL mainFXML = getClass().getResource("/components/showMap/ShowMap.fxml");
         loader.setLocation(mainFXML);
         loader.load();
         ShowMapController showMapController = loader.getController();
@@ -156,7 +157,7 @@ public class MainAppController
     private UpdateProductsController initializeUpdateProductsController(SystemManager systemManager) throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
-        URL mainFXML = getClass().getResource("/components/updateProductsController/UpdateProductsController.fxml");
+        URL mainFXML = getClass().getResource("/components/updateProducts/UpdateProducts.fxml");
         loader.setLocation(mainFXML);
         loader.load();
         UpdateProductsController updateProductsController = loader.getController();
@@ -168,7 +169,7 @@ public class MainAppController
     private PlaceOrderController initializePlaceOrderController(SystemManager systemManager) throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
-        URL mainFXML = getClass().getResource("/components/placeOrderController/PlaceOrderController.fxml");
+        URL mainFXML = getClass().getResource("/components/placeOrder/PlaceOrder.fxml");
         loader.setLocation(mainFXML);
         loader.load();
         PlaceOrderController placeOrderController = loader.getController();
@@ -183,6 +184,14 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         mainWindow.getChildren().add(loadXmlController.getRootPane());
+        try
+        {
+            systemManager.loadDataFromXmlFile("Engine/src/resources/ex2-small.xml");
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 
     @FXML
@@ -203,6 +212,7 @@ public class MainAppController
     void showAllProducts(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showAllProductsController.updateProductsTable();
         mainWindow.getChildren().add(showAllProductsController.getRootPane());
     }
 
