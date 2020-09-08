@@ -1,13 +1,19 @@
 package engineLogic;
 import dataContainers.*;
+import jaxb.generated.ThenYouGet;
+
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import java.awt.*;
+import java.io.Console;
 import java.io.FileNotFoundException;
 import java.util.*;
 
 public class SystemManager
 {
+    private final String IF_YOU_BUY_MSG = "If you buy The %1$s %2$s of %3$s";
+    private final String THEN_YOU_GET_MSG = "then you get %1$s";
+
     private SystemData systemData;
     private XmlSystemDataBuilder xmlSystemDataBuilder;
     private Collection<StoreDataContainer> allStoresData;
@@ -182,13 +188,14 @@ public class SystemManager
             allProductsData.add(new ProductDataContainer(
                     product.getId(),
                     product.getName(),
-                    product.getPurchaseForm(),
+                    product.getPurchaseForm().name(),
                     getProductPricePerStore(product),
                     getSoldAmountPerStore(product)));
         }
 
         return allProductsData;
     }
+
 
     private Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct)
     {
@@ -254,7 +261,72 @@ public class SystemManager
 
     private DiscountDataContainer createStoreDiscountData(Discount discount)
     {
-        return null;
+        return new DiscountDataContainer(discount.getName(),
+                                        createIfYouBuyDescription(discount.getDiscountProduct()),
+                                        createThenYouGetDescription(discount.getProductsToOffer(),discount.getDiscountType()));
+    }
+
+    private String createIfYouBuyDescription(DiscountProduct discountProduct)
+    {
+        String purchaseFormStr = createPurchaseFormStr(discountProduct.getPurchaseForm(),discountProduct.getAmountForDiscount());
+        return String.format(IF_YOU_BUY_MSG,discountProduct.getAmountForDiscount(),purchaseFormStr,discountProduct.getName());
+    }
+
+    private String createPurchaseFormStr(Product.ProductPurchaseForm purchaseForm,double amount)
+    {
+        String purchaseFormStr = "";
+        switch (purchaseForm)
+        {
+            case WEIGHT:
+                purchaseFormStr = "kg";
+                break;
+            case QUANTITY:
+                purchaseFormStr = "unit";
+                if(amount > 1)
+                {
+                    purchaseFormStr += "s";
+                }
+                break;
+        }
+        return purchaseFormStr;
+    }
+
+    private String createThenYouGetDescription(Collection<OfferProduct> offerProducts, Discount.DiscountType discountType)
+    {
+        String productsToGet = THEN_YOU_GET_MSG;
+        String discountTypeStr = createDiscountTypeStr(discountType);
+
+        for(OfferProduct product: offerProducts)
+        {
+            String purchaseFormStr = createPurchaseFormStr(product.getPurchaseForm(),product.getOfferAmount());
+            if(!product.equals(offerProducts.stream().findFirst()))
+            {
+                productsToGet += discountTypeStr;
+            }
+            productsToGet += String.format(" %1$s %2$s of %3$s for %4$s",
+                                            product.getOfferAmount(),
+                                            purchaseFormStr,
+                                            product.getName(),
+                                            product.getOfferPrice());
+        }
+
+        return String.format(THEN_YOU_GET_MSG, productsToGet);
+
+    }
+
+    private String createDiscountTypeStr(Discount.DiscountType discountType)
+    {
+        String discountTypeStr = "";
+        switch (discountType)
+        {
+            case ONE_OF:
+                discountTypeStr = " or";
+                break;
+            case ALL_OR_NOTHING:
+                discountTypeStr = " and";
+                break;
+        }
+        return discountTypeStr;
     }
 
     private void createAllProductsData()
@@ -265,7 +337,7 @@ public class SystemManager
             allProductsData.add(new ProductDataContainer(
                     product.getId(),
                     product.getName(),
-                    product.getPurchaseForm(),
+                    product.getPurchaseForm().name(),
                     getHowManyStoresSellProduct(product),
                     getProductAvgPrice(product),
                     getHowManyTimesProductSold(product)));
@@ -378,32 +450,44 @@ public class SystemManager
 
     private float getCustomerOrderCostAvg(Customer customer)
     {
-        float orderCostSum = 0;
-        int numOfOrders = 0;
-        for(Order order: systemData.getOrders())
-        {
-            if(order.getCustomer().equals(customer))
-            {
-                orderCostSum += order.getCostOfAllProducts();
-                numOfOrders++;
-            }
-        }
-        return orderCostSum/numOfOrders;
+//        float orderCostSum = 0;
+//        int numOfOrders = 0;
+//        for(Order order: systemData.getOrders())
+//        {
+//            if(order.getCustomer().equals(customer))
+//            {
+//                orderCostSum += order.getCostOfAllProducts();
+//                numOfOrders++;
+//            }
+//        }
+    //    return orderCostSum/numOfOrders;
+
+        return (float) systemData.getOrders().stream()
+                .filter(order -> order.getCustomer().equals(customer))
+                .mapToDouble(Order::getCostOfAllProducts)
+                .average()
+                .orElse(0.0);
     }
 
     private float getCustomerDeliveryCostAvg(Customer customer)
     {
-        int deliveryCostSum = 0;
-        int numOfOrders = 0;
-        for(Order order: systemData.getOrders())
-        {
-            if(order.getCustomer().equals(customer))
-            {
-                deliveryCostSum += order.getDeliveryCost();
-                numOfOrders++;
-            }
-        }
-        return deliveryCostSum/numOfOrders;
+//        int deliveryCostSum = 0;
+//        int numOfOrders = 0;
+//        for(Order order: systemData.getOrders())
+//        {
+//            if(order.getCustomer().equals(customer))
+//            {
+//                deliveryCostSum += order.getDeliveryCost();
+//                numOfOrders++;
+//            }
+//        }
+//        return deliveryCostSum/numOfOrders;
+
+        return (float) systemData.getOrders().stream()
+                .filter(order -> order.getCustomer().equals(customer))
+                .mapToDouble(Order::getDeliveryCost)
+                .average()
+                .orElse(0.0);
     }
 
     public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)

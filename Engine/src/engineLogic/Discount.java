@@ -11,14 +11,14 @@ public class Discount
     }
 
     private String name;
-    private DiscountProduct product;
+    private DiscountProduct discountProduct;
     private Collection <OfferProduct> productsToOffer;
     private DiscountType discountType;
 
-    public Discount(String name,String discountType,DiscountProduct product, Collection<OfferProduct> productsToOffer)
+    public Discount(String name,String discountType,DiscountProduct discountProduct, Collection<OfferProduct> productsToOffer)
     {
         this.name = name;
-        this.product = product;
+        this.discountProduct = discountProduct;
         this.productsToOffer = productsToOffer;
         createDiscountType(discountType);
     }
@@ -45,9 +45,9 @@ public class Discount
         return name;
     }
 
-    public DiscountProduct getProduct()
+    public DiscountProduct getDiscountProduct()
     {
-        return product;
+        return discountProduct;
     }
 
     public Collection<OfferProduct> getProductsToOffer()

@@ -30,6 +30,7 @@ public class SystemData
     public SystemData(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
     {
         objectPositions = new HashSet<>();
+        customers = new HashMap<>();
         products = new HashMap<>();
         productsOnSale = new HashSet<>();
         stores = new HashMap<>();
@@ -122,14 +123,17 @@ public class SystemData
     private Collection<Discount> createStoreDiscounts(SDMDiscounts generatedDiscounts,Map<Integer,StoreProduct> storeProducts,int storeId) throws InstanceNotFoundException
     {
         Collection<Discount> storeDiscounts = new HashSet<>();
-        for (SDMDiscount discount : generatedDiscounts.getSDMDiscount())
+        if(generatedDiscounts != null)
         {
-            DiscountProduct discountProduct = createDiscountProduct(discount.getIfYouBuy(),storeProducts,storeId);
-            Collection<OfferProduct> offerProducts = createOfferProducts(discount.getThenYouGet(),storeProducts,storeId);
-            storeDiscounts.add(new Discount(discount.getName(),
-                                            discount.getThenYouGet().getOperator(),
-                                            discountProduct,
-                                            offerProducts));
+            for (SDMDiscount discount : generatedDiscounts.getSDMDiscount())
+            {
+                DiscountProduct discountProduct = createDiscountProduct(discount.getIfYouBuy(), storeProducts, storeId);
+                Collection<OfferProduct> offerProducts = createOfferProducts(discount.getThenYouGet(), storeProducts, storeId);
+                storeDiscounts.add(new Discount(discount.getName(),
+                        discount.getThenYouGet().getOperator(),
+                        discountProduct,
+                        offerProducts));
+            }
         }
         return storeDiscounts;
     }

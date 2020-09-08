@@ -5,21 +5,17 @@ import java.util.Objects;
 
 public class ProductDataContainer
 {
-    public enum ProductPurchaseForm
-    {
-        WEIGHT, QUANTITY
-    }
 
     private int id;
     private String name;
-    private ProductPurchaseForm purchaseForm;
+    private String purchaseForm;
     private int numberOfStoresSellProduct;
     private float averagePrice;
     private float numOfProductWasOrdered;
     private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
 
-    public ProductDataContainer(int id, String name, ProductPurchaseForm purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
+    public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
         this.id = id;
         this.name = name;
@@ -29,7 +25,7 @@ public class ProductDataContainer
         this.numOfProductWasOrdered = numOfProductWasOrdered;
     }
 
-    public ProductDataContainer(int id, String name, ProductPurchaseForm purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
+    public ProductDataContainer(int id, String name, String purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
         this.id = id;
         this.name = name;
         this.purchaseForm = purchaseForm;
@@ -45,7 +41,7 @@ public class ProductDataContainer
         return name;
     }
 
-    public ProductPurchaseForm getPurchaseForm() {
+    public String getPurchaseForm() {
         return purchaseForm;
     }
 
