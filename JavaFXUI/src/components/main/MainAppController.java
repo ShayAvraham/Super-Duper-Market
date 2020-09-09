@@ -248,6 +248,7 @@ public class MainAppController
     void showOrdersHistory(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showOrdersHistoryController.updateOrdersHistoryTable();
         mainWindow.getChildren().add(showOrdersHistoryController.getRootPane());
     }
 
