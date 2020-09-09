@@ -70,6 +70,7 @@ public class MainAppController
         {
             systemManager = new SystemManager();
             loadXmlController = initializeLoadXMLController(this.systemManager);
+            isFileLoadedProperty = new SimpleBooleanProperty(false);
             showAllCustomersController = initializeShowAllCustomersController(this.systemManager);
             showAllProductsController = initializeShowAllProductsController(this.systemManager);
             showAllStoresController = initializeShowAllStoresController(this.systemManager);
@@ -77,7 +78,6 @@ public class MainAppController
             updateProductsController = initializeUpdateProductsController(this.systemManager);
             placeOrderController = initializePlaceOrderController(this.systemManager);
             showOrdersHistoryController = initializeShowOrdersHistoryController(this.systemManager);
-            isFileLoadedProperty = new SimpleBooleanProperty(false);
         }
         catch (Exception e)
         {
