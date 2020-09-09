@@ -29,10 +29,9 @@ public class MainAppController
     private UpdateProductsController updateProductsController;
     private PlaceOrderController placeOrderController;
 
-    private SimpleBooleanProperty isFileLoadedProperty;
-
     private SystemManager systemManager;
     private Stage stage;
+    private SimpleBooleanProperty isFileLoadedProperty;
 
     @FXML
     private AnchorPane menuBar;
@@ -205,14 +204,6 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         mainWindow.getChildren().add(loadXmlController.getRootPane());
-//        try change
-//        {
-//            systemManager.loadDataFromXmlFile("Engine/src/resources/ex2-small.xml");
-//        }
-//        catch (Exception e)
-//        {
-//
-//        }
     }
 
     @FXML
@@ -226,6 +217,7 @@ public class MainAppController
     void showAllCustomers(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showAllCustomersController.updateCustomersTable();
         mainWindow.getChildren().add(showAllCustomersController.getRootPane());
     }
 
@@ -270,6 +262,4 @@ public class MainAppController
     {
         this.stage = primaryStage;
     }
-
-
 }
