@@ -29,7 +29,7 @@ public class ShowAllCustomersController
     private TableColumn<CustomerDataContainer, String> name;
 
     @FXML
-    private TableColumn<CustomerDataContainer, String> location;
+    private TableColumn<CustomerDataContainer, String> position;
 
     @FXML
     private TableColumn<CustomerDataContainer, Integer> numOfOrders;
@@ -43,7 +43,7 @@ public class ShowAllCustomersController
     @FXML
     private void initialize()
     {
-        setCustomersTableColumsProperties();
+        setCustomersTableColumnsProperties();
     }
 
     public void updateCustomersTable()
@@ -53,11 +53,11 @@ public class ShowAllCustomersController
         customersView.setItems(customersList);
     }
 
-    private void setCustomersTableColumsProperties()
+    private void setCustomersTableColumnsProperties()
     {
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        location.setCellValueFactory(new PropertyValueFactory<>("name"));
+        position.setCellValueFactory(new PropertyValueFactory<>("name"));
         numOfOrders.setCellValueFactory(new PropertyValueFactory<>("numOfOrders"));
         avgOrdersCost.setCellValueFactory(new PropertyValueFactory<>("orderCostAvg"));
         avgDeliveriesCost.setCellValueFactory(new PropertyValueFactory<>("deliveryCostAvg"));

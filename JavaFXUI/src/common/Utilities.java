@@ -19,7 +19,7 @@ public final class Utilities
         alert.showAndWait();
     }
 
-    public static void ShowAlert(String alertMsg)
+    public static void ShowInformationAlert(String alertMsg)
     {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);

@@ -1,4 +1,5 @@
 package components.main;
+import common.Utilities;
 import components.loadXml.LoadXmlController;
 import components.placeOrder.PlaceOrderController;
 import components.showAllCustomers.ShowAllCustomersController;
@@ -69,8 +70,8 @@ public class MainAppController
         try
         {
             systemManager = new SystemManager();
-            loadXmlController = initializeLoadXMLController(this.systemManager);
             isFileLoadedProperty = new SimpleBooleanProperty(false);
+            loadXmlController = initializeLoadXMLController(this.systemManager);
             showAllCustomersController = initializeShowAllCustomersController(this.systemManager);
             showAllProductsController = initializeShowAllProductsController(this.systemManager);
             showAllStoresController = initializeShowAllStoresController(this.systemManager);
@@ -81,7 +82,7 @@ public class MainAppController
         }
         catch (Exception e)
         {
-
+            Utilities.ShowErrorAlert(e.getMessage());
         }
     }
 
