@@ -14,8 +14,8 @@ public class SystemData
     private final int MIN_BOUND = 1;
     private final int MAX_BOUND = 50;
     private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "The %1$s with i.d %2$s position is out of the bounds of [%3$s,%4$s]";
-//    private final String POSITION_ALREADY_TAKEN_MSG = "The position %1$s already taken by %2$s with i.d %3$s";
-    private final String POSITION_ALREADY_TAKEN_MSG = "The position %1$s already taken by another entities";
+//    private final String POSITION_ALREADY_TAKEN_MSG = "The position (%1$s,%2$s) already taken by %3$s with i.d %4$s";
+    private final String POSITION_ALREADY_TAKEN_MSG = "The position (%1$s,%2$s) already taken by another entities";
     private final String NOT_ALL_PRODUCTS_IN_STORE = "The products with this i.d are not sold in any store: %1$s.";
     private final String PRODUCT_NOT_EXIST_MESSAGE = "Unable to sold the product with this id: %1$s," +
                                                      " this product not defined in the system.";
@@ -63,7 +63,7 @@ public class SystemData
         }
         if(!objectPositions.add(position))
         {
-            throw new DuplicateValuesException(String.format(POSITION_ALREADY_TAKEN_MSG,position));
+            throw new DuplicateValuesException(String.format(POSITION_ALREADY_TAKEN_MSG,position.getX(),position.getY()));
         }
         return position;
     }
@@ -99,8 +99,8 @@ public class SystemData
         Map<Integer,StoreProduct> storeProducts = new HashMap<>();
         for (SDMSell itemInStore : generatedPrices.getSDMSell())
         {
+            validateProductInSystem(itemInStore.getItemId());
             Product product = products.get(itemInStore.getItemId());
-            validateProductInSystem(product);
             productsOnSale.add(product);
             if(storeProducts.putIfAbsent(product.getId(),new StoreProduct(product, itemInStore.getPrice())) != null)
             {
@@ -112,11 +112,11 @@ public class SystemData
         return storeProducts;
     }
 
-    private void validateProductInSystem(Product product) throws InstanceNotFoundException
+    private void validateProductInSystem(int productId) throws InstanceNotFoundException
     {
-        if(product == null)
+        if(products.get(productId) == null)
         {
-            throw new InstanceNotFoundException(String.format(PRODUCT_NOT_EXIST_MESSAGE,product.getId()));
+            throw new InstanceNotFoundException(String.format(PRODUCT_NOT_EXIST_MESSAGE,productId));
         }
     }
 
@@ -140,8 +140,8 @@ public class SystemData
 
     private DiscountProduct createDiscountProduct(IfYouBuy generatedIfYouBuy,Map<Integer,StoreProduct> storeProducts,int storeId) throws InstanceNotFoundException
     {
+        validateProductSoldInStore(generatedIfYouBuy.getItemId(),storeProducts,storeId);
         StoreProduct storeProduct = storeProducts.get(generatedIfYouBuy.getItemId());
-        validateProductSoldInStore(storeProduct,storeProducts,storeId);
         return new DiscountProduct(storeProduct ,generatedIfYouBuy.getQuantity());
     }
 
@@ -150,19 +150,19 @@ public class SystemData
         Collection <OfferProduct> OfferProducts = new ArrayList<>();
         for (SDMOffer offer : generatedThenYouGet.getSDMOffer())
         {
+            validateProductSoldInStore(offer.getItemId(),storeProducts,storeId);
             StoreProduct storeProduct = storeProducts.get(offer.getItemId());
-            validateProductSoldInStore(storeProduct,storeProducts,storeId);
             OfferProducts.add(new OfferProduct(storeProduct,offer.getForAdditional(),offer.getQuantity()));
         }
         return OfferProducts;
     }
 
-    private void validateProductSoldInStore(StoreProduct storeProduct,Map<Integer,StoreProduct> storeProducts,int storeId) throws InstanceNotFoundException
+    private void validateProductSoldInStore(int productId,Map<Integer,StoreProduct> storeProducts,int storeId) throws InstanceNotFoundException
     {
-        validateProductInSystem(storeProduct);
-        if(storeProduct == null)
+        validateProductInSystem(productId);
+        if(storeProducts.get(productId) == null)
         {
-            throw new StoreDoesNotSellProductException(storeId,storeProduct.getId());
+            throw new StoreDoesNotSellProductException(storeId,productId);
         }
     }
 

@@ -1,5 +1,6 @@
 package engineLogic;
 import dataContainers.*;
+import javafx.concurrent.Task;
 import jaxb.generated.ThenYouGet;
 
 import javax.management.InstanceNotFoundException;
@@ -8,6 +9,8 @@ import java.awt.*;
 import java.io.Console;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.function.Consumer;
+
 
 public class SystemManager
 {
