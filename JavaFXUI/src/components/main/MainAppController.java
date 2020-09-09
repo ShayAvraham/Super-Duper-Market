@@ -7,6 +7,7 @@ import components.showAllStores.ShowAllStoresController;
 import components.showMap.ShowMapController;
 import components.showOrdersHistory.ShowOrdersHistoryController;
 import components.updateProducts.UpdateProductsController;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ public class MainAppController
 
     private SystemManager systemManager;
     private Stage stage;
+    private SimpleBooleanProperty isFileLoadedProperty;
 
     @FXML
     private AnchorPane menuBar;
@@ -75,11 +77,29 @@ public class MainAppController
             updateProductsController = initializeUpdateProductsController(this.systemManager);
             placeOrderController = initializePlaceOrderController(this.systemManager);
             showOrdersHistoryController = initializeShowOrdersHistoryController(this.systemManager);
+            isFileLoadedProperty = new SimpleBooleanProperty(false);
         }
         catch (Exception e)
         {
 
         }
+    }
+
+    @FXML
+    void initialize()
+    {
+        showAllCustomersButton.disableProperty().bind(isFileLoadedProperty.not());
+        showAllStoresButton.disableProperty().bind(isFileLoadedProperty.not());
+        showAllProductsButton.disableProperty().bind(isFileLoadedProperty.not());
+        showOrdersHistoryButton.disableProperty().bind(isFileLoadedProperty.not());
+        updateProductsButton.disableProperty().bind(isFileLoadedProperty.not());
+        placeOrderButton.disableProperty().bind(isFileLoadedProperty.not());
+        showMapButton.disableProperty().bind(isFileLoadedProperty.not());
+    }
+
+    public void setIsFileLoadedProperty(boolean isFileLoaded)
+    {
+        isFileLoadedProperty.set(isFileLoaded);
     }
 
     private LoadXmlController initializeLoadXMLController(SystemManager systemManager) throws IOException
@@ -184,14 +204,6 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         mainWindow.getChildren().add(loadXmlController.getRootPane());
-        try
-        {
-            systemManager.loadDataFromXmlFile("Engine/src/resources/ex2-small.xml");
-        }
-        catch (Exception e)
-        {
-
-        }
     }
 
     @FXML
@@ -205,6 +217,7 @@ public class MainAppController
     void showAllCustomers(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showAllCustomersController.updateCustomersTable();
         mainWindow.getChildren().add(showAllCustomersController.getRootPane());
     }
 
@@ -241,6 +254,7 @@ public class MainAppController
     void updateProducts(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        updateProductsController.LoadDataToControllers();
         mainWindow.getChildren().add(updateProductsController.getRootPane());
     }
 

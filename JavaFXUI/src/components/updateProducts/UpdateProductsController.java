@@ -27,4 +27,9 @@ public class UpdateProductsController
     {
         this.systemLogic = systemManager;
     }
+
+    public void LoadDataToControllers()
+    {
+
+    }
 }
