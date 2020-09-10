@@ -1,5 +1,6 @@
 package engineLogic;
 
+import exceptions.DiscountRemoveException;
 import jaxb.generated.SDMDiscounts;
 import jaxb.generated.SDMStore;
 
@@ -150,6 +151,24 @@ public class Store
     {
         Product productToRemove = getProductById(productId);
         storeProducts.remove(productToRemove);
+        removeDiscounts(productToRemove);
+    }
+
+    private void removeDiscounts(Product product)
+    {
+        Collection <String> removeDiscounts = new ArrayList<>();
+        for (Discount discount:storeDiscounts)
+        {
+            if(discount.getDiscountProduct().getId() == product.getId());
+            {
+                storeDiscounts.remove(discount);
+                removeDiscounts.add(discount.getName());
+            }
+        }
+        if(!removeDiscounts.isEmpty())
+        {
+            throw new DiscountRemoveException(product.getName(),removeDiscounts);
+        }
     }
 
     public void addProduct(StoreProduct productToAdd)

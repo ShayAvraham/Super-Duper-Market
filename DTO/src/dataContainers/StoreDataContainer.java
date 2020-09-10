@@ -91,4 +91,11 @@ public class StoreDataContainer
     {
         return Objects.hash(getId());
     }
+
+    @Override
+    public String toString() {
+        return name +" | " +
+                "id:" + id;
+    }
 }
+

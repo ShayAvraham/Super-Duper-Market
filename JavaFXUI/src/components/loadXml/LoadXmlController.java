@@ -83,14 +83,8 @@ public class LoadXmlController
     }
 
     @FXML
-    void initialize() {
-        assert rootPane != null : "fx:id=\"rootPane\" was not injected: check your FXML file 'LoadXml.fxml'.";
-        assert statusMessageLabel != null : "fx:id=\"statusMessageLabel\" was not injected: check your FXML file 'LoadXml.fxml'.";
-        assert progressPercentLabel != null : "fx:id=\"progressPercentLabel\" was not injected: check your FXML file 'LoadXml.fxml'.";
-        assert openFileButton != null : "fx:id=\"openFileButton\" was not injected: check your FXML file 'LoadXml.fxml'.";
-        assert loadProgressBar != null : "fx:id=\"loadProgressBar\" was not injected: check your FXML file 'LoadXml.fxml'.";
-        assert filePathLabel != null : "fx:id=\"filePathLabel\" was not injected: check your FXML file 'LoadXml.fxml'.";
-
+    void initialize()
+    {
         filePathLabel.textProperty().bind(selectedFileProperty);
     }
 

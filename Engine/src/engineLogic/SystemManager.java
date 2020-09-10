@@ -1,10 +1,12 @@
 package engineLogic;
 import dataContainers.*;
+import exceptions.DiscountRemoveException;
 import javafx.concurrent.Task;
 import jaxb.generated.ThenYouGet;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.ValidationException;
 import java.awt.*;
 import java.io.Console;
 import java.io.FileNotFoundException;
@@ -16,6 +18,8 @@ public class SystemManager
 {
     private final String IF_YOU_BUY_MSG = "If you buy The %1$s %2$s of %3$s";
     private final String THEN_YOU_GET_MSG = "then you get %1$s";
+    private final String UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE = "Unable to remove this product because its sold only in one store.";
+    private final String UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE = "Unable to remove this product because the store sold only this product.";
 
     private SystemData systemData;
     private XmlSystemDataBuilder xmlSystemDataBuilder;
@@ -493,10 +497,47 @@ public class SystemManager
                 .orElse(0.0);
     }
 
-    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove)
+    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove) throws ValidationException
     {
-        systemData.removeProductFromStore(store.getId(),productToRemove.getId());
-        updateDataContainers();
+        validateRemoveProduct(store,productToRemove);
+        try
+        {
+             systemData.removeProductFromStore(store.getId(),productToRemove.getId());
+        }
+        finally
+        {
+            updateDataContainers();
+        }
+
+
+
+    }
+
+    private void validateRemoveProduct(StoreDataContainer store, ProductDataContainer product) throws ValidationException
+    {
+        if(!isOthersStoresSellThisProduct(store, product))
+        {
+            throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE);
+        }
+        if(store.getProducts().size() == 1)
+        {
+            throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE);
+        }
+    }
+
+    private boolean isOthersStoresSellThisProduct(StoreDataContainer selectedStore, ProductDataContainer product)
+    {
+        for(StoreDataContainer store: getAllStoresData())
+        {
+            if(!selectedStore.equals(store))
+            {
+                if(store.getProducts().contains(product))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void addProductToStore(StoreDataContainer store, ProductDataContainer productToAdd, int price)

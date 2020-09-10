@@ -79,4 +79,11 @@ public class ProductDataContainer
     {
         return Objects.hash(getId());
     }
+
+    @Override
+    public String toString()
+    {
+        return name +" | " +
+                "id:" + id;
+    }
 }
