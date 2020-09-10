@@ -39,7 +39,8 @@ public class StoreDataContainer
     public Point getPosition() {
         return position;
     }
-    public float getPPK()
+
+    public float getPpk()
     {
         return ppk;
     }

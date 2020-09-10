@@ -234,6 +234,7 @@ public class MainAppController
     void showAllStores(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showAllStoresController.updateStoresTable();
         mainWindow.getChildren().add(showAllStoresController.getRootPane());
     }
 
@@ -248,6 +249,7 @@ public class MainAppController
     void showOrdersHistory(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showOrdersHistoryController.updateOrdersHistoryTable();
         mainWindow.getChildren().add(showOrdersHistoryController.getRootPane());
     }
 
