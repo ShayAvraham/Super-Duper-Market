@@ -234,6 +234,7 @@ public class MainAppController
     void showAllStores(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showAllStoresController.updateStoresTable();
         mainWindow.getChildren().add(showAllStoresController.getRootPane());
     }
 
