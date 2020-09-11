@@ -48,6 +48,7 @@ public class ShowAllCustomersController
 
     public void updateCustomersTable()
     {
+        customersView.refresh();
         ObservableList<CustomerDataContainer> customersList = FXCollections.observableArrayList();
         customersList.addAll(systemLogic.getAllCustomersData());
         customersView.setItems(customersList);

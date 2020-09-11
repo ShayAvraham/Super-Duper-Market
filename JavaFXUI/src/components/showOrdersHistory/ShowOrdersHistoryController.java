@@ -60,6 +60,7 @@ public class ShowOrdersHistoryController
 
     public void updateOrdersHistoryTable()
     {
+        ordersView.refresh();
         ObservableList<OrderDataContainer> ordersList = FXCollections.observableArrayList();
         ordersList.addAll(systemLogic.getAllOrdersData());
         ordersView.setItems(ordersList);

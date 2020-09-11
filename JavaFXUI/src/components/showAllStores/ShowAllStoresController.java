@@ -3,6 +3,8 @@ package components.showAllStores;
 import components.main.MainAppController;
 import dataContainers.*;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
+import javax.swing.*;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -111,17 +114,28 @@ public class ShowAllStoresController
 
     public void updateStoresTable()
     {
+        storesView.refresh();
         if (systemLogic.getAllStoresData().size() != 0)
         {
-            if (storesView.getSelectionModel().getSelectedItems() == null)
-            {
-                storesView.getSelectionModel().select(0);
-            }
-            ObservableList<StoreDataContainer> selectedStore = storesView.getSelectionModel().getSelectedItems();
-            storesView.setOnMouseClicked(event -> updateSelectedStoreDataTables(selectedStore.get(0)));
             ObservableList<StoreDataContainer> storesList = FXCollections.observableArrayList();
             storesList.addAll(systemLogic.getAllStoresData());
             storesView.setItems(storesList);
+            if (storesView.getSelectionModel().getSelectedItems().size() == 0)
+            {
+                storesView.getSelectionModel().select(0);
+                storesView.getSelectionModel().focus(0);
+            }
+            updateSelectedStoreDataTables(storesView.getSelectionModel().getSelectedItem());
+            storesView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+                @Override
+                public void changed(ObservableValue observableValue, Object oldValue, Object newValue) {
+                    StoreDataContainer selectedStore = storesView.getSelectionModel().getSelectedItem();
+                    if(selectedStore != null)
+                    {
+                        updateSelectedStoreDataTables(selectedStore);
+                    }
+                }
+            });
         }
         else
         {
