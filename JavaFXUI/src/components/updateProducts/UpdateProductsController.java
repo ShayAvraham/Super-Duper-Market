@@ -135,7 +135,6 @@ public class UpdateProductsController
         loadStores();
         updateOptionProperty.setValue(updateOptionValues);
         priceSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,Integer.MAX_VALUE,1,1));
-//        newPriceProperty.setValue(1);
     }
 
     private void loadStores()
@@ -144,22 +143,28 @@ public class UpdateProductsController
                 .collect(Collectors
                         .collectingAndThen(Collectors.toList(),
                                 FXCollections::observableArrayList)));
-        updateOptionProperty.setValue(updateOptionValues);
+
     }
 
     @FXML
     void onStoreSelected(ActionEvent event)
     {
-        isStoreSelected.setValue(true);
-        loadProducts();
+        try
+        {
+            isStoreSelected.setValue(true);
+            loadProducts();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Utilities.ShowErrorAlert(e.getMessage());
+        }
     }
 
     private void loadProducts()
     {
         if(isUpdateOptionSelected.get())
         {
-//            productsProperty.clear();
-            productsProperty.setValue(null);
             switch (selectedOptionProperty.getValue())
             {
                 case ADD:
@@ -189,40 +194,46 @@ public class UpdateProductsController
     private ObservableList<ProductDataContainer> loadProductToAdd()
     {
         return systemManager.getAllProductsData().stream()
-                .filter(s -> {return !selectedStoreProperty.getValue().getProducts().contains(s);
-               //     return s.equals(selectedStoreProperty.getValue());
-                })
+                .filter(s -> {return !selectedStoreProperty.getValue().getProducts().contains(s); })
                 .collect(Collectors
                         .collectingAndThen(Collectors.toList(),
                                 FXCollections::observableArrayList));
-
-
-//       return systemManager.getAllProductsData().stream()
-//                .collect(Collectors
-//                        .collectingAndThen(Collectors.toList(),
-//                                FXCollections::observableArrayList));
     }
 
     @FXML
     void onUpdateOptionSelected(ActionEvent event)
     {
-        isUpdateOptionSelected.setValue(true);
-        if(selectedOptionProperty.getValue().equals(UPDATE_PRICE))
+        try
         {
-            isNotUpdatePriceSelected.setValue(true);
+            isUpdateOptionSelected.setValue(true);
+            if (selectedOptionProperty.getValue().equals(UPDATE_PRICE))
+            {
+                isNotUpdatePriceSelected.setValue(true);
+            }
+            else
+            {
+                isNotUpdatePriceSelected.setValue(false);
+            }
+            loadProducts();
         }
-        else
+        catch (Exception e)
         {
-            isNotUpdatePriceSelected.setValue(false);
+            Utilities.ShowErrorAlert(e.getMessage());
         }
-        loadProducts();
-
     }
 
     @FXML
     void onProductSelected(ActionEvent event)
     {
-        isProductSelected.setValue(true);
+        try
+        {
+            isProductSelected.setValue(true);
+        }
+        catch (Exception e)
+        {
+            Utilities.ShowErrorAlert(e.getMessage());
+        }
+
     }
 
     @FXML
@@ -243,6 +254,7 @@ public class UpdateProductsController
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }

@@ -7,6 +7,7 @@ import jaxb.generated.SDMStore;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.round;
 
@@ -33,7 +34,7 @@ public class Store
         this.name = store.getName();
         this.position = position;
         this.ppk = store.getDeliveryPpk();
-        this.storeProducts = storeProducts;
+        this.storeProducts = new HashSet<>(storeProducts);
         this.storeDiscounts = storeDiscounts;
         this.storeOrders = new HashSet<>();
     }
@@ -159,7 +160,7 @@ public class Store
         Collection <String> removeDiscounts = new ArrayList<>();
         for (Discount discount:storeDiscounts)
         {
-            if(discount.getDiscountProduct().getId() == product.getId());
+            if(discount.getDiscountProduct().getId() == product.getId())
             {
                 storeDiscounts.remove(discount);
                 removeDiscounts.add(discount.getName());

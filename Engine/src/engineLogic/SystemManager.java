@@ -16,8 +16,6 @@ import java.util.function.Consumer;
 
 public class SystemManager
 {
-    private final String IF_YOU_BUY_MSG = "If you buy The %1$s %2$s of %3$s";
-    private final String THEN_YOU_GET_MSG = "then you get %1$s";
     private final String UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE = "Unable to remove this product because its sold only in this store.";
     private final String UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE = "Unable to remove this product because the store sold only this product.";
 
@@ -276,7 +274,7 @@ public class SystemManager
     private String createIfYouBuyDescription(DiscountProduct discountProduct)
     {
         String purchaseFormStr = createPurchaseFormStr(discountProduct.getPurchaseForm(),discountProduct.getAmountForDiscount());
-        return String.format(IF_YOU_BUY_MSG,discountProduct.getAmountForDiscount(),purchaseFormStr,discountProduct.getName());
+        return String.format("%1$s %2$s of %3$s",discountProduct.getAmountForDiscount(),purchaseFormStr,discountProduct.getName());
     }
 
     private String createPurchaseFormStr(Product.ProductPurchaseForm purchaseForm,double amount)
@@ -300,13 +298,13 @@ public class SystemManager
 
     private String createThenYouGetDescription(Collection<OfferProduct> offerProducts, Discount.DiscountType discountType)
     {
-        String productsToGet = THEN_YOU_GET_MSG;
+        String productsToGet = "";
         String discountTypeStr = createDiscountTypeStr(discountType);
 
         for(OfferProduct product: offerProducts)
         {
             String purchaseFormStr = createPurchaseFormStr(product.getPurchaseForm(),product.getOfferAmount());
-            if(!product.equals(offerProducts.stream().findFirst()))
+            if(!product.equals(offerProducts.stream().findFirst().get()))
             {
                 productsToGet += discountTypeStr;
             }
@@ -317,7 +315,7 @@ public class SystemManager
                                             product.getOfferPrice());
         }
 
-        return String.format(THEN_YOU_GET_MSG, productsToGet);
+        return productsToGet;
 
     }
 
