@@ -13,7 +13,7 @@ public class DiscountRemoveException extends RuntimeException
         String discountNames = "";
         for (String discount:removedDiscounts)
         {
-                if(!removedDiscounts.stream().findFirst().equals(discount))
+                if(!removedDiscounts.stream().findFirst().get().equals(discount))
                 {
                     discountNames += ", ";
                 }

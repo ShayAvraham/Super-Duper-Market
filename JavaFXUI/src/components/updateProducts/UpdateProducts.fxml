@@ -39,7 +39,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Set new price" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label fx:id="priceLabel" text="Set new price" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <Spinner fx:id="priceSpinner" editable="true" prefHeight="31.0" prefWidth="109.0" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="10.0" />

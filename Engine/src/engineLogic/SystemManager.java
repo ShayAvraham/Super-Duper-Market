@@ -18,7 +18,7 @@ public class SystemManager
 {
     private final String IF_YOU_BUY_MSG = "If you buy The %1$s %2$s of %3$s";
     private final String THEN_YOU_GET_MSG = "then you get %1$s";
-    private final String UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE = "Unable to remove this product because its sold only in one store.";
+    private final String UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE = "Unable to remove this product because its sold only in this store.";
     private final String UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE = "Unable to remove this product because the store sold only this product.";
 
     private SystemData systemData;
