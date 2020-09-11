@@ -28,7 +28,7 @@
         </rowConstraints>
          <children>
             <ComboBox fx:id="storeComboBox" onAction="#onStoreSelected" prefHeight="31.0" prefWidth="211.0" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-            <ComboBox fx:id="productComboBox" onAction="#onProductSelected" prefHeight="31.0" prefWidth="212.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <ComboBox fx:id="productComboBox" prefHeight="31.0" prefWidth="212.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
             <Label text="Choose store">
                <GridPane.margin>
                   <Insets left="10.0" />

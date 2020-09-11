@@ -6,19 +6,22 @@ import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import engineLogic.SystemManager;
 import exceptions.DiscountRemoveException;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javafx.event.ActionEvent;
+import javafx.util.converter.IntegerStringConverter;
 
 import javax.xml.bind.ValidationException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class UpdateProductsController
 {
@@ -58,7 +61,6 @@ public class UpdateProductsController
     private final String PRODUCT_ADDED_SUCCESSFULLY_MESSAGE = "Product %1$s add successfully to %2$s.";
     private final String PRODUCT_UPDATED_PRICE_SUCCESSFULLY_MESSAGE = "Product %1$s update price successfully in %2$s.";
 
-
     private SystemManager systemManager;
 
     private SimpleListProperty<StoreDataContainer> storesProperty;
@@ -69,11 +71,6 @@ public class UpdateProductsController
     private SimpleObjectProperty<ProductDataContainer> selectedProductProperty;
     private SimpleStringProperty selectedOptionProperty;
     private SimpleObjectProperty<Integer> selectedPrice;
-
-    private SimpleBooleanProperty isStoreSelected;
-    private SimpleBooleanProperty isUpdateOptionSelected;
-    private SimpleBooleanProperty isProductSelected;
-    private SimpleBooleanProperty isNotUpdatePriceSelected;
 
     ObservableList<String> updateOptionValues = FXCollections.observableArrayList(ADD,REMOVE,UPDATE_PRICE);
 
@@ -89,11 +86,11 @@ public class UpdateProductsController
         selectedOptionProperty.bind(updateOptionComboBox.valueProperty());
         selectedPrice.bind(priceSpinner.valueProperty());
 
-        productComboBox.disableProperty().bind(isUpdateOptionSelected.not() .or (isStoreSelected.not()));
-        priceSpinner.visibleProperty().bind(isNotUpdatePriceSelected);
-        priceLabel.visibleProperty().bind(isNotUpdatePriceSelected);
-        submitButton.disableProperty().bind(isProductSelected.not());
 
+        productComboBox.disableProperty().bind(selectedStoreProperty.isNull() .or (selectedOptionProperty.isNull()));
+        priceSpinner.visibleProperty().bind(selectedOptionProperty.isEqualTo(ADD) .or (selectedOptionProperty.isEqualTo(UPDATE_PRICE)));
+        priceLabel.visibleProperty().bind(selectedOptionProperty.isEqualTo(ADD) .or (selectedOptionProperty.isEqualTo(UPDATE_PRICE)));
+        submitButton.disableProperty().bind(selectedProductProperty.isNull());
     }
 
     public UpdateProductsController()
@@ -106,12 +103,6 @@ public class UpdateProductsController
         selectedProductProperty = new SimpleObjectProperty<>();
         selectedOptionProperty = new SimpleStringProperty();
         selectedPrice = new SimpleObjectProperty<>();
-
-
-        isStoreSelected = new SimpleBooleanProperty(false);
-        isUpdateOptionSelected = new SimpleBooleanProperty(false);
-        isProductSelected = new SimpleBooleanProperty(false);
-        isNotUpdatePriceSelected = new SimpleBooleanProperty(false);
     }
 
     public AnchorPane getRootPane()
@@ -134,7 +125,9 @@ public class UpdateProductsController
     {
         loadStores();
         updateOptionProperty.setValue(updateOptionValues);
+        TextFormatter<Integer> priceFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1, Utilities.getNaturalNumbersFilter());
         priceSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,Integer.MAX_VALUE,1,1));
+        priceSpinner.getEditor().setTextFormatter(priceFormatter);
     }
 
     private void loadStores()
@@ -143,7 +136,6 @@ public class UpdateProductsController
                 .collect(Collectors
                         .collectingAndThen(Collectors.toList(),
                                 FXCollections::observableArrayList)));
-
     }
 
     @FXML
@@ -151,19 +143,18 @@ public class UpdateProductsController
     {
         try
         {
-            isStoreSelected.setValue(true);
             loadProducts();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }
 
     private void loadProducts()
     {
-        if(isUpdateOptionSelected.get())
+        if(selectedOptionProperty.isNotNull().get() && selectedStoreProperty.isNotNull().get())
         {
             switch (selectedOptionProperty.getValue())
             {
@@ -176,6 +167,7 @@ public class UpdateProductsController
                     break;
             }
         }
+
     }
 
     private ObservableList<ProductDataContainer> loadStoreProducts()
@@ -194,7 +186,9 @@ public class UpdateProductsController
     private ObservableList<ProductDataContainer> loadProductToAdd()
     {
         return systemManager.getAllProductsData().stream()
-                .filter(s -> {return !selectedStoreProperty.getValue().getProducts().contains(s); })
+                .filter(s -> {
+                    return !selectedStoreProperty.getValue().getProducts().contains(s);
+                })
                 .collect(Collectors
                         .collectingAndThen(Collectors.toList(),
                                 FXCollections::observableArrayList));
@@ -205,35 +199,13 @@ public class UpdateProductsController
     {
         try
         {
-            isUpdateOptionSelected.setValue(true);
-            if (selectedOptionProperty.getValue().equals(UPDATE_PRICE))
-            {
-                isNotUpdatePriceSelected.setValue(true);
-            }
-            else
-            {
-                isNotUpdatePriceSelected.setValue(false);
-            }
             loadProducts();
         }
         catch (Exception e)
         {
+//            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
-    }
-
-    @FXML
-    void onProductSelected(ActionEvent event)
-    {
-        try
-        {
-            isProductSelected.setValue(true);
-        }
-        catch (Exception e)
-        {
-            Utilities.ShowErrorAlert(e.getMessage());
-        }
-
     }
 
     @FXML
@@ -254,7 +226,7 @@ public class UpdateProductsController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+//            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }

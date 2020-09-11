@@ -1,6 +1,10 @@
 package common;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextFormatter;
+
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 public final class Utilities
 {
@@ -26,5 +30,19 @@ public final class Utilities
         alert.setTitle("Information Dialog");
         alert.setContentText(alertMsg);
         alert.showAndWait();
+    }
+
+    public static UnaryOperator<TextFormatter.Change> getNaturalNumbersFilter()
+    {
+        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
+            String text = change.getControlNewText();
+
+            if (text.matches("[1-9]+[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+
+        return naturalNumbersFilter;
     }
 }
