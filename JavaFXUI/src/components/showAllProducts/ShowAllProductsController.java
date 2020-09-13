@@ -63,6 +63,7 @@ public class ShowAllProductsController
 
     public void updateProductsTable()
     {
+        productsView.refresh();
         ObservableList<ProductDataContainer> productsList = FXCollections.observableArrayList();
         productsList.addAll(systemLogic.getAllProductsData());
         productsView.setItems(productsList);

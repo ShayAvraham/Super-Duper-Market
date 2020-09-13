@@ -2,7 +2,10 @@ package components.showAllStores;
 
 import components.main.MainAppController;
 import dataContainers.*;
+import engineLogic.Discount;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
+import javax.swing.*;
+import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -21,6 +26,11 @@ public class ShowAllStoresController
 {
     private MainAppController mainAppController;
     private SystemManager systemLogic;
+
+    private SimpleListProperty<StoreDataContainer> storesProperty;
+    private SimpleListProperty<ProductDataContainer> productsProperty;
+    private SimpleListProperty<OrderDataContainer> ordersProperty;
+    private SimpleListProperty<DiscountDataContainer> discountsProperty;
 
     @FXML
     private AnchorPane rootPane;
@@ -103,25 +113,36 @@ public class ShowAllStoresController
     @FXML
     private TableColumn<DiscountDataContainer, String> thenYouGetDescription;
 
+    public ShowAllStoresController()
+    {
+        storesProperty = new SimpleListProperty<>();
+        productsProperty = new SimpleListProperty<>();
+        ordersProperty = new SimpleListProperty<>();
+        discountsProperty = new SimpleListProperty<>();
+    }
+
     @FXML
     private void initialize()
     {
+        storesView.itemsProperty().bind(storesProperty);
+        storeProductsView.itemsProperty().bind(productsProperty);
+        storeOrdersView.itemsProperty().bind(ordersProperty);
+        storeDiscountsView.itemsProperty().bind(discountsProperty);
+        productsTab.disableProperty().bind(storesView.getSelectionModel().selectedItemProperty().isNull());
+        ordersTab.disableProperty().bind(storesView.getSelectionModel().selectedItemProperty().isNull());
+        discountsTab.disableProperty().bind(storesView.getSelectionModel().selectedItemProperty().isNull());
         setStoresTableColumnsProperties();
     }
 
     public void updateStoresTable()
     {
+        storesView.refresh();
+        mainTabPane.getSelectionModel().select(storesTab);
+        storesView.getSelectionModel().clearSelection();
         if (systemLogic.getAllStoresData().size() != 0)
         {
-            if (storesView.getSelectionModel().getSelectedItems() == null)
-            {
-                storesView.getSelectionModel().select(0);
-            }
-            ObservableList<StoreDataContainer> selectedStore = storesView.getSelectionModel().getSelectedItems();
-            storesView.setOnMouseClicked(event -> updateSelectedStoreDataTables(selectedStore.get(0)));
-            ObservableList<StoreDataContainer> storesList = FXCollections.observableArrayList();
-            storesList.addAll(systemLogic.getAllStoresData());
-            storesView.setItems(storesList);
+            storesProperty.setValue(loadStores());
+            storesView.setOnMouseClicked(event -> updateSelectedStoreDataTables(storesView.getSelectionModel().getSelectedItem()));
         }
         else
         {
@@ -131,9 +152,12 @@ public class ShowAllStoresController
 
     private void updateSelectedStoreDataTables(StoreDataContainer selectedStore)
     {
-        updateStoreProductsTable(selectedStore);
-        updateStoreOrdersTable(selectedStore);
-        updateStoreDiscountsTable(selectedStore);
+        if (selectedStore != null)
+        {
+            updateStoreProductsTable(selectedStore);
+            updateStoreOrdersTable(selectedStore);
+            updateStoreDiscountsTable(selectedStore);
+        }
     }
 
     private void updateStoreProductsTable(StoreDataContainer selectedStore)
@@ -141,9 +165,7 @@ public class ShowAllStoresController
         if (selectedStore.getProducts().size() != 0)
         {
             setProductsTableColumnsProperties(selectedStore);
-            ObservableList<ProductDataContainer> storeProductsList = FXCollections.observableArrayList();
-            storeProductsList.addAll(selectedStore.getProducts());
-            storeProductsView.setItems(storeProductsList);
+            productsProperty.setValue(loadStoreProducts(selectedStore));
         }
         else
         {
@@ -156,9 +178,7 @@ public class ShowAllStoresController
         if (selectedStore.getOrders().size() != 0)
         {
             setOrdersTableColumnsProperties();
-            ObservableList<OrderDataContainer> storeOrdersList = FXCollections.observableArrayList();
-            storeOrdersList.addAll(selectedStore.getOrders());
-            storeOrdersView.setItems(storeOrdersList);
+            ordersProperty.setValue(loadStoreOrders(selectedStore));
         }
         else
         {
@@ -171,9 +191,7 @@ public class ShowAllStoresController
         if (selectedStore.getDiscounts().size() != 0)
         {
             setDiscountsTableColumnsProperties();
-            ObservableList<DiscountDataContainer> storeDiscountsList = FXCollections.observableArrayList();
-            storeDiscountsList.addAll(selectedStore.getDiscounts());
-            storeDiscountsView.setItems(storeDiscountsList);
+            discountsProperty.setValue(loadStoreDiscounts(selectedStore));
         }
         else
         {
@@ -212,6 +230,53 @@ public class ShowAllStoresController
         discountName.setCellValueFactory(new PropertyValueFactory<>("discountName"));
         ifYouBuyDescription.setCellValueFactory(new PropertyValueFactory<>("ifYouBuyDescription"));
         thenYouGetDescription.setCellValueFactory(new PropertyValueFactory<>("thenYouGetDescription"));
+    }
+
+    private ObservableList<StoreDataContainer> loadStores()
+    {
+        return systemLogic.getAllStoresData().stream()
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),
+                                FXCollections::observableArrayList));
+    }
+
+    private ObservableList<ProductDataContainer> loadStoreProducts(StoreDataContainer selectedStore)
+    {
+        return systemLogic.getAllStoresData().stream()
+                .filter(s -> {
+                    return s.equals(selectedStore);
+                })
+                .map(StoreDataContainer::getProducts)
+                .flatMap(Collection<ProductDataContainer>::stream)
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),
+                                FXCollections::observableArrayList));
+    }
+
+    private ObservableList<OrderDataContainer> loadStoreOrders(StoreDataContainer selectedStore)
+    {
+        return systemLogic.getAllStoresData().stream()
+                .filter(s -> {
+                    return s.equals(selectedStore);
+                })
+                .map(StoreDataContainer::getOrders)
+                .flatMap(Collection<OrderDataContainer>::stream)
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),
+                                FXCollections::observableArrayList));
+    }
+
+    private ObservableList<DiscountDataContainer> loadStoreDiscounts(StoreDataContainer selectedStore)
+    {
+        return systemLogic.getAllStoresData().stream()
+                .filter(s -> {
+                    return s.equals(selectedStore);
+                })
+                .map(StoreDataContainer::getDiscounts)
+                .flatMap(Collection<DiscountDataContainer>::stream)
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),
+                                FXCollections::observableArrayList));
     }
 
     public AnchorPane getRootPane()

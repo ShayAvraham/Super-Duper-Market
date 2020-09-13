@@ -3,6 +3,7 @@ package components.showAllCustomers;
 import components.main.MainAppController;
 import dataContainers.CustomerDataContainer;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,8 +12,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
+import java.awt.*;
+
 public class ShowAllCustomersController
 {
+    private final String POSITION_FORMAT = "(%1$s, %2$s)";
+
     private MainAppController mainAppController;
     private SystemManager systemLogic;
 
@@ -48,6 +53,7 @@ public class ShowAllCustomersController
 
     public void updateCustomersTable()
     {
+        customersView.refresh();
         ObservableList<CustomerDataContainer> customersList = FXCollections.observableArrayList();
         customersList.addAll(systemLogic.getAllCustomersData());
         customersView.setItems(customersList);
@@ -57,10 +63,15 @@ public class ShowAllCustomersController
     {
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        position.setCellValueFactory(new PropertyValueFactory<>("name"));
+        position.setCellValueFactory(cellData -> new SimpleObjectProperty<>(convertPositionFormat(cellData.getValue().getPosition())));
         numOfOrders.setCellValueFactory(new PropertyValueFactory<>("numOfOrders"));
         avgOrdersCost.setCellValueFactory(new PropertyValueFactory<>("orderCostAvg"));
         avgDeliveriesCost.setCellValueFactory(new PropertyValueFactory<>("deliveryCostAvg"));
+    }
+
+    private String convertPositionFormat(Point position)
+    {
+        return String.format(POSITION_FORMAT, (int) position.getX(), (int) position.getY());
     }
 
     public AnchorPane getRootPane()
