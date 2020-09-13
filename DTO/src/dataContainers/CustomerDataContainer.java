@@ -45,4 +45,11 @@ public class CustomerDataContainer
     public Point getPosition() {
         return position;
     }
+
+    @Override
+    public String toString()
+    {
+        return name +" | " +
+                "id:" + id;
+    }
 }

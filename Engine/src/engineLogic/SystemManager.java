@@ -10,6 +10,7 @@ import javax.xml.bind.ValidationException;
 import java.awt.*;
 import java.io.Console;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -28,6 +29,12 @@ public class SystemManager
     private boolean isFileWasLoadSuccessfully = false;
     private Map <ProductDataContainer, StoreDataContainer> storesToBuyFrom;
     private Map <Integer,Float> deliveryCostFromStores;
+    private static DecimalFormat DECIMAL_FORMAT;
+
+    static
+    {
+        DECIMAL_FORMAT = new DecimalFormat("#.##");
+    }
 
     public SystemManager()
     {
@@ -662,8 +669,19 @@ public class SystemManager
         return deliveryCost;
     }
 
-    public float getDistanceBetweenStoreAndCustomer(Point userLocation, StoreDataContainer store)
+//    public float getDistanceBetweenStoreAndCustomer(Point userLocation, StoreDataContainer store)
+//    {
+//        return systemData.getStores().get(store.getId()).getDistanceToCustomer(userLocation);
+//    }
+
+    public float getStaticOrderDeliveryCost(StoreDataContainer store, CustomerDataContainer customer)
     {
-        return systemData.getStores().get(store.getId()).getDistanceToCustomer(userLocation);
+        float deliveryCost  = getDistanceBetweenStoreAndCustomer(store, customer) * store.getPpk();
+        return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
+    }
+
+    private float getDistanceBetweenStoreAndCustomer(StoreDataContainer store, CustomerDataContainer customer)
+    {
+        return Math.abs((float) store.getPosition().distance(customer.getPosition()));
     }
 }

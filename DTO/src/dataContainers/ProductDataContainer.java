@@ -84,6 +84,6 @@ public class ProductDataContainer
     public String toString()
     {
         return name +" | " +
-                "id:" + id;
+                "id: " + id;
     }
 }

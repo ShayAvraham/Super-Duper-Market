@@ -1,7 +1,9 @@
 package common;
 
+import dataContainers.StoreDataContainer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
+import javafx.util.StringConverter;
 
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -44,5 +46,25 @@ public final class Utilities
         };
 
         return naturalNumbersFilter;
+    }
+
+    public static StringConverter<StoreDataContainer> getStoreConverterInPlaceOrder()
+    {
+       return new StringConverter<StoreDataContainer>()
+       {
+            @Override
+            public String toString(StoreDataContainer object)
+            {
+                return object.getName() + " | " +
+                        "id: " + object.getId() + " | " +
+                        "location: " +"["+ object.getPosition().x +
+                         ","+ object.getPosition().y +"]";
+            }
+
+            @Override
+            public StoreDataContainer fromString(String string) {
+                return null;
+            }
+        };
     }
 }

@@ -96,7 +96,7 @@ public class StoreDataContainer
     @Override
     public String toString() {
         return name +" | " +
-                "id:" + id;
+                "id: " + id;
     }
 }
 

@@ -212,6 +212,7 @@ public class MainAppController
     void placeOrder(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        placeOrderController.LoadDataToControllers();//change
         mainWindow.getChildren().add(placeOrderController.getRootPane());
     }
 
