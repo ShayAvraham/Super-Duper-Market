@@ -12,12 +12,12 @@
         <tabs>
           <Tab fx:id="storesTab" text="Stores">
                <content>
-                  <TableView fx:id="storesView" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="storesView" accessibleRole="IMAGE_VIEW" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="storeId" prefWidth="171.0" text="ID" />
-                      <TableColumn fx:id="storeName" prefWidth="146.0" text="Name" />
-                        <TableColumn fx:id="ppk" prefWidth="173.0" text="PPK" />
-                        <TableColumn fx:id="totalDeliveriesCost" prefWidth="274.0" text="Total Deliveries Cost" />
+                      <TableColumn fx:id="storeId" prefWidth="171.0" sortable="false" text="ID" />
+                      <TableColumn fx:id="storeName" prefWidth="146.0" sortable="false" text="Name" />
+                        <TableColumn fx:id="ppk" prefWidth="173.0" sortable="false" text="PPK" />
+                        <TableColumn fx:id="totalDeliveriesCost" prefWidth="274.0" sortable="false" text="Total Deliveries Cost" />
                     </columns>
                   </TableView>
                </content>
@@ -26,11 +26,11 @@
                <content>
                   <TableView fx:id="storeProductsView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="productId" prefWidth="83.0" text="ID" />
-                      <TableColumn fx:id="productName" prefWidth="159.0" text="Name" />
-                        <TableColumn fx:id="purchaseForm" prefWidth="168.0" text="Purchase Form" />
-                        <TableColumn fx:id="price" prefWidth="120.0" text="Price" />
-                        <TableColumn fx:id="howMuchSoldInStore" prefWidth="234.0" text="How Much Sold" />
+                      <TableColumn fx:id="productId" prefWidth="83.0" sortable="false" text="ID" />
+                      <TableColumn fx:id="productName" prefWidth="159.0" sortable="false" text="Name" />
+                        <TableColumn fx:id="purchaseForm" prefWidth="168.0" sortable="false" text="Purchase Form" />
+                        <TableColumn fx:id="price" prefWidth="120.0" sortable="false" text="Price" />
+                        <TableColumn fx:id="howMuchSoldInStore" prefWidth="234.0" sortable="false" text="How Much Sold" />
                     </columns>
                   </TableView>
                </content>
@@ -39,11 +39,11 @@
                <content>
                   <TableView fx:id="storeOrdersView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="date" prefWidth="121.0" text="Date" />
-                      <TableColumn fx:id="totalNumOfProducts" prefWidth="132.0" text="Total Products" />
-                        <TableColumn fx:id="totalProductsCost" prefWidth="175.0" text="Total Products Cost" />
-                        <TableColumn fx:id="deliveryCost" prefWidth="131.0" text="Delivery Cost" />
-                        <TableColumn fx:id="totalOrderCost" prefWidth="205.0" text="Total Order Cost" />
+                      <TableColumn fx:id="date" prefWidth="121.0" sortable="false" text="Date" />
+                      <TableColumn fx:id="totalNumOfProducts" prefWidth="132.0" sortable="false" text="Total Products" />
+                        <TableColumn fx:id="totalProductsCost" prefWidth="175.0" sortable="false" text="Total Products Cost" />
+                        <TableColumn fx:id="deliveryCost" prefWidth="131.0" sortable="false" text="Delivery Cost" />
+                        <TableColumn fx:id="totalOrderCost" prefWidth="205.0" sortable="false" text="Total Order Cost" />
                     </columns>
                   </TableView>
                </content>
@@ -52,9 +52,9 @@
                <content>
                   <TableView fx:id="storeDiscountsView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="discountName" prefWidth="164.0" text="Name" />
-                      <TableColumn fx:id="ifYouBuyDescription" prefWidth="330.0" text="If You Buy" />
-                        <TableColumn fx:id="thenYouGetDescription" prefWidth="270.0" text="Then You Get" />
+                      <TableColumn fx:id="discountName" prefWidth="164.0" sortable="false" text="Name" />
+                      <TableColumn fx:id="ifYouBuyDescription" prefWidth="330.0" sortable="false" text="If You Buy" />
+                        <TableColumn fx:id="thenYouGetDescription" prefWidth="270.0" sortable="false" text="Then You Get" />
                     </columns>
                   </TableView>
                </content>
