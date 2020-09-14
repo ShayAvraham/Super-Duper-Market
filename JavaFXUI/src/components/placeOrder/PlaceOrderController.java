@@ -4,6 +4,7 @@ import components.main.MainAppController;
 import dataContainers.CustomerDataContainer;
 import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
+import engineLogic.Store;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import engineLogic.SystemManager;
@@ -13,13 +14,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PlaceOrderController
@@ -54,10 +62,13 @@ public class PlaceOrderController
     private Label deliveryCostLabel;
 
     @FXML
+    private Tab productToOrderTab;
+
+    @FXML
     private TableView<ProductDataContainer> productsTableView;
 
     @FXML
-    private TableColumn<ProductDataContainer,CheckBox> productToOrderColumn;
+    private TableColumn<ProductDataContainer,Boolean> productToOrderColumn;
 
     @FXML
     private TableColumn<ProductDataContainer, Integer> productIDColumn;
@@ -70,6 +81,50 @@ public class PlaceOrderController
 
     @FXML
     private TableColumn<ProductDataContainer, String> productNameColumn;
+    @FXML
+    private TableColumn<ProductDataContainer,Spinner<Integer>> productAmountColumn;
+
+    @FXML
+    private Tab storesOrderedFromTab;
+
+    @FXML
+    private TableView<ArrayList<StringProperty>> storesOrderedFromTableView;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeIDColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeNameColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeLocationColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeDistanceColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storePPKColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeDeliveryCostColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeNumOfProductsTypesColumn;
+
+    @FXML
+    private TableColumn<ArrayList<StringProperty>, String> storeProductsCostColumn;
+
+    @FXML
+    private Tab availableDiscountsTab;
+
+    @FXML
+    private Tab storesOrderSummaryTab;
+
+    @FXML
+    private Tab productsOrderSummaryTab;
+
+    @FXML
+    private Button submitProductsButton;
 
     private final String STATIC = "Static order";
     private final String DYNAMIC = "Dynamic order";
@@ -81,6 +136,7 @@ public class PlaceOrderController
     private SimpleListProperty<StoreDataContainer> storesProperty;
     private SimpleFloatProperty deliveryCostProperty;
     private SimpleListProperty<ProductDataContainer> productsProperty;
+//    private SimpleListProperty<String> storesOrderedFromProperty;
 
 
     private SimpleObjectProperty<CustomerDataContainer> selectedCustomerProperty;
@@ -104,6 +160,7 @@ public class PlaceOrderController
 
         deliveryCostValueLabel.textProperty().bind(deliveryCostProperty.asString());
         productsTableView.itemsProperty().bind(productsProperty);
+//        storesOrderedFromTableView.itemsProperty().bind(storesOrderedFromProperty);
 
         selectedCustomerProperty.bind(customersComboBox.selectionModelProperty().get().selectedItemProperty());
         selectedOrderTypeProperty.bind(orderTypesComboBox.selectionModelProperty().get().selectedItemProperty());
@@ -112,7 +169,7 @@ public class PlaceOrderController
 
 //        productsTableView.disableProperty().bind(selectedCustomerProperty.isNull() .or (selectedOrderTypeProperty.isNull()));
 
-        productsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        productsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         productPriceColumn.visibleProperty().bindBidirectional(isOrderTypeStatic);
 
@@ -144,6 +201,7 @@ public class PlaceOrderController
         storesProperty = new SimpleListProperty<>();
         deliveryCostProperty = new SimpleFloatProperty();
         productsProperty = new SimpleListProperty<>();
+//        storesOrderedFromProperty = new SimpleListProperty<>();
 
         selectedCustomerProperty = new SimpleObjectProperty<>();
         selectedDeliveryDate = new SimpleObjectProperty<>();
@@ -251,7 +309,8 @@ public class PlaceOrderController
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productPurchaseFormColumn.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
         setPriceColumn();
-        setProductToOrderColumnColumn();
+        setProductToOrderColumn();
+        setAmountColumn();
     }
 
     private void setPriceColumn()
@@ -270,7 +329,8 @@ public class PlaceOrderController
     {
         productPriceColumn.setCellValueFactory(cellData ->
         {
-            if (selectedStoreProperty.getValue().getProducts().contains(cellData.getValue())) {
+            if (selectedStoreProperty.getValue().getProducts().contains(cellData.getValue()))
+            {
                 return new SimpleObjectProperty<>(selectedStoreProperty.getValue()
                         .getProductDataContainerById(cellData.getValue().getId())
                         .getPricePerStore().get(selectedStoreProperty.getValue()
@@ -283,26 +343,51 @@ public class PlaceOrderController
         });
     }
 
-    private void setProductToOrderColumnColumn()
+    private void setProductToOrderColumn()
     {
-        productToOrderColumn.setCellValueFactory(cellData ->
+//        productToOrderColumn.setCellFactory(CheckBoxTableCell.forTableColumn(productToOrderColumn));
+//        productToOrderColumn.setCellValueFactory(c -> c.getValue().checkedProperty());
+
+        productToOrderColumn.setCellFactory(column ->
         {
-            if(!isOrderTypeStatic.getValue()||
-                    (selectedStoreProperty.isNotNull().get() &&
-                    selectedStoreProperty.getValue().getProducts().contains(cellData.getValue())))
+            CheckBoxTableCell checkbox = new CheckBoxTableCell();
+            if(isOrderTypeStatic.get() && selectedStoreProperty.getValue() == null)
             {
-                return new SimpleObjectProperty<CheckBox>(new CheckBox());
+                checkbox.disableProperty().setValue(true);
             }
-            else
-            {
-                CheckBox checkBox = new CheckBox();
-                checkBox.disableProperty().setValue(true);
-                return new SimpleObjectProperty<CheckBox>(checkBox);
-            }
+
+            return  checkbox;
         });
+
+        productToOrderColumn.setCellValueFactory(c ->
+        {
+            if((isOrderTypeStatic.get() && selectedStoreProperty.getValue() == null)||
+                    (selectedStoreProperty.getValue() != null
+                    && !selectedStoreProperty.getValue().getProducts().contains(c.getValue())))
+            {
+              c.getValue().checkedProperty().setValue(false);
+            }
+
+           return  c.getValue().checkedProperty();
+        });
+
     }
 
 
+    private void setAmountColumn()
+    {
+        productAmountColumn.setCellValueFactory(column ->
+        {
+            Spinner<Integer> spinner = new Spinner<>();
+            TextFormatter<Integer> amountFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1, Utilities.getPositiveRealNumbersFilter());
+            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 1));
+            spinner.getEditor().setTextFormatter(amountFormatter);
+            spinner.setEditable(true);
+            column.getValue().amountProperty().bind(spinner.valueProperty());
+            return new SimpleObjectProperty<Spinner<Integer>>(spinner);
+        });
+
+    }
 
     @FXML
     void OnStoreSelected(ActionEvent event)
@@ -316,5 +401,89 @@ public class PlaceOrderController
         {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    void OnSubmitProductSelected(ActionEvent event)
+    {
+        Collection <ProductDataContainer > selectedProducts = getSelectedProducts();
+        if(!selectedProducts.isEmpty())
+        {
+            if(selectedOrderTypeProperty.getValue().equals(DYNAMIC))
+            {
+                Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom= systemManager.dynamicStoreAllocation(selectedProducts);
+                loadStoresOrderedFrom(storeToPurchaseFrom);
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    private Collection<ProductDataContainer> getSelectedProducts()
+    {
+        int sum = 0;
+        Collection <ProductDataContainer > selectedProducts = new HashSet<>();
+        for (ProductDataContainer item: productsTableView.getItems())
+        {
+            if (productToOrderColumn.getCellObservableValue(item).getValue().booleanValue())
+            {
+                selectedProducts.add(item);
+                sum += item.amountProperty().get();
+            }
+        }
+        return selectedProducts;
+    }
+
+    private void loadStoresOrderedFrom( Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom)
+    {
+
+        setStoresOrderedFromTableColumnsProperties();
+        ObservableList<ArrayList<StringProperty>> data = storesOrderedFromData(storeToPurchaseFrom);
+        storesOrderedFromTableView.setItems(data);
+        storesOrderedFromTableView.refresh();
+
+    }
+
+    private void setStoresOrderedFromTableColumnsProperties()
+    {
+        storeIDColumn.setCellValueFactory(data -> data.getValue().get(0));
+        storeNameColumn.setCellValueFactory(data -> data.getValue().get(1));
+        storeLocationColumn.setCellValueFactory(data -> data.getValue().get(2));
+        storeDistanceColumn.setCellValueFactory(data -> data.getValue().get(3));
+        storePPKColumn.setCellValueFactory(data -> data.getValue().get(4));
+        storeDeliveryCostColumn.setCellValueFactory(data -> data.getValue().get(5));
+        storeNumOfProductsTypesColumn.setCellValueFactory(data -> data.getValue().get(6));
+        storeProductsCostColumn.setCellValueFactory(data -> data.getValue().get(7));
+    }
+
+    private ObservableList<ArrayList<StringProperty>> storesOrderedFromData
+            (Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom)
+    {
+        ObservableList<ArrayList<StringProperty>> data = FXCollections.observableArrayList();
+
+        for(StoreDataContainer store: storeToPurchaseFrom.keySet())
+        {
+            ArrayList<StringProperty> row = new ArrayList<>();
+            row.add(0, new SimpleStringProperty(Integer.toString(store.getId())));
+            row.add(1, new SimpleStringProperty(store.getName()));
+            row.add(2, new SimpleStringProperty(store.getPosition().toString()));
+            row.add(3, new SimpleStringProperty(
+                    Float.toString(systemManager.getDistanceBetweenStoreAndCustomer(
+                                store,selectedCustomerProperty.getValue()))));
+
+            row.add(4, new SimpleStringProperty(Float.toString(store.getPpk())));
+            row.add(5, new SimpleStringProperty(
+                    Float.toString(systemManager.getStaticOrderDeliveryCost(
+                                store,selectedCustomerProperty.getValue()))));
+            row.add(6, new SimpleStringProperty(
+                    Integer.toString(storeToPurchaseFrom.get(store).size())));
+            row.add(7, new SimpleStringProperty(
+                    Float.toString(systemManager.getProductCostFromStore(store,storeToPurchaseFrom.get(store)))));
+            data.add(row);
+        }
+
+        return data;
     }
 }

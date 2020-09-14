@@ -557,7 +557,7 @@ public class SystemManager
         updateDataContainers();
     }
 
-    public Map<ProductDataContainer, StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
     {
         storesToBuyFrom = new HashMap<>();
         for (ProductDataContainer productToPurchase : productsToPurchase)
@@ -565,7 +565,22 @@ public class SystemManager
             Store store = getStoreWithTheCheapestPrice(productToPurchase.getId());
             storesToBuyFrom.put(productToPurchase,getStoreDataContainer(store));
         }
-        return storesToBuyFrom;
+//        return storesToBuyFrom;
+
+        /** new code    **/
+        Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom = new HashMap();
+        for (ProductDataContainer productToPurchase : productsToPurchase)
+        {
+            StoreDataContainer store = getStoreDataContainer(getStoreWithTheCheapestPrice(productToPurchase.getId()));
+            ArrayList<ProductDataContainer> products = new ArrayList<ProductDataContainer>();
+            products.add(productToPurchase);
+            if(storeToPurchaseFrom.putIfAbsent(store, products) != null)
+            {
+                storeToPurchaseFrom.get(store).add(productToPurchase);
+            }
+        }
+        return storeToPurchaseFrom;
+
     }
 
     private Store getStoreWithTheCheapestPrice(int productId)
@@ -680,8 +695,20 @@ public class SystemManager
         return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
     }
 
-    private float getDistanceBetweenStoreAndCustomer(StoreDataContainer store, CustomerDataContainer customer)
+    public float getDistanceBetweenStoreAndCustomer(StoreDataContainer store, CustomerDataContainer customer)
     {
-        return Math.abs((float) store.getPosition().distance(customer.getPosition()));
+        return Float.valueOf(DECIMAL_FORMAT.format(Math.abs((float) store.getPosition().distance(customer.getPosition()))));
+    }
+
+    public float getProductCostFromStore(StoreDataContainer storeData, Collection<ProductDataContainer> products)
+    {
+        float cost = 0;
+        Store store = systemData.getStores().get(storeData.getId());
+        for (ProductDataContainer product:products)
+        {
+            cost += store.getProductById(product.getId()).getPrice() * product.amountProperty().get();
+        }
+
+        return  cost;
     }
 }

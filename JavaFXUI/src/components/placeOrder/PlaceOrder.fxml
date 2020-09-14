@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,9 +19,9 @@
    <children>
       <GridPane layoutX="6.0" layoutY="-14.0" prefHeight="580.0" prefWidth="813.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="167.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="295.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="152.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="186.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="241.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="31.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="199.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="199.0" />
         </columnConstraints>
@@ -35,7 +39,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <ComboBox fx:id="customersComboBox" onAction="#OnCustomerSelected" prefWidth="150.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="customersComboBox" onAction="#OnCustomerSelected" prefHeight="31.0" prefWidth="146.0" GridPane.columnIndex="1" />
             <DatePicker fx:id="deliveryDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Select Date Of Delivery " GridPane.rowIndex="1">
                <GridPane.margin>
@@ -48,18 +52,66 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <TableView fx:id="productsTableView" prefHeight="162.0" prefWidth="659.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2">
-              <columns>
-                  <TableColumn fx:id="productToOrderColumn" prefWidth="75.0" />
-                <TableColumn fx:id="productIDColumn" prefWidth="90.0" text="ID" />
-                  <TableColumn fx:id="productPurchaseFormColumn" prefWidth="158.0" text="Purchase Form" />
-                  <TableColumn fx:id="productPriceColumn" minWidth="4.0" prefWidth="119.0" text="Price" />
-                <TableColumn fx:id="productNameColumn" prefWidth="233.0" text="Name" />
-              </columns>
+            <ScrollPane fitToHeight="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
-            </TableView>
+               <content>
+                  <TabPane>
+                     <tabs>
+                        <Tab fx:id="productToOrderTab" text="Products To Order">
+                           <content>
+                              <TableView fx:id="productsTableView" editable="true" prefHeight="162.0" prefWidth="603.0">
+                                <columns>
+                                    <TableColumn fx:id="productToOrderColumn" prefWidth="75.0" />
+                                  <TableColumn fx:id="productIDColumn" prefWidth="90.0" text="ID" />
+                                  <TableColumn fx:id="productNameColumn" prefWidth="148.0" text="Name" />
+                                    <TableColumn fx:id="productPurchaseFormColumn" minWidth="0.0" prefWidth="117.0" text="Purchase Form" />
+                                    <TableColumn fx:id="productPriceColumn" minWidth="4.0" prefWidth="105.0" text="Price" />
+                                    <TableColumn fx:id="productAmountColumn" prefWidth="87.0" text="Amount" />
+                                </columns>
+                              </TableView>
+                           </content>
+                        </Tab>
+                        <Tab fx:id="storesOrderedFromTab" text="Stores Ordered From">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="storesOrderedFromTableView" layoutY="-1.0" prefHeight="261.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="storeIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="storeNameColumn" prefWidth="75.0" text="Name" />
+                                          <TableColumn fx:id="storeLocationColumn" prefWidth="75.0" text="Location" />
+                                          <TableColumn fx:id="storeDistanceColumn" prefWidth="75.0" text="Distance" />
+                                          <TableColumn fx:id="storePPKColumn" prefWidth="75.0" text="PPK" />
+                                          <TableColumn fx:id="storeDeliveryCostColumn" prefWidth="75.0" text="Delivery Cost" />
+                                          <TableColumn fx:id="storeNumOfProductsTypesColumn" prefWidth="75.0" text="Number Of Prodcuts Types" />
+                                          <TableColumn fx:id="storeProductsCostColumn" prefWidth="75.0" text="ProductsCost" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="availableDiscountsTab" text="Available Discounts">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                        <Tab fx:id="storesOrderSummaryTab" text="Stores Order Summary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                        <Tab fx:id="productsOrderSummaryTab" text="Products Order Summary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </content>
+            </ScrollPane>
             <GridPane fx:id="storesGridPane" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -72,10 +124,11 @@
                <children>
                   <Label fx:id="selectStoreLabel" text="Select Store" />
                   <ComboBox fx:id="storesComboBox" onAction="#OnStoreSelected" prefWidth="150.0" GridPane.columnIndex="1" />
-                  <Label fx:id="deliveryCostValueLabel" prefHeight="39.0" prefWidth="147.0" text="text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="deliveryCostValueLabel" prefHeight="39.0" prefWidth="147.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="deliveryCostLabel" text="Delivery Cost" GridPane.rowIndex="1" />
                </children>
             </GridPane>
+            <Button fx:id="submitProductsButton" mnemonicParsing="false" onAction="#OnSubmitProductSelected" text="Submit Products" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </children>
