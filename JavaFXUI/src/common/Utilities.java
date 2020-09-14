@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
+import java.awt.*;
 import java.text.NumberFormat;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -12,7 +13,7 @@ import java.util.function.UnaryOperator;
 public final class Utilities
 {
 //    private final String LOAD_FILE_FAILURE_MESSAGE = "Failed to load the file, cause of failure:\n";
-
+        private static final String POSITION_FORMAT = "(%1$s, %2$s)";
     private Utilities()
     {
     }
@@ -83,4 +84,11 @@ public final class Utilities
             }
         };
     }
+
+    public static String convertPositionFormat(Point position)
+    {
+        return String.format(POSITION_FORMAT, (int) position.getX(), (int) position.getY());
+    }
+
+
 }

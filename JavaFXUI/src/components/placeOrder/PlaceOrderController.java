@@ -2,6 +2,7 @@ package components.placeOrder;
 import common.Utilities;
 import components.main.MainAppController;
 import dataContainers.CustomerDataContainer;
+import dataContainers.DiscountDataContainer;
 import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import engineLogic.Store;
@@ -118,6 +119,18 @@ public class PlaceOrderController
     private Tab availableDiscountsTab;
 
     @FXML
+    private TableView<DiscountDataContainer> availableDiscountsTableView;
+
+    @FXML
+    private TableColumn<DiscountDataContainer, Boolean> discountToGet;
+
+    @FXML
+    private TableColumn<DiscountDataContainer, String> discountNameColumn;
+
+    @FXML
+    private TableColumn<DiscountDataContainer, String> discountYouCanGetColumn;
+
+    @FXML
     private Tab storesOrderSummaryTab;
 
     @FXML
@@ -137,6 +150,8 @@ public class PlaceOrderController
     private SimpleFloatProperty deliveryCostProperty;
     private SimpleListProperty<ProductDataContainer> productsProperty;
 //    private SimpleListProperty<String> storesOrderedFromProperty;
+    private SimpleListProperty<DiscountDataContainer> availableDiscountsProperty;
+
 
 
     private SimpleObjectProperty<CustomerDataContainer> selectedCustomerProperty;
@@ -161,6 +176,7 @@ public class PlaceOrderController
         deliveryCostValueLabel.textProperty().bind(deliveryCostProperty.asString());
         productsTableView.itemsProperty().bind(productsProperty);
 //        storesOrderedFromTableView.itemsProperty().bind(storesOrderedFromProperty);
+        availableDiscountsTableView.itemsProperty().bind(availableDiscountsProperty);
 
         selectedCustomerProperty.bind(customersComboBox.selectionModelProperty().get().selectedItemProperty());
         selectedOrderTypeProperty.bind(orderTypesComboBox.selectionModelProperty().get().selectedItemProperty());
@@ -202,6 +218,7 @@ public class PlaceOrderController
         deliveryCostProperty = new SimpleFloatProperty();
         productsProperty = new SimpleListProperty<>();
 //        storesOrderedFromProperty = new SimpleListProperty<>();
+        availableDiscountsProperty = new SimpleListProperty<>();
 
         selectedCustomerProperty = new SimpleObjectProperty<>();
         selectedDeliveryDate = new SimpleObjectProperty<>();
@@ -289,12 +306,12 @@ public class PlaceOrderController
     private void loadProducts()
     {
         setProductsTableColumnsProperties();
-        productsProperty.setValue(loadProductToTableView());
+        productsProperty.setValue(getProductForTableView());
         productsTableView.refresh();
 
     }
 
-    private ObservableList<ProductDataContainer> loadProductToTableView()
+    private ObservableList<ProductDataContainer> getProductForTableView()
     {
         return systemManager.getAllProductsData().stream()
                 .collect(Collectors
@@ -409,15 +426,12 @@ public class PlaceOrderController
         Collection <ProductDataContainer > selectedProducts = getSelectedProducts();
         if(!selectedProducts.isEmpty())
         {
+            Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom = systemManager.dynamicStoreAllocation(selectedProducts);
             if(selectedOrderTypeProperty.getValue().equals(DYNAMIC))
             {
-                Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom= systemManager.dynamicStoreAllocation(selectedProducts);
                 loadStoresOrderedFrom(storeToPurchaseFrom);
             }
-            else
-            {
-
-            }
+            loadAvailableDiscounts(storeToPurchaseFrom);
         }
     }
 
@@ -440,7 +454,7 @@ public class PlaceOrderController
     {
 
         setStoresOrderedFromTableColumnsProperties();
-        ObservableList<ArrayList<StringProperty>> data = storesOrderedFromData(storeToPurchaseFrom);
+        ObservableList<ArrayList<StringProperty>> data = getStoresOrderedFromForTableView(storeToPurchaseFrom);
         storesOrderedFromTableView.setItems(data);
         storesOrderedFromTableView.refresh();
 
@@ -458,7 +472,7 @@ public class PlaceOrderController
         storeProductsCostColumn.setCellValueFactory(data -> data.getValue().get(7));
     }
 
-    private ObservableList<ArrayList<StringProperty>> storesOrderedFromData
+    private ObservableList<ArrayList<StringProperty>> getStoresOrderedFromForTableView
             (Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom)
     {
         ObservableList<ArrayList<StringProperty>> data = FXCollections.observableArrayList();
@@ -468,7 +482,7 @@ public class PlaceOrderController
             ArrayList<StringProperty> row = new ArrayList<>();
             row.add(0, new SimpleStringProperty(Integer.toString(store.getId())));
             row.add(1, new SimpleStringProperty(store.getName()));
-            row.add(2, new SimpleStringProperty(store.getPosition().toString()));
+            row.add(2, new SimpleStringProperty(Utilities.convertPositionFormat(store.getPosition())));
             row.add(3, new SimpleStringProperty(
                     Float.toString(systemManager.getDistanceBetweenStoreAndCustomer(
                                 store,selectedCustomerProperty.getValue()))));
@@ -485,5 +499,30 @@ public class PlaceOrderController
         }
 
         return data;
+    }
+
+    private void loadAvailableDiscounts(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
+    {
+        setAvailableDiscountsTableColumnsProperties();
+        availableDiscountsProperty.setValue(getAvailableDiscountsForTableView(storeToPurchaseFrom));
+        availableDiscountsTableView.refresh();
+    }
+    private ObservableList<DiscountDataContainer> getAvailableDiscountsForTableView(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
+    {
+//        return systemManager.getAvailableDiscounts(storeToPurchaseFrom).stream()
+//                .collect(Collectors
+//                        .collectingAndThen(Collectors.toList(),
+//                                FXCollections::observableArrayList));
+
+        return systemManager.getAvailableDiscounts(storeToPurchaseFrom).values()
+                .stream()
+                .flatMap(Collection<DiscountDataContainer>::stream)
+                .collect(Collectors.collectingAndThen(Collectors.toList(),FXCollections::observableArrayList));
+    }
+
+    private void setAvailableDiscountsTableColumnsProperties()
+    {
+        discountNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        discountYouCanGetColumn.setCellValueFactory(new PropertyValueFactory<>("thenYouGetDescription"));
     }
 }

@@ -52,7 +52,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <ScrollPane fitToHeight="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2">
+            <ScrollPane fitToHeight="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
@@ -95,7 +95,16 @@
                         </Tab>
                         <Tab fx:id="availableDiscountsTab" text="Available Discounts">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="availableDiscountsTableView" prefHeight="241.0" prefWidth="626.0">
+                                      <columns>
+                                          <TableColumn fx:id="discountToGet" prefWidth="75.0" />
+                                        <TableColumn fx:id="discountNameColumn" prefWidth="144.0" text="Name" />
+                                        <TableColumn fx:id="discountYouCanGetColumn" prefWidth="139.0" text="You Can Get" />
+                                      </columns>
+                                    </TableView>
+                                 </children></AnchorPane>
                           </content>
                         </Tab>
                         <Tab fx:id="storesOrderSummaryTab" text="Stores Order Summary">
