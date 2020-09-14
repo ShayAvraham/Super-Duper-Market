@@ -244,6 +244,7 @@ public class MainAppController
     void showMap(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        showMapController.updateMap();
         mainWindow.getChildren().add(showMapController.getRootPane());
     }
 
