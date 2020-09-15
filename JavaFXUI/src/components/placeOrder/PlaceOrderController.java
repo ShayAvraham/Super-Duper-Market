@@ -5,6 +5,8 @@ import dataContainers.CustomerDataContainer;
 import dataContainers.DiscountDataContainer;
 import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
+import engineLogic.Discount;
+import engineLogic.Product;
 import engineLogic.Store;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -13,17 +15,27 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+//import javafx.scene.input.MouseButton;
+//import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
+//import java.beans.EventHandler;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,7 +95,7 @@ public class PlaceOrderController
     @FXML
     private TableColumn<ProductDataContainer, String> productNameColumn;
     @FXML
-    private TableColumn<ProductDataContainer,Spinner<Integer>> productAmountColumn;
+    private TableColumn<ProductDataContainer,Spinner<Double>> productAmountColumn;
 
     @FXML
     private Tab storesOrderedFromTab;
@@ -128,7 +140,13 @@ public class PlaceOrderController
     private TableColumn<DiscountDataContainer, String> discountNameColumn;
 
     @FXML
-    private TableColumn<DiscountDataContainer, String> discountYouCanGetColumn;
+    private TableColumn<DiscountDataContainer, String> discountForBuyingColumn;
+
+    @FXML
+    private TableColumn<DiscountDataContainer, String> discountYouGetColumn;
+
+    @FXML
+    private TableColumn<DiscountDataContainer,ProductDataContainer> discountChosenProductColumn;
 
     @FXML
     private Tab storesOrderSummaryTab;
@@ -139,10 +157,15 @@ public class PlaceOrderController
     @FXML
     private Button submitProductsButton;
 
+    @FXML
+    private Button submitDiscountsButton;
+
     private final String STATIC = "Static order";
     private final String DYNAMIC = "Dynamic order";
 
     private SystemManager systemManager;
+    private Collection<ProductDataContainer> selectedProducts;
+    private Collection <DiscountDataContainer> selectedDiscounts;
 
     private SimpleListProperty<CustomerDataContainer> customersProperty;
     private SimpleListProperty<String> orderTypesProperty;
@@ -163,7 +186,10 @@ public class PlaceOrderController
 
     ObservableList<String> orderTypeValues = FXCollections.observableArrayList(STATIC,DYNAMIC);
 
-
+    public enum OrderSteps
+    {
+        SELECT_PRODUCTS,SHOW_DISCOUNTS, SHOW_PRE_ORDER_SUMMARY
+    }
     @FXML
     void initialize()
     {
@@ -245,6 +271,8 @@ public class PlaceOrderController
 
     public void LoadDataToControllers()
     {
+        selectedDiscounts = new HashSet<>();
+        selectedProducts = new HashSet<>();
         loadCustomers();
         orderTypesProperty.setValue(orderTypeValues);
     }
@@ -363,7 +391,7 @@ public class PlaceOrderController
     private void setProductToOrderColumn()
     {
 //        productToOrderColumn.setCellFactory(CheckBoxTableCell.forTableColumn(productToOrderColumn));
-//        productToOrderColumn.setCellValueFactory(c -> c.getValue().checkedProperty());
+////        productToOrderColumn.setCellValueFactory(c -> c.getValue().checkedProperty());
 
         productToOrderColumn.setCellFactory(column ->
         {
@@ -395,13 +423,13 @@ public class PlaceOrderController
     {
         productAmountColumn.setCellValueFactory(column ->
         {
-            Spinner<Integer> spinner = new Spinner<>();
-            TextFormatter<Integer> amountFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1, Utilities.getPositiveRealNumbersFilter());
-            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 1));
+            Spinner<Double> spinner = new Spinner<>();
+            TextFormatter<Double> amountFormatter = new TextFormatter<Double>(new DoubleStringConverter(), 1d, Utilities.getPositiveRealNumbersFilter());
+            spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 0.1));
             spinner.getEditor().setTextFormatter(amountFormatter);
             spinner.setEditable(true);
             column.getValue().amountProperty().bind(spinner.valueProperty());
-            return new SimpleObjectProperty<Spinner<Integer>>(spinner);
+            return new SimpleObjectProperty<Spinner<Double>>(spinner);
         });
 
     }
@@ -423,7 +451,7 @@ public class PlaceOrderController
     @FXML
     void OnSubmitProductSelected(ActionEvent event)
     {
-        Collection <ProductDataContainer > selectedProducts = getSelectedProducts();
+        getSelectedProducts();
         if(!selectedProducts.isEmpty())
         {
             Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom = systemManager.dynamicStoreAllocation(selectedProducts);
@@ -435,19 +463,16 @@ public class PlaceOrderController
         }
     }
 
-    private Collection<ProductDataContainer> getSelectedProducts()
+    private void getSelectedProducts()
     {
-        int sum = 0;
-        Collection <ProductDataContainer > selectedProducts = new HashSet<>();
+        selectedProducts = new HashSet<>();
         for (ProductDataContainer item: productsTableView.getItems())
         {
             if (productToOrderColumn.getCellObservableValue(item).getValue().booleanValue())
             {
                 selectedProducts.add(item);
-                sum += item.amountProperty().get();
             }
         }
-        return selectedProducts;
     }
 
     private void loadStoresOrderedFrom( Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom)
@@ -504,9 +529,21 @@ public class PlaceOrderController
     private void loadAvailableDiscounts(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
     {
         setAvailableDiscountsTableColumnsProperties();
+
         availableDiscountsProperty.setValue(getAvailableDiscountsForTableView(storeToPurchaseFrom));
+        setOfferProductComboBox();
         availableDiscountsTableView.refresh();
     }
+
+    private void setOfferProductComboBox()
+    {
+//        for (DiscountDataContainer item: availableDiscountsTableView.getItems())
+//        {
+//            if(item.)
+//        }
+//        return selectedProducts;
+    }
+
     private ObservableList<DiscountDataContainer> getAvailableDiscountsForTableView(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
     {
 //        return systemManager.getAvailableDiscounts(storeToPurchaseFrom).stream()
@@ -522,7 +559,84 @@ public class PlaceOrderController
 
     private void setAvailableDiscountsTableColumnsProperties()
     {
-        discountNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        discountYouCanGetColumn.setCellValueFactory(new PropertyValueFactory<>("thenYouGetDescription"));
+        setDiscountToGetColumn();
+        discountNameColumn.setCellValueFactory(new PropertyValueFactory<>("discountName"));
+        discountForBuyingColumn.setCellValueFactory(new PropertyValueFactory<>("ifYouBuyDescription"));
+        discountYouGetColumn.setCellValueFactory(new PropertyValueFactory<>("thenYouGetDescription"));
+        setDiscountChosenProductColumn();
     }
+
+    private void setDiscountToGetColumn()
+    {
+        discountToGet.setCellFactory(CheckBoxTableCell.forTableColumn(discountToGet));
+        discountToGet.setCellValueFactory(c -> c.getValue().checkedProperty());
+    }
+
+    private void setDiscountChosenProductColumn()
+    {
+        discountChosenProductColumn.setCellFactory(new Callback<TableColumn<DiscountDataContainer, ProductDataContainer>, TableCell<DiscountDataContainer, ProductDataContainer>>()
+        {
+            @Override
+            public TableCell<DiscountDataContainer, ProductDataContainer> call(TableColumn<DiscountDataContainer, ProductDataContainer> param)
+            {
+                ComboBox<ProductDataContainer> box = new ComboBox<>();
+                TableCell<DiscountDataContainer, ProductDataContainer> cell = new TableCell<DiscountDataContainer, ProductDataContainer>();
+                cell.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        int row = availableDiscountsTableView.getSelectionModel().getSelectedIndex();
+                        if (event.getButton().equals(MouseButton.PRIMARY)) {
+                            DiscountDataContainer discount = availableDiscountsTableView.getSelectionModel().getSelectedItem();
+                            discount.selectedOfferProductProperty().bind(box.selectionModelProperty().get().selectedItemProperty());
+                            if (discount != null && discount.getDiscountType() == "ONE_OF")
+                            {
+                                box.setItems(FXCollections.observableArrayList(discount.getAmountForOfferProduct().keySet()
+                                        .stream()
+                                        .collect(Collectors.toList())));
+
+                            }
+                        }
+                        if (event.getClickCount() == 1 && row == cell.getIndex()) {
+                            box.getSelectionModel().select(0);
+                            cell.setText(null);
+                            if (!box.itemsProperty().get().isEmpty() && box.itemsProperty().get().size() != 1) {
+                                cell.setGraphic(box);
+                            }
+                        }
+                    }
+                });
+                return cell;
+            }
+        });
+     //   discountChosenProductColumn.setCellValueFactory(c -> c.getValue().selectedOfferProductProperty());
+
+    }
+
+    @FXML
+    void OnSubmitDiscountsSelected(ActionEvent event)
+    {
+        try
+        {
+            getSelectedDiscounts();
+            systemManager.validateSelectedDiscounts(selectedDiscounts,selectedProducts);
+        }
+        catch (Exception e)
+        {
+            Utilities.ShowInformationAlert(e.getMessage());
+        }
+    }
+
+    private void getSelectedDiscounts()
+    {
+        selectedDiscounts = new HashSet<>();
+        for (DiscountDataContainer item: availableDiscountsTableView.getItems())
+        {
+            if (discountToGet.getCellObservableValue(item).getValue().booleanValue())
+            {
+                selectedDiscounts.add(item);
+            }
+        }
+    }
+
+
 }

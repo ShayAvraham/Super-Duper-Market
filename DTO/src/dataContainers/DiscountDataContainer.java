@@ -1,7 +1,11 @@
 package dataContainers;
 
+import javafx.beans.property.*;
+import javafx.collections.ObservableList;
+
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 public class DiscountDataContainer
 {
@@ -16,8 +20,11 @@ public class DiscountDataContainer
     private Map<ProductDataContainer,Double> amountForOfferProduct;
 
 
+    private final BooleanProperty checked = new SimpleBooleanProperty(false);
+    private SimpleObjectProperty<ProductDataContainer> selectedOfferProduct = new SimpleObjectProperty<>();
+
     public DiscountDataContainer(String discountName, String discountType, ProductDataContainer discountProduct,
-                                 double amountForDiscount,Map<ProductDataContainer,Integer> priceForOfferProduct,
+                                 double amountForDiscount, Map<ProductDataContainer,Integer> priceForOfferProduct,
                                  Map<ProductDataContainer,Double> amountForOfferProduct)
     {
         this.discountName = discountName;
@@ -26,6 +33,7 @@ public class DiscountDataContainer
         this.amountForDiscount = amountForDiscount;
         this.priceForOfferProduct = priceForOfferProduct;
         this.amountForOfferProduct = amountForOfferProduct;
+//        selectedOfferProduct.setValue(discountType == "ONE_OF"? null: priceForOfferProduct.keySet().stream().findFirst().get());
         createIfYouBuyDescription();
         createThenYouGetDescription();
     }
@@ -61,6 +69,22 @@ public class DiscountDataContainer
 
     public Map<ProductDataContainer, Double> getAmountForOfferProduct() {
         return amountForOfferProduct;
+    }
+
+    public boolean isChecked() {
+        return checked.get();
+    }
+
+    public BooleanProperty checkedProperty() {
+        return checked;
+    }
+
+    public ProductDataContainer getSelectedOfferProduct() {
+        return selectedOfferProduct.get();
+    }
+
+    public SimpleObjectProperty<ProductDataContainer> selectedOfferProductProperty() {
+        return selectedOfferProduct;
     }
 
     private void createIfYouBuyDescription()
@@ -121,5 +145,19 @@ public class DiscountDataContainer
                 break;
         }
         return discountTypeStr;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof DiscountDataContainer)) return false;
+        DiscountDataContainer that = (DiscountDataContainer) o;
+        return getDiscountName().equals(that.getDiscountName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDiscountName());
     }
 }

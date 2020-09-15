@@ -1,9 +1,6 @@
 package dataContainers;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 
 import java.util.Map;
 import java.util.Objects;
@@ -20,15 +17,7 @@ public class ProductDataContainer
     private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
     private final BooleanProperty checked = new SimpleBooleanProperty(false);
-    private final IntegerProperty amount = new SimpleIntegerProperty(1);
-
-    public int getAmount() {
-        return amount.get();
-    }
-
-    public IntegerProperty amountProperty() {
-        return amount;
-    }
+    private final DoubleProperty amount = new SimpleDoubleProperty(1);
 
     public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
@@ -88,6 +77,14 @@ public class ProductDataContainer
     public BooleanProperty checkedProperty()
     {
         return checked;
+    }
+
+    public double getAmount() {
+        return amount.get();
+    }
+
+    public DoubleProperty amountProperty() {
+        return amount;
     }
 
     @Override

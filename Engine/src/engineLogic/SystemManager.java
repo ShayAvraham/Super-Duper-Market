@@ -698,9 +698,12 @@ public class SystemManager
             {
                 if (discount.getDiscountProduct().equals(product))
                 {
-                    for(int i = product.amountProperty().get(); i <= discount.getAmountForDiscount(); i+=product.amountProperty().get())
+                    for(double i = product.amountProperty().get(); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
                     {
-                        availableStoreDiscounts.add(discount);
+                        createStoreDiscountData(systemData.getStores().get(store.getId()).getDiscountById(discount.getDiscountName()));
+                        availableStoreDiscounts.add(createStoreDiscountData(systemData.getStores().get
+                                (store.getId())
+                                .getDiscountById(discount.getDiscountName())));
                     }
                 }
             }
@@ -711,4 +714,41 @@ public class SystemManager
         }
         return availableStoreDiscounts;
     }
+
+    public void validateSelectedDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
+    {
+        validatedOneOfDiscounts(selectedDiscounts);
+        validatedNumOfDiscounts(selectedDiscounts,selectedProducts);
+    }
+
+    private void validatedOneOfDiscounts(Collection<DiscountDataContainer> selectedDiscounts)
+    {
+        for (DiscountDataContainer discount:selectedDiscounts)
+        {
+            if(discount.getDiscountType().equals("ONE_OF") && discount.selectedOfferProductProperty().isNull().get())
+            {
+                throw new IllegalArgumentException(String.format("You must select a product if you want to get %1$s discount",discount.getDiscountName()));
+            }
+        }
+    }
+
+    private void validatedNumOfDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
+    {
+        for(ProductDataContainer product: selectedProducts)
+        {
+            double sum = 0;
+            for (DiscountDataContainer discount : selectedDiscounts)
+            {
+                if(product.equals(discount.getDiscountProduct()))
+                {
+                    sum += discount.getAmountForDiscount();
+                }
+            }
+            if(sum>product.amountProperty().doubleValue())
+            {
+                throw new IllegalArgumentException(String.format("You chosen to many discounts for the product %1$s, please reselect the discounts",product.getName()));
+            }
+        }
+    }
+
 }

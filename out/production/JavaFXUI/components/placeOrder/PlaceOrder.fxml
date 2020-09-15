@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="rootPane" prefHeight="573.0" prefWidth="813.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.placeOrder.PlaceOrderController">
    <children>
@@ -61,7 +62,7 @@
                      <tabs>
                         <Tab fx:id="productToOrderTab" text="Products To Order">
                            <content>
-                              <TableView fx:id="productsTableView" editable="true" prefHeight="162.0" prefWidth="603.0">
+                              <TableView fx:id="productsTableView" disable="true" editable="true" prefHeight="162.0" prefWidth="603.0">
                                 <columns>
                                     <TableColumn fx:id="productToOrderColumn" prefWidth="75.0" />
                                   <TableColumn fx:id="productIDColumn" prefWidth="90.0" text="ID" />
@@ -97,11 +98,13 @@
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="availableDiscountsTableView" prefHeight="241.0" prefWidth="626.0">
+                                    <TableView fx:id="availableDiscountsTableView" editable="true" prefHeight="241.0" prefWidth="626.0">
                                       <columns>
                                           <TableColumn fx:id="discountToGet" prefWidth="75.0" />
                                         <TableColumn fx:id="discountNameColumn" prefWidth="144.0" text="Name" />
-                                        <TableColumn fx:id="discountYouCanGetColumn" prefWidth="139.0" text="You Can Get" />
+                                          <TableColumn fx:id="discountForBuyingColumn" prefWidth="167.0" text="For Buying" />
+                                        <TableColumn fx:id="discountYouGetColumn" prefWidth="177.0" text="You Get" />
+                                          <TableColumn fx:id="discountChosenProductColumn" minWidth="9.0" prefWidth="137.0" text="Select Product" />
                                       </columns>
                                     </TableView>
                                  </children></AnchorPane>
@@ -137,7 +140,23 @@
                   <Label fx:id="deliveryCostLabel" text="Delivery Cost" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <Button fx:id="submitProductsButton" mnemonicParsing="false" onAction="#OnSubmitProductSelected" text="Submit Products" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+               <children>
+                  <Button fx:id="submitProductsButton" mnemonicParsing="false" onAction="#OnSubmitProductSelected" text="Submit Products">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="submitDiscountsButton" mnemonicParsing="false" onAction="#OnSubmitDiscountsSelected" text="Submit Discounts">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
+            </VBox>
          </children>
       </GridPane>
    </children>

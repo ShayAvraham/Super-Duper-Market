@@ -1,5 +1,6 @@
 package common;
 
+import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
@@ -80,6 +81,24 @@ public final class Utilities
 
             @Override
             public StoreDataContainer fromString(String string) {
+                return null;
+            }
+        };
+    }
+
+    public static StringConverter<ProductDataContainer> getProductConverterInPlaceOrder()
+    {
+        return new StringConverter<ProductDataContainer>()
+        {
+            @Override
+            public String toString(ProductDataContainer object)
+            {
+                return object.getName() + " | " +
+                        "id: " + object.getId();
+            }
+
+            @Override
+            public ProductDataContainer fromString(String string) {
                 return null;
             }
         };
