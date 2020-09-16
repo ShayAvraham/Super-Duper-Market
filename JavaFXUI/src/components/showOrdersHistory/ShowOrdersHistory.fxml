@@ -4,10 +4,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showOrdersHistory.ShowOrdersHistoryController">
+<AnchorPane fx:id="rootPane" prefHeight="425.0" prefWidth="641.0" stylesheets="@ShowOrdersHistoryStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showOrdersHistory.ShowOrdersHistoryController">
    <children>
-      <TableView fx:id="ordersView" prefHeight="410.0" prefWidth="778.0">
+      <TableView fx:id="ordersView" prefHeight="410.0" prefWidth="633.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columns>
           <TableColumn fx:id="id" prefWidth="49.66668701171875" text="ID" />
           <TableColumn fx:id="date" prefWidth="75.0" text="Date" />
@@ -19,6 +18,9 @@
             <TableColumn fx:id="deliveryCost" prefWidth="85.66668701171875" text="Delivery Cost" />
             <TableColumn fx:id="totalCost" prefWidth="74.0" text="Total Cost" />
         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
    </children>
 </AnchorPane>

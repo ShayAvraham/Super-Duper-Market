@@ -8,14 +8,13 @@ import engineLogic.SystemManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 
 import java.util.Comparator;
 
-import static java.lang.Integer.max;
-import static java.lang.Integer.min;
+import static java.lang.Integer.*;
 
 public class ShowMapController
 {
@@ -61,6 +60,8 @@ public class ShowMapController
     void initialize()
     {
         rootPane.getChildren().add(map);
+        rootPane.setLeftAnchor(map, 50.);
+        rootPane.setTopAnchor(map, 200.);
     }
 
     public void updateMap()
@@ -81,10 +82,7 @@ public class ShowMapController
     {
         for (CustomerDataContainer customer: systemLogic.getAllCustomersData())
         {
-            Tooltip customerInfo = createCustomerInfoToolTip(customer);
-            Label label = new Label("c");
-            label.setTooltip(customerInfo);
-            map.add(label, (int) customer.getPosition().getX(), (int) customer.getPosition().getY());
+            addCustomerInfoToMap(customer);
         }
     }
 
@@ -92,11 +90,28 @@ public class ShowMapController
     {
         for (StoreDataContainer store: systemLogic.getAllStoresData())
         {
-            Tooltip customerInfo = createStoreInfoToolTip(store);
-            Label label = new Label("s");
-            label.setTooltip(customerInfo);
-            map.add(label, (int) store.getPosition().getX(), (int) store.getPosition().getY());
+            addStoreInfoToMap(store);
         }
+    }
+
+    private void addCustomerInfoToMap(CustomerDataContainer customer)
+    {
+        Tooltip customerInfo = createCustomerInfoToolTip(customer);
+        ImageView customerImage = new ImageView(new Image(getClass().getResourceAsStream("customerIcon.png")));
+        Label label = new Label();
+        label.setGraphic(customerImage);
+        label.setTooltip(customerInfo);
+        map.add(label, (int) customer.getPosition().getX(), maxYCoordinate -1 - (int) customer.getPosition().getY());
+    }
+
+    private void addStoreInfoToMap(StoreDataContainer store)
+    {
+        Tooltip customerInfo = createStoreInfoToolTip(store);
+        ImageView storeImage = new ImageView(new Image(getClass().getResourceAsStream("storeIcon.png")));
+        Label label = new Label();
+        label.setGraphic(storeImage);
+        label.setTooltip(customerInfo);
+        map.add(label, (int) store.getPosition().getX(), maxYCoordinate -1 - (int) store.getPosition().getY());
     }
 
     private Tooltip createCustomerInfoToolTip(CustomerDataContainer customer)
@@ -122,7 +137,9 @@ public class ShowMapController
 
     private void clearMap()
     {
-        map.getChildren().removeAll();
+        map.getChildren().removeAll(map.getChildren());
+        map.getRowConstraints().removeAll(map.getRowConstraints());
+        map.getColumnConstraints().removeAll(map.getColumnConstraints());
     }
 
     private void updateMapCoordinates()
@@ -141,11 +158,11 @@ public class ShowMapController
     {
         for(int column = minXCoordinate; column < maxXCoordinate; column++)
         {
-            map.getColumnConstraints().add(new ColumnConstraints(50));
+            map.getColumnConstraints().add(new ColumnConstraints(15));
         }
         for(int row = minYCoordinate; row < maxYCoordinate; row++)
         {
-            map.getColumnConstraints().add(new ColumnConstraints(50));
+            map.getColumnConstraints().add(new ColumnConstraints(15));
         }
     }
 }

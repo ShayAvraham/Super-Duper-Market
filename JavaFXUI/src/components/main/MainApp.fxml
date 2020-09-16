@@ -1,51 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.main.MainAppController">
-   <content>
-      <SplitPane dividerPositions="0.1894353369763206" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0">
-        <items>
-          <AnchorPane fx:id="menuBar" minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="228.0">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="683.0" stylesheets="@MainStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.main.MainAppController">
+   <children>
+      <AnchorPane fx:id="menuBar" prefHeight="505.0" prefWidth="143.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="505.0" prefWidth="143.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="552.0" prefWidth="205.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="117.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="74.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <Label prefHeight="119.0" prefWidth="260.0" text="name of the app with logo" textAlignment="JUSTIFY" />
-                        <Button fx:id="loadXmlButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadXmlFile" prefHeight="45.0" prefWidth="260.0" text="Load Xml File" GridPane.rowIndex="1" />
-                        <Button fx:id="showAllCustomersButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllCustomers" prefHeight="45.0" prefWidth="260.0" text="Show All Customers" GridPane.rowIndex="2" />
-                        <Button fx:id="showAllStoresButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllStores" prefHeight="45.0" prefWidth="260.0" text="Show All Stores" GridPane.rowIndex="3" />
-                        <Button fx:id="showAllProductsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllProducts" prefHeight="45.0" prefWidth="260.0" text="Show All Products" GridPane.rowIndex="4" />
-                        <Button fx:id="showOrdersHistoryButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showOrdersHistory" prefHeight="45.0" prefWidth="260.0" text="Show Orders History" GridPane.rowIndex="5" />
-                        <Button fx:id="updateProductsButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#updateProducts" prefHeight="45.0" prefWidth="260.0" text="Update Products" GridPane.rowIndex="6" />
-                        <Button fx:id="placeOrderButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#placeOrder" prefHeight="45.0" prefWidth="260.0" text="Place Order " GridPane.rowIndex="7" />
-                        <Button fx:id="showMapButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showMap" prefHeight="45.0" prefWidth="260.0" text="Show Map" GridPane.rowIndex="8" />
-                     </children>
-                  </GridPane>
+                  <ImageView fx:id="superDuperMarketImage" fitHeight="121.0" fitWidth="143.0" pickOnBounds="true" smooth="false">
+                     <image>
+                        <Image url="@supermarket%20Logo.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="superDuperMarketLabel" alignment="CENTER" prefHeight="39.0" prefWidth="215.0" text="Super Duper Market" textAlignment="JUSTIFY">
+                     <font>
+                        <Font name="System Bold Italic" size="13.0" />
+                     </font>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </Label>
+                  <Button fx:id="loadXmlButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#loadXmlFile" prefHeight="100.0" prefWidth="260.0" text="Load Xml " textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="showAllCustomersButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllCustomers" prefHeight="100.0" prefWidth="260.0" text="Customers" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="showAllStoresButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllStores" prefHeight="100.0" prefWidth="260.0" text="Stores" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="showAllProductsButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showAllProducts" prefHeight="100.0" prefWidth="260.0" text="Products" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="showOrdersHistoryButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showOrdersHistory" prefHeight="100.0" prefWidth="260.0" text="Orders History" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="updateProductsButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#updateProducts" prefHeight="100.0" prefWidth="260.0" text="Update Products" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="placeOrderButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#placeOrder" prefHeight="100.0" prefWidth="260.0" text="Place Order " textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="showMapButton" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showMap" prefHeight="100.0" prefWidth="260.0" text="Map" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="Microsoft YaHei Light" size="12.0" />
+                     </font>
+                  </Button>
                </children>
-            </AnchorPane>
-          <AnchorPane fx:id="mainWindow" minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="802.0" />
-        </items>
-      </SplitPane>
-   </content>
-</ScrollPane>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="mainWindow" layoutX="226.0" prefHeight="505.0" prefWidth="457.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="143.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>

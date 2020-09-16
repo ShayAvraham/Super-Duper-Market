@@ -13,7 +13,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -35,10 +38,16 @@ public class MainAppController
     private SimpleBooleanProperty isFileLoadedProperty;
 
     @FXML
+    private AnchorPane mainPane;
+
+    @FXML
     private AnchorPane menuBar;
 
     @FXML
-    private AnchorPane mainWindow;
+    private ImageView superDuperMarketImage;
+
+    @FXML
+    private Label superDuperMarketLabel;
 
     @FXML
     private Button loadXmlButton;
@@ -63,6 +72,9 @@ public class MainAppController
 
     @FXML
     private Button showMapButton;
+
+    @FXML
+    private AnchorPane mainWindow;
 
 
     public MainAppController() 
@@ -205,6 +217,10 @@ public class MainAppController
     void loadXmlFile(ActionEvent event)
     {
         mainWindow.getChildren().clear();
+        mainWindow.setBottomAnchor(loadXmlController.getRootPane(),0.);
+        mainWindow.setTopAnchor(loadXmlController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(loadXmlController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(loadXmlController.getRootPane(), 0.);
         mainWindow.getChildren().add(loadXmlController.getRootPane());
     }
 
@@ -212,7 +228,6 @@ public class MainAppController
     void placeOrder(ActionEvent event)
     {
         mainWindow.getChildren().clear();
-        placeOrderController.LoadDataToControllers();//change
         mainWindow.getChildren().add(placeOrderController.getRootPane());
     }
 
@@ -221,6 +236,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         showAllCustomersController.updateCustomersTable();
+        mainWindow.setBottomAnchor(showAllCustomersController.getRootPane(),0.);
+        mainWindow.setTopAnchor(showAllCustomersController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(showAllCustomersController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(showAllCustomersController.getRootPane(), 0.);
         mainWindow.getChildren().add(showAllCustomersController.getRootPane());
     }
 
@@ -229,6 +248,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         showAllProductsController.updateProductsTable();
+        mainWindow.setBottomAnchor(showAllProductsController.getRootPane(),0.);
+        mainWindow.setTopAnchor(showAllProductsController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(showAllProductsController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(showAllProductsController.getRootPane(), 0.);
         mainWindow.getChildren().add(showAllProductsController.getRootPane());
     }
 
@@ -237,6 +260,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         showAllStoresController.updateStoresTable();
+        mainWindow.setBottomAnchor(showAllStoresController.getRootPane(),0.);
+        mainWindow.setTopAnchor(showAllStoresController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(showAllStoresController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(showAllStoresController.getRootPane(), 0.);
         mainWindow.getChildren().add(showAllStoresController.getRootPane());
     }
 
@@ -245,6 +272,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         showMapController.updateMap();
+        mainWindow.setBottomAnchor(showMapController.getRootPane(),0.);
+        mainWindow.setTopAnchor(showMapController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(showMapController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(showMapController.getRootPane(), 0.);
         mainWindow.getChildren().add(showMapController.getRootPane());
     }
 
@@ -253,6 +284,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         showOrdersHistoryController.updateOrdersHistoryTable();
+        mainWindow.setBottomAnchor(showOrdersHistoryController.getRootPane(),0.);
+        mainWindow.setTopAnchor(showOrdersHistoryController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(showOrdersHistoryController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(showOrdersHistoryController.getRootPane(), 0.);
         mainWindow.getChildren().add(showOrdersHistoryController.getRootPane());
     }
 
@@ -261,6 +296,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         updateProductsController.LoadDataToControllers();
+        mainWindow.setBottomAnchor(updateProductsController.getRootPane(),0.);
+        mainWindow.setTopAnchor(updateProductsController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(updateProductsController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(updateProductsController.getRootPane(), 0.);
         mainWindow.getChildren().add(updateProductsController.getRootPane());
     }
 
