@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class SystemManager
@@ -650,7 +651,7 @@ public class SystemManager
 //        return systemData.getStores().get(store.getId()).getDistanceToCustomer(userLocation);
 //    }
 
-    public float getStaticOrderDeliveryCost(StoreDataContainer store, CustomerDataContainer customer)
+    public float getDeliveryCostFromStore(StoreDataContainer store, CustomerDataContainer customer)
     {
         float deliveryCost  = getDistanceBetweenStoreAndCustomer(store, customer) * store.getPpk();
         return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
@@ -675,7 +676,6 @@ public class SystemManager
 
     public Map<StoreDataContainer,Collection<DiscountDataContainer>> getAvailableDiscounts(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
     {
-   //     Collection<DiscountDataContainer> availableDiscounts1 = new ArrayList<>();
         Map<StoreDataContainer,Collection<DiscountDataContainer>> availableDiscounts = new HashMap<>();
         for (StoreDataContainer store: storeToPurchaseFrom.keySet())
         {
@@ -685,7 +685,6 @@ public class SystemManager
                 availableDiscounts.put(store,availableStoreDiscounts);
             }
         }
-
         return availableDiscounts;
     }
 
@@ -749,6 +748,62 @@ public class SystemManager
                 throw new IllegalArgumentException(String.format("You chosen to many discounts for the product %1$s, please reselect the discounts",product.getName()));
             }
         }
+    }
+
+    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)
+    {
+        return systemData.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
+    }
+
+    public Collection<DiscountDataContainer> createSubDiscounts(Collection <DiscountDataContainer> discounts)
+    {
+        Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
+        for(DiscountDataContainer discount : discounts)
+        {
+            switch (discount.getDiscountType())
+            {
+                case "ONE_OF":
+                    subDiscounts.add(createOneOfSubDiscount(discount));
+                    break;
+                case "ALL_OR_NOTHING":
+                    subDiscounts.addAll(createAllOrNothingSubDiscounts(discount));
+                    break;
+                case "IRRELEVANT":
+                    subDiscounts.add(discount);
+                    break;
+            }
+        }
+        return subDiscounts;
+
+
+
+    }
+
+    private Collection<DiscountDataContainer> createAllOrNothingSubDiscounts(DiscountDataContainer discount)
+    {
+        Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
+        for(ProductDataContainer offerProduct : discount.getPriceForOfferProduct().keySet())
+        {
+            subDiscounts.add(new DiscountDataContainer(discount.getDiscountName(),
+                    discount.getDiscountType(),
+                    discount.getDiscountProduct(),
+                    discount.getAmountForDiscount(),
+                    new HashMap<ProductDataContainer,Integer>(){{put(offerProduct,discount.getPriceForOfferProduct().get(offerProduct));}},
+                    new HashMap<ProductDataContainer,Double>(){{put(offerProduct,discount.getAmountForOfferProduct().get(offerProduct));}}));
+        }
+        return subDiscounts;
+    }
+
+    private DiscountDataContainer createOneOfSubDiscount(DiscountDataContainer discount)
+    {
+        ProductDataContainer selectedOfferProduct = discount.getSelectedOfferProduct();
+
+        return new DiscountDataContainer(discount.getDiscountName(),
+                discount.getDiscountType(),
+                discount.getDiscountProduct(),
+                discount.getAmountForDiscount(),
+                new HashMap<ProductDataContainer,Integer>(){{put(selectedOfferProduct,discount.getPriceForOfferProduct().get(selectedOfferProduct));}},
+                new HashMap<ProductDataContainer,Double>(){{put(selectedOfferProduct,discount.getAmountForOfferProduct().get(selectedOfferProduct));}});
     }
 
 }

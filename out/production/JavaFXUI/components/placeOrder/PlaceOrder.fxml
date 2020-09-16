@@ -107,17 +107,61 @@
                                           <TableColumn fx:id="discountChosenProductColumn" minWidth="9.0" prefWidth="137.0" text="Select Product" />
                                       </columns>
                                     </TableView>
-                                 </children></AnchorPane>
+                                 </children>
+                              </AnchorPane>
                           </content>
                         </Tab>
-                        <Tab fx:id="storesOrderSummaryTab" text="Stores Order Summary">
+                        <Tab fx:id="storesSummaryTab" text="Stores Order Summary">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="storeSummaryTableView" layoutX="-1.0" prefHeight="242.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="storeSummaryIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="storeSummaryNameColumn" prefWidth="75.0" text="Name" />
+                                          <TableColumn fx:id="storeSummaryPPKColumn" prefWidth="75.0" text="PPK" />
+                                          <TableColumn fx:id="storeSummaryDistanceColumn" prefWidth="75.0" text="Distance" />
+                                          <TableColumn fx:id="storeSummaryDeliveryCostColumn" prefWidth="128.0" text="Delivery Cost" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
                           </content>
                         </Tab>
                         <Tab fx:id="productsOrderSummaryTab" text="Products Order Summary">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="productsSummaryTableView" prefHeight="245.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="productsSummaryIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="productsSummaryNameColumn" prefWidth="128.0" text="Name" />
+                                          <TableColumn fx:id="productsSummaryPurchaseFormColumn" prefWidth="121.0" text="Purchase Form" />
+                                          <TableColumn fx:id="productsSummaryAmountColumn" text="Amount" />
+                                          <TableColumn fx:id="productsSummaryPriceColumn" prefWidth="103.0" text="Price" />
+                                          <TableColumn fx:id="productsSummaryTotalPriceColumn" minWidth="0.0" prefWidth="110.0" text="Total Price" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="discountsOrderSummaryTab" text="Discounts Order Summary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="discountsSummaryTableView" prefHeight="247.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="discountsSummaryIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="discountsSummaryNameColumn" prefWidth="169.0" text="Name" />
+                                          <TableColumn fx:id="discountsSummaryPurchaseFormColumn" prefWidth="121.0" text="Purchase Form" />
+                                          <TableColumn fx:id="discountsSummaryAmountColumn" prefWidth="92.0" text="Amount" />
+                                          <TableColumn fx:id="discountsSummaryPriceColumn" prefWidth="75.0" text="Price" />
+                                          <TableColumn fx:id="discountsSummaryTotalPriceColumn" prefWidth="93.0" text="Total Price" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
                           </content>
                         </Tab>
                      </tabs>
@@ -148,6 +192,11 @@
                      </VBox.margin>
                   </Button>
                   <Button fx:id="submitDiscountsButton" mnemonicParsing="false" onAction="#OnSubmitDiscountsSelected" text="Submit Discounts">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="submitOrderButton" mnemonicParsing="false" onAction="#OnSubmitOrder" text="Submit Order">
                      <VBox.margin>
                         <Insets top="10.0" />
                      </VBox.margin>

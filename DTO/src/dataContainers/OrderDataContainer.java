@@ -1,12 +1,13 @@
 package dataContainers;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 
 public class OrderDataContainer
 {
     private int id;
-    private Date date;
+    private LocalDate date;
     private int numOfProducts;
     private float costOfAllProducts;
     private float deliveryCost;
@@ -19,7 +20,7 @@ public class OrderDataContainer
     private boolean isDynamic = false;
 
 
-    public OrderDataContainer(Date date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
+    public OrderDataContainer(LocalDate date, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost) {
         this.date = date;
         this.numOfProducts = numOfProducts;
         this.costOfAllProducts = costOfAllProducts;
@@ -27,7 +28,7 @@ public class OrderDataContainer
         this.totalCost = totalCost;
     }
 
-    public OrderDataContainer(int id, Date date, int storeId, String storeName, int numOfProductTypes, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost, boolean isDynamic,int numberOfStoresOrderedFrom)
+    public OrderDataContainer(int id, LocalDate date, int storeId, String storeName, int numOfProductTypes, int numOfProducts, float costOfAllProducts, float deliveryCost, float totalCost, boolean isDynamic,int numberOfStoresOrderedFrom)
     {
         this.id = id;
         this.date = date;
@@ -42,14 +43,15 @@ public class OrderDataContainer
         this.numberOfStoresOrderedFrom = numberOfStoresOrderedFrom;
     }
 
-    public OrderDataContainer(Date date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) {
+    public OrderDataContainer(LocalDate date, float deliveryCost, int storeId, Map<Integer, Float> amountPerProduct) //STATIC
+    {
         this.date = date;
         this.deliveryCost = deliveryCost;
         this.storeId = storeId;
         this.amountPerProduct = amountPerProduct;
     }
 
-    public OrderDataContainer(Date date,float deliveryCost,Map<Integer, Float> amountPerProduct,int numberOfStoresOrderedFrom)
+    public OrderDataContainer(LocalDate date,float deliveryCost,Map<Integer, Float> amountPerProduct,int numberOfStoresOrderedFrom)
     {
         this.date = date;
         this.deliveryCost = deliveryCost;
@@ -62,7 +64,7 @@ public class OrderDataContainer
         return id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
