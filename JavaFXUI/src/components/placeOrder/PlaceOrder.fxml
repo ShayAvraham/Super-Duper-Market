@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="rootPane" prefHeight="573.0" prefWidth="813.0" stylesheets="@PlaceOrderStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.placeOrder.PlaceOrderController">
    <children>
       <GridPane layoutX="6.0" layoutY="-14.0" prefHeight="580.0" prefWidth="813.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.0" minWidth="10.0" prefWidth="167.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="295.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="152.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="186.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="241.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="31.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="199.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="199.0" />
         </columnConstraints>
@@ -35,7 +40,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <ComboBox fx:id="customersComboBox" onAction="#OnCustomerSelected" prefWidth="150.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="customersComboBox" onAction="#OnCustomerSelected" prefHeight="31.0" prefWidth="146.0" GridPane.columnIndex="1" />
             <DatePicker fx:id="deliveryDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Select Date Of Delivery " GridPane.rowIndex="1">
                <GridPane.margin>
@@ -48,18 +53,121 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <TableView fx:id="productsTableView" prefHeight="162.0" prefWidth="659.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3" GridPane.rowSpan="2">
-              <columns>
-                  <TableColumn fx:id="productToOrderColumn" prefWidth="75.0" />
-                <TableColumn fx:id="productIDColumn" prefWidth="90.0" text="ID" />
-                  <TableColumn fx:id="productPurchaseFormColumn" prefWidth="158.0" text="Purchase Form" />
-                  <TableColumn fx:id="productPriceColumn" minWidth="4.0" prefWidth="119.0" text="Price" />
-                <TableColumn fx:id="productNameColumn" prefWidth="233.0" text="Name" />
-              </columns>
+            <ScrollPane fitToHeight="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
-            </TableView>
+               <content>
+                  <TabPane>
+                     <tabs>
+                        <Tab fx:id="productToOrderTab" text="Products To Order">
+                           <content>
+                              <TableView fx:id="productsTableView" disable="true" editable="true" prefHeight="162.0" prefWidth="603.0">
+                                <columns>
+                                    <TableColumn fx:id="productToOrderColumn" prefWidth="75.0" />
+                                  <TableColumn fx:id="productIDColumn" prefWidth="90.0" text="ID" />
+                                  <TableColumn fx:id="productNameColumn" prefWidth="148.0" text="Name" />
+                                    <TableColumn fx:id="productPurchaseFormColumn" minWidth="0.0" prefWidth="117.0" text="Purchase Form" />
+                                    <TableColumn fx:id="productPriceColumn" minWidth="4.0" prefWidth="105.0" text="Price" />
+                                    <TableColumn fx:id="productAmountColumn" prefWidth="87.0" text="Amount" />
+                                </columns>
+                              </TableView>
+                           </content>
+                        </Tab>
+                        <Tab fx:id="storesOrderedFromTab" text="Stores Ordered From">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="storesOrderedFromTableView" layoutY="-1.0" prefHeight="261.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="storeIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="storeNameColumn" prefWidth="75.0" text="Name" />
+                                          <TableColumn fx:id="storeLocationColumn" prefWidth="75.0" text="Location" />
+                                          <TableColumn fx:id="storeDistanceColumn" prefWidth="75.0" text="Distance" />
+                                          <TableColumn fx:id="storePPKColumn" prefWidth="75.0" text="PPK" />
+                                          <TableColumn fx:id="storeDeliveryCostColumn" prefWidth="75.0" text="Delivery Cost" />
+                                          <TableColumn fx:id="storeNumOfProductsTypesColumn" prefWidth="75.0" text="Number Of Prodcuts Types" />
+                                          <TableColumn fx:id="storeProductsCostColumn" prefWidth="75.0" text="ProductsCost" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="availableDiscountsTab" text="Available Discounts">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="availableDiscountsTableView" editable="true" prefHeight="241.0" prefWidth="626.0">
+                                      <columns>
+                                          <TableColumn fx:id="discountToGet" prefWidth="75.0" />
+                                        <TableColumn fx:id="discountNameColumn" prefWidth="144.0" text="Name" />
+                                          <TableColumn fx:id="discountForBuyingColumn" prefWidth="167.0" text="For Buying" />
+                                        <TableColumn fx:id="discountYouGetColumn" prefWidth="177.0" text="You Get" />
+                                          <TableColumn fx:id="discountChosenProductColumn" minWidth="9.0" prefWidth="137.0" text="Select Product" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="storesSummaryTab" text="Stores Order Summary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="storeSummaryTableView" layoutX="-1.0" prefHeight="242.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="storeSummaryIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="storeSummaryNameColumn" prefWidth="75.0" text="Name" />
+                                          <TableColumn fx:id="storeSummaryPPKColumn" prefWidth="75.0" text="PPK" />
+                                          <TableColumn fx:id="storeSummaryDistanceColumn" prefWidth="75.0" text="Distance" />
+                                          <TableColumn fx:id="storeSummaryDeliveryCostColumn" prefWidth="128.0" text="Delivery Cost" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="productsOrderSummaryTab" text="Products Order Summary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="productsSummaryTableView" prefHeight="245.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="productsSummaryIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="productsSummaryNameColumn" prefWidth="128.0" text="Name" />
+                                          <TableColumn fx:id="productsSummaryPurchaseFormColumn" prefWidth="121.0" text="Purchase Form" />
+                                          <TableColumn fx:id="productsSummaryAmountColumn" text="Amount" />
+                                          <TableColumn fx:id="productsSummaryPriceColumn" prefWidth="103.0" text="Price" />
+                                          <TableColumn fx:id="productsSummaryTotalPriceColumn" minWidth="0.0" prefWidth="110.0" text="Total Price" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab fx:id="discountsOrderSummaryTab" text="Discounts Order Summary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="discountsSummaryTableView" prefHeight="247.0" prefWidth="626.0">
+                                      <columns>
+                                        <TableColumn fx:id="discountsSummaryIDColumn" prefWidth="75.0" text="ID" />
+                                        <TableColumn fx:id="discountsSummaryNameColumn" prefWidth="169.0" text="Name" />
+                                          <TableColumn fx:id="discountsSummaryPurchaseFormColumn" prefWidth="121.0" text="Purchase Form" />
+                                          <TableColumn fx:id="discountsSummaryAmountColumn" prefWidth="92.0" text="Amount" />
+                                          <TableColumn fx:id="discountsSummaryPriceColumn" prefWidth="75.0" text="Price" />
+                                          <TableColumn fx:id="discountsSummaryTotalPriceColumn" prefWidth="93.0" text="Total Price" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </content>
+            </ScrollPane>
             <GridPane fx:id="storesGridPane" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -72,10 +180,32 @@
                <children>
                   <Label fx:id="selectStoreLabel" text="Select Store" />
                   <ComboBox fx:id="storesComboBox" onAction="#OnStoreSelected" prefWidth="150.0" GridPane.columnIndex="1" />
-                  <Label fx:id="deliveryCostValueLabel" prefHeight="39.0" prefWidth="147.0" text="text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="deliveryCostValueLabel" prefHeight="39.0" prefWidth="147.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="deliveryCostLabel" text="Delivery Cost" GridPane.rowIndex="1" />
                </children>
             </GridPane>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
+               <children>
+                  <Button fx:id="submitProductsButton" mnemonicParsing="false" onAction="#OnSubmitProductSelected" text="Submit Products">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="submitDiscountsButton" mnemonicParsing="false" onAction="#OnSubmitDiscountsSelected" text="Submit Discounts">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="submitOrderButton" mnemonicParsing="false" onAction="#OnSubmitOrder" text="Submit Order">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
+            </VBox>
          </children>
       </GridPane>
    </children>

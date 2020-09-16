@@ -1,12 +1,14 @@
 package engineLogic;
 import dataContainers.*;
+
+import java.time.LocalDate;
 import java.util.*;
 
 public class Order
 {
     private int id;
     private int storeId;
-    private Date orderDate;
+    private LocalDate orderDate;
     private float deliveryCost;
     private Collection<OrderProduct> orderedProducts;
     private static int idNumber = 1;
@@ -15,7 +17,7 @@ public class Order
     private Customer customer;
 
 
-    public Order(int id, int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
+    public Order(int id, int storeId, LocalDate date, float deliveryCost, Collection<OrderProduct> productsInOrder)
     {
         this.id = id;
         this.idNumber = id > idNumber ? ++id : idNumber;
@@ -29,7 +31,7 @@ public class Order
         }
     }
 
-    public Order(int storeId, Date date, float deliveryCost, Collection<OrderProduct> productsInOrder)
+    public Order(int storeId, LocalDate date, float deliveryCost, Collection<OrderProduct> productsInOrder)
     {
         this.id = idNumber++;
         this.storeId = storeId;
@@ -42,7 +44,7 @@ public class Order
         }
     }
 
-    public Order(Date date, float deliveryCost, int numberOfStoresOrderedFrom,Collection<OrderProduct> productsInOrder)
+    public Order(LocalDate date, float deliveryCost, int numberOfStoresOrderedFrom,Collection<OrderProduct> productsInOrder)
     {
         this.id = idNumber++;
         this.orderDate = date;
@@ -72,11 +74,11 @@ public class Order
         this.storeId = shopId;
     }
 
-    public Date getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 

@@ -1,19 +1,20 @@
 package common;
 
+import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
 import java.awt.*;
+import java.text.NumberFormat;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public final class Utilities
 {
 //    private final String LOAD_FILE_FAILURE_MESSAGE = "Failed to load the file, cause of failure:\n";
-    private static final String POSITION_FORMAT = "(%1$s, %2$s)";
-
+        private static final String POSITION_FORMAT = "(%1$s, %2$s)";
     private Utilities()
     {
     }
@@ -50,6 +51,21 @@ public final class Utilities
         return naturalNumbersFilter;
     }
 
+    public static UnaryOperator<TextFormatter.Change> getPositiveRealNumbersFilter()
+    {
+
+        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
+            String text = change.getControlNewText();
+            if (text.matches("[1-9]+[0-9]*[.]*[0-9]*"))
+            {
+                return change;
+            }
+            return null;
+        };
+
+        return naturalNumbersFilter;
+    }
+
     public static StringConverter<StoreDataContainer> getStoreConverterInPlaceOrder()
     {
        return new StringConverter<StoreDataContainer>()
@@ -59,8 +75,8 @@ public final class Utilities
             {
                 return object.getName() + " | " +
                         "id: " + object.getId() + " | " +
-                        "location: " +"["+ object.getPosition().x +
-                         ","+ object.getPosition().y +"]";
+                        "location: " +"("+ object.getPosition().x +
+                         ","+ object.getPosition().y +")";
             }
 
             @Override
@@ -70,8 +86,28 @@ public final class Utilities
         };
     }
 
+    public static StringConverter<ProductDataContainer> getProductConverterInPlaceOrder()
+    {
+        return new StringConverter<ProductDataContainer>()
+        {
+            @Override
+            public String toString(ProductDataContainer object)
+            {
+                return object.getName() + " | " +
+                        "id: " + object.getId();
+            }
+
+            @Override
+            public ProductDataContainer fromString(String string) {
+                return null;
+            }
+        };
+    }
+
     public static String convertPositionFormat(Point position)
     {
         return String.format(POSITION_FORMAT, (int) position.getX(), (int) position.getY());
     }
+
+
 }

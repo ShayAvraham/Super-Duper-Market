@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class SystemManager
@@ -157,10 +158,10 @@ public class SystemManager
 
     private void updateDataContainers()
     {
-        createAllStoresData();
         createAllProductsData();
         createAllOrdersData();
         createAllCustomersData();
+        createAllStoresData();
     }
 
 
@@ -263,9 +264,10 @@ public class SystemManager
     private Collection<DiscountDataContainer> getStoreDiscountsData(Store store)
     {
         Collection<DiscountDataContainer> allDiscountData = new ArrayList<>();
-        for (Discount discount: store.getStoreDiscounts())
-        {
-            allDiscountData.add(createStoreDiscountData(discount));
+        if(store.getStoreDiscounts()!=null) {
+            for (Discount discount : store.getStoreDiscounts()) {
+                allDiscountData.add(createStoreDiscountData(discount));
+            }
         }
 
         return allDiscountData;
@@ -274,71 +276,31 @@ public class SystemManager
     private DiscountDataContainer createStoreDiscountData(Discount discount)
     {
         return new DiscountDataContainer(discount.getName(),
-                                        createIfYouBuyDescription(discount.getDiscountProduct()),
-                                        createThenYouGetDescription(discount.getProductsToOffer(),discount.getDiscountType()));
+                discount.getDiscountType().name(),
+                getProductDataById(discount.getDiscountProduct().getId()),
+                discount.getDiscountProduct().getAmountForDiscount(),
+                createPriceForOfferProduct(discount.getProductsToOffer()),
+                createAmountForOfferProduct(discount.getProductsToOffer()));
     }
 
-    private String createIfYouBuyDescription(DiscountProduct discountProduct)
+    private Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
     {
-        String purchaseFormStr = createPurchaseFormStr(discountProduct.getPurchaseForm(),discountProduct.getAmountForDiscount());
-        return String.format("%1$s %2$s of %3$s",discountProduct.getAmountForDiscount(),purchaseFormStr,discountProduct.getName());
-    }
-
-    private String createPurchaseFormStr(Product.ProductPurchaseForm purchaseForm,double amount)
-    {
-        String purchaseFormStr = "";
-        switch (purchaseForm)
+        Map <ProductDataContainer,Integer> priceForOfferProduct = new HashMap<>();
+        for (OfferProduct offerProduct:productsToOffer)
         {
-            case WEIGHT:
-                purchaseFormStr = "kg";
-                break;
-            case QUANTITY:
-                purchaseFormStr = "unit";
-                if(amount > 1)
-                {
-                    purchaseFormStr += "s";
-                }
-                break;
+            priceForOfferProduct.put(getProductDataById(offerProduct.getId()),offerProduct.getOfferPrice());
         }
-        return purchaseFormStr;
+        return priceForOfferProduct;
     }
 
-    private String createThenYouGetDescription(Collection<OfferProduct> offerProducts, Discount.DiscountType discountType)
+    private Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
     {
-        String productsToGet = "";
-        String discountTypeStr = createDiscountTypeStr(discountType);
-
-        for(OfferProduct product: offerProducts)
+        Map <ProductDataContainer,Double> amountForOfferProduct = new HashMap<>();
+        for (OfferProduct offerProduct:productsToOffer)
         {
-            String purchaseFormStr = createPurchaseFormStr(product.getPurchaseForm(),product.getOfferAmount());
-            if(!product.equals(offerProducts.stream().findFirst().get()))
-            {
-                productsToGet += discountTypeStr;
-            }
-            productsToGet += String.format(" %1$s %2$s of %3$s for %4$s",
-                                            product.getOfferAmount(),
-                                            purchaseFormStr,
-                                            product.getName(),
-                                            product.getOfferPrice());
+            amountForOfferProduct.put(getProductDataById(offerProduct.getId()),offerProduct.getOfferAmount());
         }
-
-        return productsToGet;
-
-    }
-
-    private String createDiscountTypeStr(Discount.DiscountType discountType)
-    {
-        String discountTypeStr = "";
-        switch (discountType)
-        {
-            case ONE_OF:
-                discountTypeStr = " or";
-                break;
-            case ALL_OR_NOTHING:
-                discountTypeStr = " and";
-                break;
-        }
-        return discountTypeStr;
+        return amountForOfferProduct;
     }
 
     private void createAllProductsData()
@@ -410,7 +372,7 @@ public class SystemManager
     private OrderDataContainer createOrderData(Order order)
     {
         String storeName = order.isDynamic()?
-                "Multy store order":
+                "Multi store order":
                 systemData.getStores().get(order.getStoreId()).getName();
 
         return new OrderDataContainer(
@@ -557,7 +519,7 @@ public class SystemManager
         updateDataContainers();
     }
 
-    public Map<ProductDataContainer, StoreDataContainer> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
+    public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
     {
         storesToBuyFrom = new HashMap<>();
         for (ProductDataContainer productToPurchase : productsToPurchase)
@@ -565,7 +527,22 @@ public class SystemManager
             Store store = getStoreWithTheCheapestPrice(productToPurchase.getId());
             storesToBuyFrom.put(productToPurchase,getStoreDataContainer(store));
         }
-        return storesToBuyFrom;
+//        return storesToBuyFrom;
+
+        /** new code    **/
+        Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom = new HashMap();
+        for (ProductDataContainer productToPurchase : productsToPurchase)
+        {
+            StoreDataContainer store = getStoreDataContainer(getStoreWithTheCheapestPrice(productToPurchase.getId()));
+            ArrayList<ProductDataContainer> products = new ArrayList<ProductDataContainer>();
+            products.add(productToPurchase);
+            if(storeToPurchaseFrom.putIfAbsent(store, products) != null)
+            {
+                storeToPurchaseFrom.get(store).add(productToPurchase);
+            }
+        }
+        return storeToPurchaseFrom;
+
     }
 
     private Store getStoreWithTheCheapestPrice(int productId)
@@ -674,14 +651,159 @@ public class SystemManager
 //        return systemData.getStores().get(store.getId()).getDistanceToCustomer(userLocation);
 //    }
 
-    public float getStaticOrderDeliveryCost(StoreDataContainer store, CustomerDataContainer customer)
+    public float getDeliveryCostFromStore(StoreDataContainer store, CustomerDataContainer customer)
     {
         float deliveryCost  = getDistanceBetweenStoreAndCustomer(store, customer) * store.getPpk();
         return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
     }
 
-    private float getDistanceBetweenStoreAndCustomer(StoreDataContainer store, CustomerDataContainer customer)
+    public float getDistanceBetweenStoreAndCustomer(StoreDataContainer store, CustomerDataContainer customer)
     {
-        return Math.abs((float) store.getPosition().distance(customer.getPosition()));
+        return Float.valueOf(DECIMAL_FORMAT.format(Math.abs((float) store.getPosition().distance(customer.getPosition()))));
     }
+
+    public float getProductCostFromStore(StoreDataContainer storeData, Collection<ProductDataContainer> products)
+    {
+        float cost = 0;
+        Store store = systemData.getStores().get(storeData.getId());
+        for (ProductDataContainer product:products)
+        {
+            cost += store.getProductById(product.getId()).getPrice() * product.amountProperty().get();
+        }
+
+        return  cost;
+    }
+
+    public Map<StoreDataContainer,Collection<DiscountDataContainer>> getAvailableDiscounts(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
+    {
+        Map<StoreDataContainer,Collection<DiscountDataContainer>> availableDiscounts = new HashMap<>();
+        for (StoreDataContainer store: storeToPurchaseFrom.keySet())
+        {
+            Collection <DiscountDataContainer> availableStoreDiscounts = getAvailableDiscountsInStore(store,storeToPurchaseFrom.get(store));
+            if(availableStoreDiscounts != null)
+            {
+                availableDiscounts.put(store,availableStoreDiscounts);
+            }
+        }
+        return availableDiscounts;
+    }
+
+    private Collection<DiscountDataContainer> getAvailableDiscountsInStore(StoreDataContainer store, Collection<ProductDataContainer> products)
+    {
+        Collection<DiscountDataContainer> availableStoreDiscounts = new ArrayList<>();
+        for(DiscountDataContainer discount : store.getDiscounts())
+        {
+            for (ProductDataContainer product : products)
+            {
+                if (discount.getDiscountProduct().equals(product))
+                {
+                    for(double i = product.amountProperty().get(); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
+                    {
+                        createStoreDiscountData(systemData.getStores().get(store.getId()).getDiscountById(discount.getDiscountName()));
+                        availableStoreDiscounts.add(createStoreDiscountData(systemData.getStores().get
+                                (store.getId())
+                                .getDiscountById(discount.getDiscountName())));
+                    }
+                }
+            }
+        }
+        if(availableStoreDiscounts.isEmpty())
+        {
+            return null;
+        }
+        return availableStoreDiscounts;
+    }
+
+    public void validateSelectedDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
+    {
+        validatedOneOfDiscounts(selectedDiscounts);
+        validatedNumOfDiscounts(selectedDiscounts,selectedProducts);
+    }
+
+    private void validatedOneOfDiscounts(Collection<DiscountDataContainer> selectedDiscounts)
+    {
+        for (DiscountDataContainer discount:selectedDiscounts)
+        {
+            if(discount.getDiscountType().equals("ONE_OF") && discount.selectedOfferProductProperty().isNull().get())
+            {
+                throw new IllegalArgumentException(String.format("You must select a product if you want to get %1$s discount",discount.getDiscountName()));
+            }
+        }
+    }
+
+    private void validatedNumOfDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
+    {
+        for(ProductDataContainer product: selectedProducts)
+        {
+            double sum = 0;
+            for (DiscountDataContainer discount : selectedDiscounts)
+            {
+                if(product.equals(discount.getDiscountProduct()))
+                {
+                    sum += discount.getAmountForDiscount();
+                }
+            }
+            if(sum>product.amountProperty().doubleValue())
+            {
+                throw new IllegalArgumentException(String.format("You chosen to many discounts for the product %1$s, please reselect the discounts",product.getName()));
+            }
+        }
+    }
+
+    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)
+    {
+        return systemData.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
+    }
+
+    public Collection<DiscountDataContainer> createSubDiscounts(Collection <DiscountDataContainer> discounts)
+    {
+        Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
+        for(DiscountDataContainer discount : discounts)
+        {
+            switch (discount.getDiscountType())
+            {
+                case "ONE_OF":
+                    subDiscounts.add(createOneOfSubDiscount(discount));
+                    break;
+                case "ALL_OR_NOTHING":
+                    subDiscounts.addAll(createAllOrNothingSubDiscounts(discount));
+                    break;
+                case "IRRELEVANT":
+                    subDiscounts.add(discount);
+                    break;
+            }
+        }
+        return subDiscounts;
+
+
+
+    }
+
+    private Collection<DiscountDataContainer> createAllOrNothingSubDiscounts(DiscountDataContainer discount)
+    {
+        Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
+        for(ProductDataContainer offerProduct : discount.getPriceForOfferProduct().keySet())
+        {
+            subDiscounts.add(new DiscountDataContainer(discount.getDiscountName(),
+                    discount.getDiscountType(),
+                    discount.getDiscountProduct(),
+                    discount.getAmountForDiscount(),
+                    new HashMap<ProductDataContainer,Integer>(){{put(offerProduct,discount.getPriceForOfferProduct().get(offerProduct));}},
+                    new HashMap<ProductDataContainer,Double>(){{put(offerProduct,discount.getAmountForOfferProduct().get(offerProduct));}}));
+        }
+        return subDiscounts;
+    }
+
+    private DiscountDataContainer createOneOfSubDiscount(DiscountDataContainer discount)
+    {
+        ProductDataContainer selectedOfferProduct = discount.getSelectedOfferProduct();
+
+        return new DiscountDataContainer(discount.getDiscountName(),
+                discount.getDiscountType(),
+                discount.getDiscountProduct(),
+                discount.getAmountForDiscount(),
+                new HashMap<ProductDataContainer,Integer>(){{put(selectedOfferProduct,discount.getPriceForOfferProduct().get(selectedOfferProduct));}},
+                new HashMap<ProductDataContainer,Double>(){{put(selectedOfferProduct,discount.getAmountForOfferProduct().get(selectedOfferProduct));}});
+    }
+
 }

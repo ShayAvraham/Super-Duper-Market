@@ -105,6 +105,21 @@ public class Store
         return storeProduct;
     }
 
+    public Discount getDiscountById(String discountName)
+    {
+        Discount discount = null;
+        for (Discount currentDiscount: storeDiscounts)
+        {
+            if(currentDiscount.getName() == discountName)
+            {
+                discount = currentDiscount;
+                break;
+            }
+        }
+        return discount;
+    }
+
+
     float getDistanceToCustomer(Point customerPosition)
     {
         float distanceToCustomer = Math.abs((float) position.distance(customerPosition));
