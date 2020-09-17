@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.orderDetails.OrderDetailsController">
+   <children>
+      <TabPane fx:id="tabPane" layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <tabs>
+            <Tab fx:id="storesSummaryTab" text="Stores Order Summary">
+               <content>
+                  <AnchorPane prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="storeSummaryTableView" layoutX="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="storeSummaryIDColumn" prefWidth="54.333343505859375" text="ID" />
+                              <TableColumn fx:id="storeSummaryNameColumn" prefWidth="117.33334350585938" text="Name" />
+                              <TableColumn fx:id="storeSummaryPPKColumn" prefWidth="114.66668701171875" text="PPK" />
+                              <TableColumn fx:id="storeSummaryDistanceColumn" prefWidth="117.33331298828125" text="Distance" />
+                              <TableColumn fx:id="storeSummaryDeliveryCostColumn" prefWidth="198.66668701171875" text="Delivery Cost" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="productsOrderSummaryTab" text="Products Order Summary">
+               <content>
+                  <AnchorPane prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="productsSummaryTableView" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="productsSummaryIDColumn" prefWidth="63.66668701171875" text="ID" />
+                              <TableColumn fx:id="productsSummaryNameColumn" prefWidth="97.33334350585938" text="Name" />
+                              <TableColumn fx:id="productsSummaryPurchaseFormColumn" prefWidth="124.6666259765625" text="Purchase Form" />
+                              <TableColumn fx:id="productsSummaryAmountColumn" prefWidth="94.0" text="Amount" />
+                              <TableColumn fx:id="productsSummaryPriceColumn" prefWidth="90.33331298828125" text="Price" />
+                              <TableColumn fx:id="productsSummaryTotalPriceColumn" minWidth="0.0" prefWidth="148.66668701171875" text="Total Price" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab fx:id="discountsOrderSummaryTab" text="Discounts Order Summary">
+               <content>
+                  <AnchorPane prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="discountsSummaryTableView" prefHeight="371.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="discountsSummaryIDColumn" prefWidth="65.0" text="ID" />
+                              <TableColumn fx:id="discountsSummaryNameColumn" prefWidth="127.6666259765625" text="Name" />
+                              <TableColumn fx:id="discountsSummaryPurchaseFormColumn" prefWidth="117.66668701171875" text="Purchase Form" />
+                              <TableColumn fx:id="discountsSummaryAmountColumn" prefWidth="103.33331298828125" text="Amount" />
+                              <TableColumn fx:id="discountsSummaryPriceColumn" prefWidth="63.66668701171875" text="Price" />
+                              <TableColumn fx:id="discountsSummaryTotalPriceColumn" prefWidth="148.33331298828125" text="Total Price" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

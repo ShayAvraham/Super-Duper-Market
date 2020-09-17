@@ -47,6 +47,9 @@ public class PlaceOrderController
     private AnchorPane rootPane;
 
     @FXML
+    private GridPane placeOrderGridPane;
+
+    @FXML
     private ComboBox<CustomerDataContainer> customersComboBox;
 
     @FXML
@@ -773,6 +776,4 @@ public class PlaceOrderController
         }
 //        systemManager.addNewOrder(order);
     }
-
-
 }
