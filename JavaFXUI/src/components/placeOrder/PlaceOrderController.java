@@ -148,75 +148,6 @@ public class PlaceOrderController
     private TableColumn<DiscountDataContainer,ProductDataContainer> discountChosenProductColumn;
 
     @FXML
-    private Tab storesOrderSummaryTab;
-
-    @FXML
-    private TableView<StoreDataContainer> storeSummaryTableView;
-
-    @FXML
-    private TableColumn<StoreDataContainer, Integer> storeSummaryIDColumn;
-
-    @FXML
-    private TableColumn<StoreDataContainer, String> storeSummaryNameColumn;
-
-    @FXML
-    private TableColumn<StoreDataContainer, Float> storeSummaryPPKColumn;
-
-    @FXML
-    private TableColumn<StoreDataContainer, Float> storeSummaryDistanceColumn;
-
-    @FXML
-    private TableColumn<StoreDataContainer, Float> storeSummaryDeliveryCostColumn;
-
-    @FXML
-    private Tab productsOrderSummaryTab;
-
-    @FXML
-    private TableView<ProductDataContainer> productsSummaryTableView;
-
-    @FXML
-    private TableColumn<ProductDataContainer, Integer> productsSummaryIDColumn;
-
-    @FXML
-    private TableColumn<ProductDataContainer, String> productsSummaryNameColumn;
-
-    @FXML
-    private TableColumn<ProductDataContainer, String> productsSummaryPurchaseFormColumn;
-
-    @FXML
-    private TableColumn<ProductDataContainer, Float> productsSummaryAmountColumn;
-
-    @FXML
-    private TableColumn<ProductDataContainer, Integer> productsSummaryPriceColumn;
-
-    @FXML
-    private TableColumn<ProductDataContainer, Double> productsSummaryTotalPriceColumn;
-
-    @FXML
-    private Tab discountsOrderSummaryTab;
-
-    @FXML
-    private TableView<DiscountDataContainer> discountsSummaryTableView;
-
-    @FXML
-    private TableColumn<DiscountDataContainer, Integer> discountsSummaryIDColumn;
-
-    @FXML
-    private TableColumn<DiscountDataContainer, String> discountsSummaryNameColumn;
-
-    @FXML
-    private TableColumn<DiscountDataContainer, String> discountsSummaryPurchaseFormColumn;
-
-    @FXML
-    private TableColumn<DiscountDataContainer, Float> discountsSummaryAmountColumn;
-
-    @FXML
-    private TableColumn<DiscountDataContainer, Integer> discountsSummaryPriceColumn;
-
-    @FXML
-    private TableColumn<DiscountDataContainer, Integer> discountsSummaryTotalPriceColumn;
-
-    @FXML
     private Button submitProductsButton;
 
     @FXML
@@ -233,6 +164,9 @@ public class PlaceOrderController
     private Map <StoreDataContainer,Collection<DiscountDataContainer>> selectedDiscounts;
     private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
     private Map<StoreDataContainer,Collection<DiscountDataContainer>> availableDiscounts;
+    private OrderDataContainer order;
+
+    private SimpleObjectProperty<OrderSteps> currentStepProperty;
 
     private SimpleListProperty<CustomerDataContainer> customersProperty;
     private SimpleListProperty<String> orderTypesProperty;
@@ -241,15 +175,11 @@ public class PlaceOrderController
     private SimpleListProperty<ProductDataContainer> productsProperty;
     private SimpleListProperty<StoreDataContainer> storesOrderedFromProperty;
     private SimpleListProperty<DiscountDataContainer> availableDiscountsProperty;
-    private SimpleListProperty<ProductDataContainer> productsSummaryProperty;
-    private SimpleListProperty<DiscountDataContainer> discountsSummaryProperty;
-
 
     private SimpleObjectProperty<CustomerDataContainer> selectedCustomerProperty;
     private SimpleObjectProperty<LocalDate> selectedDeliveryDate;
     private SimpleStringProperty selectedOrderTypeProperty;
     private SimpleObjectProperty<StoreDataContainer> selectedStoreProperty;
-    private SimpleObjectProperty<StoreDataContainer> selectedStoreSummaryProperty;
 
     private SimpleBooleanProperty isOrderTypeStatic;
 
@@ -257,32 +187,50 @@ public class PlaceOrderController
 
     public enum OrderSteps
     {
-        SELECT_PRODUCTS,SHOW_DISCOUNTS, SHOW_PRE_ORDER_SUMMARY
+        SELECT_PRODUCTS,SELECT_DISCOUNTS,SUBMIT_ORDER,
     }
     @FXML
     void initialize()
     {
+        /** step 1 **/
         customersComboBox.itemsProperty().bind(customersProperty);
+        customersComboBox.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_PRODUCTS));
+
         orderTypesComboBox.itemsProperty().bind(orderTypesProperty);
+        customersComboBox.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_PRODUCTS));
+
         storesComboBox.itemsProperty().bind(storesProperty);
         storesComboBox.setConverter(Utilities.getStoreConverterInPlaceOrder());
+        storesComboBox.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_PRODUCTS));
+
+        productToOrderTab.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_PRODUCTS));
+
+        submitProductsButton.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_PRODUCTS));
+
+
+        /** step 2 **/
+
+        storesOrderedFromTab.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_DISCOUNTS)
+                                                    .or(isOrderTypeStatic));
+        availableDiscountsTab.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_DISCOUNTS));
+        submitDiscountsButton.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SELECT_DISCOUNTS));
+
+
+        /** step 2 **/
+
+        submitOrderButton.disableProperty().bind(currentStepProperty.isNotEqualTo(OrderSteps.SUBMIT_ORDER));
+
+        /** unselected **/
 
         deliveryCostValueLabel.textProperty().bind(deliveryCostProperty.asString());
         productsTableView.itemsProperty().bind(productsProperty);
         storesOrderedFromTableView.itemsProperty().bind(storesOrderedFromProperty);
         availableDiscountsTableView.itemsProperty().bind(availableDiscountsProperty);
-        storeSummaryTableView.itemsProperty().bind(storesOrderedFromProperty);
-        productsSummaryTableView.itemsProperty().bind(productsSummaryProperty);
-        discountsSummaryTableView.itemsProperty().bind(discountsSummaryProperty);
 
         selectedCustomerProperty.bind(customersComboBox.selectionModelProperty().get().selectedItemProperty());
         selectedOrderTypeProperty.bind(orderTypesComboBox.selectionModelProperty().get().selectedItemProperty());
         selectedDeliveryDate.bind(deliveryDatePicker.valueProperty());
         selectedStoreProperty.bind(storesComboBox.selectionModelProperty().getValue().selectedItemProperty());
-        selectedStoreSummaryProperty.bind(storeSummaryTableView.selectionModelProperty().getValue().selectedItemProperty());
-
-//        productsTableView.disableProperty().bind(selectedCustomerProperty.isNull() .or (selectedOrderTypeProperty.isNull()));
-//        productsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         productPriceColumn.visibleProperty().bindBidirectional(isOrderTypeStatic);
 
@@ -309,6 +257,7 @@ public class PlaceOrderController
 
     public PlaceOrderController()
     {
+        currentStepProperty = new SimpleObjectProperty<>();
         customersProperty = new SimpleListProperty<>();
         orderTypesProperty = new SimpleListProperty<>();
         storesProperty = new SimpleListProperty<>();
@@ -316,14 +265,11 @@ public class PlaceOrderController
         productsProperty = new SimpleListProperty<>();
         storesOrderedFromProperty = new SimpleListProperty<>();
         availableDiscountsProperty = new SimpleListProperty<>();
-        productsSummaryProperty = new SimpleListProperty<>();
-        discountsSummaryProperty = new SimpleListProperty<>();
 
         selectedCustomerProperty = new SimpleObjectProperty<>();
         selectedDeliveryDate = new SimpleObjectProperty<>();
         selectedOrderTypeProperty = new SimpleStringProperty();
         selectedStoreProperty = new SimpleObjectProperty<>();
-        selectedStoreSummaryProperty = new SimpleObjectProperty<>();
 
         isOrderTypeStatic = new SimpleBooleanProperty();
     }
@@ -349,8 +295,11 @@ public class PlaceOrderController
         selectedProducts = new HashSet<>();
         storeToPurchaseFrom = new HashMap<>();
         availableDiscounts = new HashMap<>();
+        currentStepProperty.setValue(OrderSteps.SELECT_PRODUCTS);
+        order = null;
         loadCustomers();
         orderTypesProperty.setValue(orderTypeValues);
+
     }
 
     private void loadCustomers()
@@ -524,18 +473,26 @@ public class PlaceOrderController
     @FXML
     void OnSubmitProductSelected(ActionEvent event)
     {
-        getSelectedProducts();
-        if(!selectedProducts.isEmpty())
+        try
         {
-            if(selectedOrderTypeProperty.getValue().equals(DYNAMIC))
+            getSelectedProducts();
+            currentStepProperty.set(OrderSteps.SELECT_DISCOUNTS);
+            if (!selectedProducts.isEmpty())
             {
-                loadStoresOrderedFrom();
+                if (selectedOrderTypeProperty.getValue().equals(DYNAMIC))
+                {
+                    loadStoresOrderedFrom();
+                }
+                else
+                {
+                    storeToPurchaseFrom.putIfAbsent(selectedStoreProperty.get(), selectedProducts);
+                }
+                loadAvailableDiscounts();
             }
-            else
-            {
-                storeToPurchaseFrom.putIfAbsent(selectedStoreProperty.get(),selectedProducts);
-            }
-            loadAvailableDiscounts();
+        }
+        catch (Exception e)
+        {
+            Utilities.ShowErrorAlert(e.getMessage());
         }
     }
 
@@ -652,7 +609,7 @@ public class PlaceOrderController
     }
 
     @FXML
-    void OnSubmitDiscountsSelected(ActionEvent event) /** move to new controller **/
+    void OnSubmitDiscountsSelected(ActionEvent event)
     {
         try
         {
@@ -660,11 +617,11 @@ public class PlaceOrderController
             systemManager.validateSelectedDiscounts(selectedDiscounts.values().stream()
                     .flatMap(Collection<DiscountDataContainer>::stream)
                     .collect(Collectors.collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)),selectedProducts);
-
+            currentStepProperty.set(OrderSteps.SUBMIT_ORDER);
 
             float costOfAllProducts =  systemManager.getOrderCostOfAllProducts(storeToPurchaseFrom,selectedDiscounts);
             float deliveryCost = systemManager.getOrderDeliveryCost(storeToPurchaseFrom.keySet(),selectedCustomerProperty.get());
-            OrderDataContainer order = new OrderDataContainer(selectedDeliveryDate.get(),
+            order = new OrderDataContainer(selectedDeliveryDate.getValue(),
                     selectedCustomerProperty.get(),
                     storeToPurchaseFrom,
                     selectedDiscounts,
@@ -672,11 +629,6 @@ public class PlaceOrderController
                     costOfAllProducts,
                     deliveryCost,
                     costOfAllProducts + deliveryCost);
-            systemManager.addNewOrder(order);
-
-
-/*****************************************/
-            loadOrderSummary();
         }
         catch (Exception e)
         {
@@ -701,95 +653,16 @@ public class PlaceOrderController
         }
     }
 
-    private void loadOrderSummary()
-    {
-        loadStoresSummary();
-    }
-
-    private void loadStoresSummary()
-    {
-        setStoresSummaryTableColumnsProperties();
-        storeSummaryTableView.setOnMouseClicked(event ->
-        {
-            loadProductsSummary();
-            loadDiscountsSummary();
-        } );
-        storeSummaryTableView.refresh();
-    }
-
-    private void setStoresSummaryTableColumnsProperties()
-    {
-        storeSummaryIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        storeSummaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        storeSummaryPPKColumn.setCellValueFactory(new PropertyValueFactory<>("ppk"));
-        storeSummaryDistanceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(
-                systemManager.getDistanceBetweenStoreAndCustomer(cell.getValue(),selectedCustomerProperty.get())));
-        storeSummaryDeliveryCostColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(
-                systemManager.getDeliveryCostFromStore(cell.getValue(),selectedCustomerProperty.get())));
-    }
-
-    private void loadProductsSummary()
-    {
-
-        setProductsSummaryTableColumnsProperties();
-        productsSummaryProperty.setValue(
-                storeToPurchaseFrom.get(selectedStoreSummaryProperty.get())
-                .stream()
-                .collect(Collectors
-                .collectingAndThen(Collectors.toList(),
-                FXCollections::observableArrayList)));
-    }
-
-    private void setProductsSummaryTableColumnsProperties()
-    {
-        productsSummaryIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        productsSummaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productsSummaryPurchaseFormColumn.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
-        productsSummaryAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        productsSummaryPriceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(systemManager.getProductPrice(selectedStoreSummaryProperty.get(),cell.getValue())));
-        productsSummaryTotalPriceColumn.setCellValueFactory(cell ->new SimpleObjectProperty<>(
-                cell.getValue().amountProperty().get() *
-                systemManager.getProductPrice(selectedStoreSummaryProperty.get(),cell.getValue())));
-    }
-
-
-
-    private void loadDiscountsSummary()
-    {
-        setDiscountsSummaryTableColumnsProperties();
-        discountsSummaryProperty.setValue(systemManager.createSubDiscounts(
-                selectedDiscounts.get(selectedStoreSummaryProperty.getValue()))
-            .stream()
-            .collect(Collectors
-                    .collectingAndThen(Collectors.toList(),
-                            FXCollections::observableArrayList)));
-    }
-
-    private void setDiscountsSummaryTableColumnsProperties()
-    {
-        discountsSummaryIDColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getId()));
-        discountsSummaryNameColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getName()));
-        discountsSummaryPurchaseFormColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getPurchaseForm()));
-        discountsSummaryAmountColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()));
-        discountsSummaryPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(systemManager.getProductPrice(selectedStoreSummaryProperty.get(),
-                data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get())));
-        discountsSummaryTotalPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()));
-    }
-
     @FXML
     void OnSubmitOrder(ActionEvent event)
     {
-        OrderDataContainer order;
-        if(selectedOrderTypeProperty.getValue().equals(STATIC))
+        try
         {
-//            LocalDate date1 = deliveryDatePicker.valueProperty().get();
-//            System.out.println(date1);
-//             order = new OrderDataContainer(selectedDeliveryDate.get(),deliveryCostProperty.get(),selectedStoreProperty.get().getId(),);
+            systemManager.addNewOrder(order);
         }
-        else
+        catch (Exception e)
         {
-//            order = ;
+            Utilities.ShowErrorAlert(e.getMessage());
         }
-//        systemManager.addNewOrder(order);
     }
 }
