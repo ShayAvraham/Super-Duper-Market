@@ -105,7 +105,7 @@ public class Store
         return storeProduct;
     }
 
-    public Discount getDiscountById(String discountName)
+    public Discount getDiscountByName(String discountName)
     {
         Discount discount = null;
         for (Discount currentDiscount: storeDiscounts)

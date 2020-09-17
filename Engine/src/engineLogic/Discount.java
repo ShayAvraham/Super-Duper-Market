@@ -1,5 +1,7 @@
 package engineLogic;
 
+import dataContainers.DiscountDataContainer;
+
 import java.util.Collection;
 import java.util.Objects;
 

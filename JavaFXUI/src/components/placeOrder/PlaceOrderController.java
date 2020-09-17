@@ -574,7 +574,7 @@ public class PlaceOrderController
         storeDeliveryCostColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(
                 systemManager.getDeliveryCostFromStore(data.getValue(),selectedCustomerProperty.get())));
         storeNumOfProductsTypesColumn.setCellValueFactory(data-> new SimpleObjectProperty<>(storeToPurchaseFrom.get(data.getValue()).size()));
-        storeProductsCostColumn.setCellValueFactory(data ->new SimpleObjectProperty<>(systemManager.getProductCostFromStore
+        storeProductsCostColumn.setCellValueFactory(data ->new SimpleObjectProperty<>(systemManager.getProductsCostFromStore
                 (data.getValue(),storeToPurchaseFrom.get(data.getValue()))));
 
 
@@ -652,14 +652,30 @@ public class PlaceOrderController
     }
 
     @FXML
-    void OnSubmitDiscountsSelected(ActionEvent event)
+    void OnSubmitDiscountsSelected(ActionEvent event) /** move to new controller **/
     {
         try
         {
             getSelectedDiscounts();
             systemManager.validateSelectedDiscounts(selectedDiscounts.values().stream()
                     .flatMap(Collection<DiscountDataContainer>::stream)
-                    .collect(Collectors.collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)), selectedProducts);
+                    .collect(Collectors.collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)),selectedProducts);
+
+
+            float costOfAllProducts =  systemManager.getOrderCostOfAllProducts(storeToPurchaseFrom,selectedDiscounts);
+            float deliveryCost = systemManager.getOrderDeliveryCost(storeToPurchaseFrom.keySet(),selectedCustomerProperty.get());
+            OrderDataContainer order = new OrderDataContainer(selectedDeliveryDate.get(),
+                    selectedCustomerProperty.get(),
+                    storeToPurchaseFrom,
+                    selectedDiscounts,
+                    selectedOrderTypeProperty.get().equals(DYNAMIC)?true:false,
+                    costOfAllProducts,
+                    deliveryCost,
+                    costOfAllProducts + deliveryCost);
+            systemManager.addNewOrder(order);
+
+
+/*****************************************/
             loadOrderSummary();
         }
         catch (Exception e)
