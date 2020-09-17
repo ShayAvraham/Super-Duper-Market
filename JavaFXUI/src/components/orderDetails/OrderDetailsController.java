@@ -1,5 +1,6 @@
 package components.orderDetails;
 
+import components.main.MainAppController;
 import dataContainers.DiscountDataContainer;
 import dataContainers.OrderDataContainer;
 import dataContainers.ProductDataContainer;
@@ -115,6 +116,7 @@ public class OrderDetailsController
     @FXML
     private TableColumn<DiscountDataContainer, Integer> discountsSummaryTotalPriceColumn;
 
+    private MainAppController mainAppController;
     private SystemManager systemManager;
     private OrderDataContainer orderDetails;
     private SimpleListProperty<StoreDataContainer> storesOrderProperty;
@@ -159,6 +161,13 @@ public class OrderDetailsController
     {
         this.systemManager = systemManager;
     }
+
+    public void setMainController(MainAppController mainController)
+    {
+        this.mainAppController = mainController;
+    }
+
+
 
     public AnchorPane getRootPane()
     {
@@ -207,6 +216,9 @@ public class OrderDetailsController
     private void loadStoresSummary()
     {
         setStoresSummaryTableColumnsProperties();
+        storesOrderProperty.setValue(orderDetails.getProducts().keySet().stream()
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)));
         storeSummaryTableView.setOnMouseClicked(event ->
         {
             loadProductsSummary();

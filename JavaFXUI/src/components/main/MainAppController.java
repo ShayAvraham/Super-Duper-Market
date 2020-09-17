@@ -1,6 +1,7 @@
 package components.main;
 import common.Utilities;
 import components.loadXml.LoadXmlController;
+import components.orderDetails.OrderDetailsController;
 import components.placeOrder.PlaceOrderController;
 import components.showAllCustomers.ShowAllCustomersController;
 import components.showAllProducts.ShowAllProductsController;
@@ -31,6 +32,7 @@ public class MainAppController
     private ShowOrdersHistoryController showOrdersHistoryController;
     private UpdateProductsController updateProductsController;
     private PlaceOrderController placeOrderController;
+    private OrderDetailsController orderDetailsController;
 
     private SystemManager systemManager;
     private Stage stage;
@@ -83,6 +85,7 @@ public class MainAppController
             systemManager = new SystemManager();
             isFileLoadedProperty = new SimpleBooleanProperty(false);
             loadXmlController = initializeLoadXMLController(this.systemManager);
+            orderDetailsController = initializeOrderDetailsController(this.systemManager);
             showAllCustomersController = initializeShowAllCustomersController(this.systemManager);
             showAllProductsController = initializeShowAllProductsController(this.systemManager);
             showAllStoresController = initializeShowAllStoresController(this.systemManager);
@@ -96,6 +99,17 @@ public class MainAppController
             e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
+    }
+
+    private OrderDetailsController initializeOrderDetailsController(SystemManager systemManager) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/orderDetails/OrderDetails.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        OrderDetailsController orderDetailsController = loader.getController();
+        orderDetailsController.setMainController(this);
+        orderDetailsController.setSystemLogic(systemManager);
+        return orderDetailsController;
     }
 
     @FXML
@@ -172,6 +186,7 @@ public class MainAppController
         ShowOrdersHistoryController showOrdersHistoryController = loader.getController();
         showOrdersHistoryController.setMainController(this);
         showOrdersHistoryController.setSystemLogic(systemManager);
+        showOrdersHistoryController.setOrderDetailsController(orderDetailsController);
         return showOrdersHistoryController;
     }
 
@@ -208,6 +223,7 @@ public class MainAppController
         PlaceOrderController placeOrderController = loader.getController();
         placeOrderController.setMainController(this);
         placeOrderController.setSystemLogic(systemManager);
+        placeOrderController.setOrderDetailsController(orderDetailsController);
         return placeOrderController;
     }
 

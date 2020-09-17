@@ -834,4 +834,9 @@ public class SystemManager
 
         return  cost;
     }
+
+    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)
+    {
+        return systemData.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
+    }
 }

@@ -12,13 +12,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -45,11 +45,13 @@ public class ShowOrdersHistoryController
     @FXML
     private AnchorPane displayOrderDetailsPane;
 
+    @FXML
+    private Button displayOrderDetailsButton;
+
     public ShowOrdersHistoryController()
     {
         ordersProperty = new SimpleListProperty<>();
         selectedOrderProperty = new SimpleObjectProperty<>();
-        orderDetailsController = new OrderDetailsController();
     }
 
     @FXML
@@ -58,7 +60,6 @@ public class ShowOrdersHistoryController
         selectOrderComboBox.itemsProperty().bind(ordersProperty);
         selectOrderComboBox.setConverter(Utilities.getOrderConverterInShowOrdersHistory());
         selectedOrderProperty.bind(selectOrderComboBox.selectionModelProperty().getValue().selectedItemProperty());
-        displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
     }
 
     public void updateOrders()
@@ -73,7 +74,15 @@ public class ShowOrdersHistoryController
     @FXML
     void OnSelectedOrder(ActionEvent event)
     {
+
+    }
+
+    @FXML
+    void OnDisplayOrderButtonPressed(ActionEvent event)
+    {
+        displayOrderDetailsPane.getChildren().clear();
         orderDetailsController.setOrderDetails(selectedOrderProperty.getValue());
+        displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
     }
 
     public AnchorPane getRootPane()
@@ -89,5 +98,10 @@ public class ShowOrdersHistoryController
     public void setSystemLogic(SystemManager systemManager)
     {
         this.systemLogic = systemManager;
+    }
+
+    public void setOrderDetailsController(OrderDetailsController orderDetailsController)
+    {
+        this.orderDetailsController = orderDetailsController;
     }
 }
