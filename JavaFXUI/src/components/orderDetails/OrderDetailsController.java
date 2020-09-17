@@ -5,16 +5,15 @@ import dataContainers.OrderDataContainer;
 import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 
 import java.util.stream.Collectors;
 
@@ -22,6 +21,27 @@ public class OrderDetailsController
 {
     @FXML
     private AnchorPane rootPane;
+
+    @FXML
+    private GridPane orderCostsGridPane;
+
+    @FXML
+    private Label productsCostLabel;
+
+    @FXML
+    private Label deliveryCostLabel;
+
+    @FXML
+    private Label orderCostLabel;
+
+    @FXML
+    private Label productsCostValueLabel;
+
+    @FXML
+    private Label deliveryCostValueLabel;
+
+    @FXML
+    private Label orderCostValueLabel;
 
     @FXML
     private TabPane tabPane;
@@ -101,6 +121,10 @@ public class OrderDetailsController
     private SimpleListProperty<ProductDataContainer> productsOrderProperty;
     private SimpleListProperty<DiscountDataContainer> discountsOrderProperty;
     private SimpleObjectProperty<StoreDataContainer> selectedStoreProperty;
+    private SimpleFloatProperty productsCostProperty;
+    private SimpleFloatProperty deliveryCostProperty;
+    private SimpleFloatProperty orderCostProperty;
+
 
     public OrderDetailsController()
     {
@@ -108,6 +132,9 @@ public class OrderDetailsController
         productsOrderProperty = new SimpleListProperty<>();
         discountsOrderProperty = new SimpleListProperty<>();
         selectedStoreProperty = new SimpleObjectProperty<>();
+        productsCostProperty = new SimpleFloatProperty();
+        deliveryCostProperty = new SimpleFloatProperty();
+        orderCostProperty = new SimpleFloatProperty();
     }
 
     @FXML
@@ -117,10 +144,28 @@ public class OrderDetailsController
         productsSummaryTableView.itemsProperty().bind(productsOrderProperty);
         discountsSummaryTableView.itemsProperty().bind(discountsOrderProperty);
         selectedStoreProperty.bind(storeSummaryTableView.selectionModelProperty().getValue().selectedItemProperty());
-        setStoresSummaryTableColumnsProperties();
+        productsCostValueLabel.textProperty().bind(productsCostProperty.asString());
+        deliveryCostValueLabel.textProperty().bind(deliveryCostProperty.asString());
+        orderCostValueLabel.textProperty().bind(orderCostProperty.asString());
     }
 
-    public void loadOrderSummary()  // starting point
+    public void setOrderDetails(OrderDataContainer orderDetails)
+    {
+        this.orderDetails = orderDetails;
+        loadOrderSummary();
+    }
+
+    public void setSystemLogic(SystemManager systemManager)
+    {
+        this.systemManager = systemManager;
+    }
+
+    public AnchorPane getRootPane()
+    {
+        return rootPane;
+    }
+
+    private void loadOrderSummary()
     {
         loadStoresSummary();
     }
@@ -131,9 +176,9 @@ public class OrderDetailsController
         storeSummaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         storeSummaryPPKColumn.setCellValueFactory(new PropertyValueFactory<>("ppk"));
         storeSummaryDistanceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(
-                                    systemManager.getDistanceBetweenStoreAndCustomer(cell.getValue(),selectedCustomerProperty.get())));
+                                    systemManager.getDistanceBetweenStoreAndCustomer(cell.getValue(),orderDetails.getCustomer())));
         storeSummaryDeliveryCostColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(
-                                    systemManager.getDeliveryCostFromStore(cell.getValue(),selectedCustomerProperty.get())));
+                                    systemManager.getDeliveryCostFromStore(cell.getValue(),orderDetails.getCustomer())));
     }
 
     private void setProductsSummaryTableColumnsProperties()
@@ -166,6 +211,9 @@ public class OrderDetailsController
         {
             loadProductsSummary();
             loadDiscountsSummary();
+            loadProductsCostSummary();
+            loadDeliveryCostSummary();
+            loadOrderCostSummary();
         } );
         storeSummaryTableView.refresh();
     }
@@ -174,32 +222,36 @@ public class OrderDetailsController
     {
         setProductsSummaryTableColumnsProperties();
         productsOrderProperty.setValue(
-                storeToPurchaseFrom.get(selectedStoreProperty.get())
+                orderDetails.getProducts().get(selectedStoreProperty.get())
                         .stream()
                         .collect(Collectors
                                 .collectingAndThen(Collectors.toList(),
                                         FXCollections::observableArrayList)));
     }
 
-
     private void loadDiscountsSummary()
     {
         setDiscountsSummaryTableColumnsProperties();
         discountsOrderProperty.setValue(systemManager.createSubDiscounts(
-                selectedDiscounts.get(selectedStoreProperty.getValue()))
+                orderDetails.getDiscounts().get(selectedStoreProperty.get()))
                 .stream()
                 .collect(Collectors
                         .collectingAndThen(Collectors.toList(),
                                 FXCollections::observableArrayList)));
     }
 
-    public void setOrderDetails(OrderDataContainer orderDetails)
+    private void loadProductsCostSummary()
     {
-        this.orderDetails = orderDetails;
+        productsCostProperty.set(orderDetails.getCostOfAllProducts());
     }
 
-    public void setSystemLogic(SystemManager systemManager)
+    private void loadDeliveryCostSummary()
     {
-        this.systemManager = systemManager;
+        deliveryCostProperty.set(orderDetails.getDeliveryCost());
+    }
+
+    private void loadOrderCostSummary()
+    {
+        orderCostProperty.set(orderDetails.getTotalCost());
     }
 }

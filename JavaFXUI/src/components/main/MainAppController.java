@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -284,7 +283,7 @@ public class MainAppController
     void showOrdersHistory(ActionEvent event)
     {
         mainWindow.getChildren().clear();
-        showOrdersHistoryController.updateOrdersHistoryTable();
+        showOrdersHistoryController.updateOrders();
         mainWindow.setBottomAnchor(showOrdersHistoryController.getRootPane(),0.);
         mainWindow.setTopAnchor(showOrdersHistoryController.getRootPane(), 0.);
         mainWindow.setLeftAnchor(showOrdersHistoryController.getRootPane(), 0.);

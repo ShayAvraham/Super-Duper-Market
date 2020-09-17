@@ -1,82 +1,79 @@
 package components.showOrdersHistory;
 
+import common.Utilities;
 import components.main.MainAppController;
+import components.orderDetails.OrderDetailsController;
 import dataContainers.CustomerDataContainer;
 import dataContainers.OrderDataContainer;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class ShowOrdersHistoryController
 {
     private MainAppController mainAppController;
+    private OrderDetailsController orderDetailsController;
     private SystemManager systemLogic;
+    private SimpleListProperty<OrderDataContainer> ordersProperty;
+    private SimpleObjectProperty<OrderDataContainer> selectedOrderProperty;
 
     @FXML
     private AnchorPane rootPane;
 
     @FXML
-    private TableView<OrderDataContainer> ordersView;
+    private AnchorPane selectOrderPane;
 
     @FXML
-    private TableColumn<OrderDataContainer, Integer> id;
+    private Label selectOrderLabel;
 
     @FXML
-    private TableColumn<OrderDataContainer, Date> date;
+    private ComboBox<OrderDataContainer> selectOrderComboBox;
 
     @FXML
-    private TableColumn<OrderDataContainer, Integer> storeId;
+    private AnchorPane displayOrderDetailsPane;
 
-    @FXML
-    private TableColumn<OrderDataContainer, String> storeName;
-
-    @FXML
-    private TableColumn<OrderDataContainer, Integer> numOfProductTypes;
-
-    @FXML
-    private TableColumn<OrderDataContainer, Integer> numOfProducts;
-
-    @FXML
-    private TableColumn<OrderDataContainer, Float> productsCost;
-
-    @FXML
-    private TableColumn<OrderDataContainer, Float> deliveryCost;
-
-    @FXML
-    private TableColumn<OrderDataContainer, Float> totalCost;
+    public ShowOrdersHistoryController()
+    {
+        ordersProperty = new SimpleListProperty<>();
+        selectedOrderProperty = new SimpleObjectProperty<>();
+        orderDetailsController = new OrderDetailsController();
+    }
 
     @FXML
     private void initialize()
     {
-        setOrdersHistoryTableColumnsProperties();
+        selectOrderComboBox.itemsProperty().bind(ordersProperty);
+        selectOrderComboBox.setConverter(Utilities.getOrderConverterInShowOrdersHistory());
+        selectedOrderProperty.bind(selectOrderComboBox.selectionModelProperty().getValue().selectedItemProperty());
+        displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
     }
 
-    public void updateOrdersHistoryTable()
+    public void updateOrders()
     {
-        ordersView.refresh();
-        ObservableList<OrderDataContainer> ordersList = FXCollections.observableArrayList();
-        ordersList.addAll(systemLogic.getAllOrdersData());
-        ordersView.setItems(ordersList);
+        ordersProperty.setValue(systemLogic.getAllOrdersData()
+                .stream()
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),
+                                FXCollections::observableArrayList)));
     }
 
-    private void setOrdersHistoryTableColumnsProperties()
+    @FXML
+    void OnSelectedOrder(ActionEvent event)
     {
-        id.setCellValueFactory(new PropertyValueFactory<>("id"));
-        date.setCellValueFactory(new PropertyValueFactory<>("name"));
-        storeId.setCellValueFactory(new PropertyValueFactory<>("storeId"));
-        storeName.setCellValueFactory(new PropertyValueFactory<>("storeName"));
-        numOfProductTypes.setCellValueFactory(new PropertyValueFactory<>("numOfProductTypes"));
-        numOfProducts.setCellValueFactory(new PropertyValueFactory<>("numOfProducts"));
-        productsCost.setCellValueFactory(new PropertyValueFactory<>("costOfAllProducts"));
-        deliveryCost.setCellValueFactory(new PropertyValueFactory<>("deliveryCost"));
-        totalCost.setCellValueFactory(new PropertyValueFactory<>("totalCost"));
+        orderDetailsController.setOrderDetails(selectedOrderProperty.getValue());
     }
 
     public AnchorPane getRootPane()

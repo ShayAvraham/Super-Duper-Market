@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" prefHeight="425.0" prefWidth="641.0" stylesheets="@ShowOrdersHistoryStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showOrdersHistory.ShowOrdersHistoryController">
+<AnchorPane fx:id="rootPane" prefHeight="504.0" prefWidth="692.0" stylesheets="@ShowOrdersHistoryStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showOrdersHistory.ShowOrdersHistoryController">
    <children>
-      <TableView fx:id="ordersView" prefHeight="410.0" prefWidth="633.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <columns>
-          <TableColumn fx:id="id" prefWidth="49.66668701171875" text="ID" />
-          <TableColumn fx:id="date" prefWidth="75.0" text="Date" />
-            <TableColumn fx:id="storeId" prefWidth="67.0" text="Store ID" />
-            <TableColumn fx:id="storeName" prefWidth="98.66668701171875" text="Store Name" />
-            <TableColumn fx:id="numOfProductTypes" prefWidth="97.6666259765625" text="Product Types" />
-            <TableColumn fx:id="numOfProducts" prefWidth="129.66668701171875" text="Number Of Products" />
-            <TableColumn fx:id="productsCost" prefWidth="98.0" text="Products Cost" />
-            <TableColumn fx:id="deliveryCost" prefWidth="85.66668701171875" text="Delivery Cost" />
-            <TableColumn fx:id="totalCost" prefWidth="74.0" text="Total Cost" />
-        </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
+      <AnchorPane fx:id="selectOrderPane" prefHeight="94.0" prefWidth="692.0" AnchorPane.bottomAnchor="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="selectOrderLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="23.0" prefHeight="48.0" prefWidth="98.0" text="Select Order" textAlignment="CENTER" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="33.0" AnchorPane.rightAnchor="561.0" AnchorPane.topAnchor="23.0" />
+            <ComboBox fx:id="selectOrderComboBox" layoutX="151.0" layoutY="35.0" onAction="#OnSelectedOrder" prefWidth="150.0" AnchorPane.bottomAnchor="32.0" AnchorPane.leftAnchor="151.0" AnchorPane.rightAnchor="391.0" AnchorPane.topAnchor="35.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="displayOrderDetailsPane" layoutY="132.0" prefHeight="371.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="94.0" />
    </children>
 </AnchorPane>
