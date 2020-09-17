@@ -184,7 +184,6 @@ public class SystemData
 
     public void addNewOrder(Order newOrder, Map <Integer,Order> newSubOrders)
     {
-
         orders.add(newOrder);
         for(Integer storeId : newSubOrders.keySet())
         {
