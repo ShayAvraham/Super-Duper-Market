@@ -1,0 +1,44 @@
+
+*
+{
+    -fx-font-family: "MV Boli";
+    -fx-font-size: 12px;
+}
+
+#menuBar
+{
+    -fx-background-color: #8d3cd9;
+}
+
+#superDuperMarketLabel
+{
+    -fx-text-fill: #020202;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-background-color: #5641a1;
+}
+
+.button
+{
+    -fx-background-color: #8d3cd9;
+    -fx-background-radius: 30 30 30 30;
+    -fx-text-fill: ghostwhite;
+}
+
+.button:hover
+{
+    -fx-background-color: #7412d7;
+}
+
+.button:pressed
+{
+    -fx-background-color: #7f00fd;
+}
+
+#mainWindow
+{
+    -fx-background-color: #a049f1;
+}
+
+
+

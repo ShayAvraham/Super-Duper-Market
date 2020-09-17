@@ -6,9 +6,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="656.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showAllStores.ShowAllStoresController">
+<AnchorPane fx:id="rootPane" prefHeight="434.0" prefWidth="701.0" stylesheets="@ShowAllStoresStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showAllStores.ShowAllStoresController">
    <children>
-      <TabPane fx:id="mainTabPane" layoutX="-6.0" prefHeight="491.0" prefWidth="764.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="mainTabPane" prefHeight="491.0" prefWidth="764.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab fx:id="storesTab" text="Stores">
                <content>

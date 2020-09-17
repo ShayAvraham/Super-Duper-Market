@@ -23,7 +23,7 @@ public class Main extends Application
         MainAppController mainAppController = loader.getController();
         mainAppController.setMainStage(primaryStage);
         primaryStage.setTitle("Super Duper Market");
-        Scene scene = new Scene(root, 1100, 600);
+        Scene scene = new Scene(root, 900, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

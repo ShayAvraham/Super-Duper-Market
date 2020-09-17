@@ -1,5 +1,6 @@
 package common;
 
+import dataContainers.OrderDataContainer;
 import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import javafx.scene.control.Alert;
@@ -109,5 +110,21 @@ public final class Utilities
         return String.format(POSITION_FORMAT, (int) position.getX(), (int) position.getY());
     }
 
+    public static StringConverter<OrderDataContainer> getOrderConverterInShowOrdersHistory()
+    {
+        return new StringConverter<OrderDataContainer>()
+        {
+            @Override
+            public String toString(OrderDataContainer object)
+            {
+                return "ID: " + object.getId() + " | " +
+                        "Date: " + object.getDate();
+            }
 
+            @Override
+            public OrderDataContainer fromString(String string) {
+                return null;
+            }
+        };
+    }
 }

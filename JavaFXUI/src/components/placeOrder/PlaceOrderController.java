@@ -1,6 +1,7 @@
 package components.placeOrder;
 import common.Utilities;
 import components.main.MainAppController;
+import components.orderDetails.OrderDetailsController;
 import dataContainers.*;
 import engineLogic.Discount;
 import engineLogic.Product;
@@ -45,6 +46,9 @@ public class PlaceOrderController
 
     @FXML
     private AnchorPane rootPane;
+
+    @FXML
+    private GridPane placeOrderGridPane;
 
     @FXML
     private ComboBox<CustomerDataContainer> customersComboBox;
@@ -157,6 +161,7 @@ public class PlaceOrderController
     private final String DYNAMIC = "Dynamic order";
 
     private SystemManager systemManager;
+    private OrderDetailsController orderDetailsController;
     private Collection<ProductDataContainer> selectedProducts;
     private Map <StoreDataContainer,Collection<DiscountDataContainer>> selectedDiscounts;
     private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
@@ -181,6 +186,11 @@ public class PlaceOrderController
     private SimpleBooleanProperty isOrderTypeStatic;
 
     ObservableList<String> orderTypeValues = FXCollections.observableArrayList(STATIC,DYNAMIC);
+
+    public void setOrderDetailsController(OrderDetailsController orderDetailsController)
+    {
+        this.orderDetailsController = orderDetailsController;
+    }
 
     public enum OrderSteps
     {
@@ -662,6 +672,4 @@ public class PlaceOrderController
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }
-
-
 }
