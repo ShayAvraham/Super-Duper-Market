@@ -33,7 +33,6 @@ public class DiscountDataContainer
         this.amountForDiscount = amountForDiscount;
         this.priceForOfferProduct = priceForOfferProduct;
         this.amountForOfferProduct = amountForOfferProduct;
-//        selectedOfferProduct.setValue(discountType == "ONE_OF"? null: priceForOfferProduct.keySet().stream().findFirst().get());
         createIfYouBuyDescription();
         createThenYouGetDescription();
     }

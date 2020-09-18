@@ -4,8 +4,12 @@ import dataContainers.OrderDataContainer;
 import dataContainers.ProductDataContainer;
 import dataContainers.StoreDataContainer;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -127,4 +131,26 @@ public final class Utilities
             }
         };
     }
+
+
+    public static Spinner<Double> getNaturalNumbersSpinner()
+    {
+        Spinner<Double> spinner = new Spinner<>();
+        TextFormatter<Integer> amountFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1, getNaturalNumbersFilter());
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 1));
+        spinner.getEditor().setTextFormatter(amountFormatter);
+        spinner.setEditable(true);
+        return spinner;
+    }
+
+    public static Spinner<Double> getPositiveRealNumbersSpinner()
+    {
+        Spinner<Double> spinner = new Spinner<>();
+        TextFormatter<Double> amountFormatter = new TextFormatter<Double>(new DoubleStringConverter(), 1d, getPositiveRealNumbersFilter());
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 0.1));
+        spinner.getEditor().setTextFormatter(amountFormatter);
+        spinner.setEditable(true);
+        return spinner;
+    }
+
 }
