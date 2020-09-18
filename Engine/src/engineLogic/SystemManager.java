@@ -1,19 +1,13 @@
 package engineLogic;
+
 import dataContainers.*;
-import exceptions.DiscountRemoveException;
-import javafx.concurrent.Task;
-import jaxb.generated.ThenYouGet;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
-import java.awt.*;
-import java.io.Console;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 
 public class SystemManager
@@ -27,9 +21,8 @@ public class SystemManager
     private Collection<ProductDataContainer> allProductsData;
     private Collection<OrderDataContainer> allOrdersData;
     private Collection<CustomerDataContainer> allCustomersData;
-    private boolean isFileWasLoadSuccessfully = false;
+//    private boolean isFileWasLoadSuccessfully = false;
     private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
-    private Map <Integer,Float> deliveryCostFromStores;
     private static DecimalFormat DECIMAL_FORMAT;
 
     static
@@ -58,9 +51,9 @@ public class SystemManager
         return allCustomersData;
     }
 
-    public boolean isFileWasLoadSuccessfully() {
+/*    public boolean isFileWasLoadSuccessfully() {
         return isFileWasLoadSuccessfully;
-    }
+    }*/
 
     /********************************************** Load XML Logic ****************************************/
 
@@ -70,7 +63,7 @@ public class SystemManager
         SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
         systemData = newSystemData;
         updateDataContainers();
-        isFileWasLoadSuccessfully = true;
+ //       isFileWasLoadSuccessfully = true;
     }
 
     /********************************************** Update Data Containers ****************************************/
@@ -280,8 +273,10 @@ public class SystemManager
     private Collection<DiscountDataContainer> getStoreDiscountsData(Store store)
     {
         Collection<DiscountDataContainer> allDiscountData = new ArrayList<>();
-        if(store.getStoreDiscounts()!=null) {
-            for (Discount discount : store.getStoreDiscounts()) {
+        if(!store.getStoreDiscounts().isEmpty())
+        {
+            for (Discount discount : store.getStoreDiscounts())
+            {
                 allDiscountData.add(createDiscountData(discount));
             }
         }
@@ -361,14 +356,17 @@ public class SystemManager
     private Map<StoreDataContainer, Collection<DiscountDataContainer>> createOrderDiscountsData(Order order)
     {
         Map<StoreDataContainer, Collection<DiscountDataContainer>> orderDiscounts = new HashMap<>();
-        for(Store store : order.getDiscounts().keySet())
+        if(!order.getDiscounts().isEmpty())
         {
-            Collection<DiscountDataContainer> discountsData = new ArrayList<>();
-            for(Discount discount : order.getDiscounts().get(store))
+            for (Store store : order.getDiscounts().keySet())
             {
-                discountsData.add(createDiscountData(discount));
+                Collection<DiscountDataContainer> discountsData = new ArrayList<>();
+                for (Discount discount : order.getDiscounts().get(store))
+                {
+                    discountsData.add(createDiscountData(discount));
+                }
+                orderDiscounts.put(getStoreDataById(store.getId()), discountsData);
             }
-            orderDiscounts.put(getStoreDataById(store.getId()),discountsData);
         }
         return orderDiscounts;
     }
@@ -431,6 +429,15 @@ public class SystemManager
     }
 
     /********************************************** Place Order Logic ****************************************/
+
+    public void validateSelectedProducts(Collection<ProductDataContainer>selectedProducts)
+    {
+        if(selectedProducts.isEmpty())
+        {
+            throw new IllegalArgumentException("You must select at least one product");
+        }
+    }
+
 
     /** Dynamic Store Allocation **/
     public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
@@ -570,7 +577,10 @@ public class SystemManager
     {
         float storeCostOfAllProducts = 0;
         storeCostOfAllProducts += getProductsCostFromStore(store,products);
-        storeCostOfAllProducts += getDiscountsCostFromStore(store,discounts);
+        if(discounts != null)
+        {
+            storeCostOfAllProducts += getDiscountsCostFromStore(store, discounts);
+        }
         return storeCostOfAllProducts;
     }
 
@@ -611,7 +621,6 @@ public class SystemManager
 
         systemData.addNewOrder(newOrder,newSubOrders);
         storeToPurchaseFrom = null;
-        deliveryCostFromStores = null;
         updateDataContainers();
     }
 
@@ -654,10 +663,13 @@ public class SystemManager
     private Map<Store, Collection<Discount>> createOrderDiscounts(Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts)
     {
         Map<Store, Collection<Discount>> orderStoreAndProducts = new HashMap<>();
-        for(StoreDataContainer store: discounts.keySet())
+        if(!discounts.isEmpty())
         {
-            Store orderStore = systemData.getStores().get(store.getId());
-            orderStoreAndProducts.put(orderStore,createOrderStoreDiscounts(store,discounts.get(store)));
+            for (StoreDataContainer store : discounts.keySet())
+            {
+                Store orderStore = systemData.getStores().get(store.getId());
+                orderStoreAndProducts.put(orderStore, createOrderStoreDiscounts(store, discounts.get(store)));
+            }
         }
         return orderStoreAndProducts;
     }
@@ -684,11 +696,20 @@ public class SystemManager
     private Collection<OfferProduct> createProductsToOffer(StoreDataContainer store,DiscountDataContainer discount)
     {
         Collection<OfferProduct> offerProducts = new ArrayList<>();
-        for(ProductDataContainer product: discount.getPriceForOfferProduct().keySet())
+        if(discount.getDiscountType().equals("ONE_OF"))
         {
-            offerProducts.add(new OfferProduct(systemData.getStores().get(store.getId()).getProductById(product.getId()),
-                    discount.getPriceForOfferProduct().get(product),
-                    discount.getAmountForOfferProduct().get(product)));
+            offerProducts.add(new OfferProduct(systemData.getStores().get(store.getId()).getProductById(discount.getSelectedOfferProduct().getId()),
+                    discount.getPriceForOfferProduct().get(discount.getSelectedOfferProduct()),
+                    discount.getAmountForOfferProduct().get(discount.getSelectedOfferProduct())));
+        }
+        else
+        {
+            for (ProductDataContainer product : discount.getPriceForOfferProduct().keySet())
+            {
+                offerProducts.add(new OfferProduct(systemData.getStores().get(store.getId()).getProductById(product.getId()),
+                        discount.getPriceForOfferProduct().get(product),
+                        discount.getAmountForOfferProduct().get(product)));
+            }
         }
         return offerProducts;
     }
@@ -708,19 +729,29 @@ public class SystemManager
         Store store = systemData.getStores().get(storeData.getId());
         float costOfAllProducts = getStoreCostOfAllProducts(storeData,newOrder.getProducts().get(storeData),
                 newOrder.getDiscounts().get(storeData));
-        float deliveryCost = getDeliveryCostFromStore(storeData,newOrder.getCustomer());;
+        float deliveryCost = getDeliveryCostFromStore(storeData,newOrder.getCustomer());
 
         return new Order(orderID,
                 newOrder.getDate(),
                 systemData.getCustomers().get(newOrder.getCustomer().getId()),
                 new HashMap<Store,Collection<OrderProduct>>()
                 {{put(store,createOrderStoreProducts(storeData,newOrder.getProducts().get(storeData)));}},
-                new HashMap<Store,Collection<Discount>>()
-                {{put(store,createOrderStoreDiscounts(storeData,newOrder.getDiscounts().get(storeData)));}},
+                createSubOrderDiscounts(newOrder,storeData,store),
                 newOrder.isDynamic(),
                 costOfAllProducts,
                 deliveryCost,
                 costOfAllProducts + deliveryCost);
+    }
+
+    private HashMap<Store,Collection<Discount>> createSubOrderDiscounts(OrderDataContainer newOrder,StoreDataContainer storeData,
+                                                                        Store store)
+    {
+        HashMap<Store,Collection<Discount>> discounts = new HashMap<Store,Collection<Discount>>();
+        if(newOrder.getDiscounts().get(storeData) != null)
+        {
+            discounts.put(store, createOrderStoreDiscounts(storeData, newOrder.getDiscounts().get(storeData)));
+        }
+        return discounts;
     }
 
     /********************************************** Order Summary Logic ****************************************/
@@ -728,36 +759,24 @@ public class SystemManager
     public Collection<DiscountDataContainer> createSubDiscounts(Collection <DiscountDataContainer> discounts)
     {
         Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
-        for(DiscountDataContainer discount : discounts)
+        if(discounts != null)
         {
-            switch (discount.getDiscountType())
+            for(DiscountDataContainer discount : discounts)
             {
-                case "ONE_OF":
-                    subDiscounts.add(createOneOfSubDiscount(discount));
-                    break;
-                case "ALL_OR_NOTHING":
-                    subDiscounts.addAll(createAllOrNothingSubDiscounts(discount));
-                    break;
-                case "IRRELEVANT":
-                    subDiscounts.add(discount);
-                    break;
+                switch (discount.getDiscountType())
+                {
+                    case "ONE_OF":
+                    case "IRRELEVANT":
+                        subDiscounts.add(discount);
+                        break;
+                    case "ALL_OR_NOTHING":
+                        subDiscounts.addAll(createAllOrNothingSubDiscounts(discount));
+                        break;
+                }
             }
         }
         return subDiscounts;
     }
-
-    private DiscountDataContainer createOneOfSubDiscount(DiscountDataContainer discount)
-    {
-        ProductDataContainer selectedOfferProduct = discount.getSelectedOfferProduct();
-
-        return new DiscountDataContainer(discount.getDiscountName(),
-                discount.getDiscountType(),
-                discount.getDiscountProduct(),
-                discount.getAmountForDiscount(),
-                new HashMap<ProductDataContainer,Integer>(){{put(selectedOfferProduct,discount.getPriceForOfferProduct().get(selectedOfferProduct));}},
-                new HashMap<ProductDataContainer,Double>(){{put(selectedOfferProduct,discount.getAmountForOfferProduct().get(selectedOfferProduct));}});
-    }
-
 
     private Collection<DiscountDataContainer> createAllOrNothingSubDiscounts(DiscountDataContainer discount)
     {

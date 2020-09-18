@@ -15,9 +15,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootPane" prefHeight="573.0" prefWidth="813.0" stylesheets="@PlaceOrderStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.placeOrder.PlaceOrderController">
+<AnchorPane fx:id="rootPane" prefHeight="612.0" prefWidth="924.0" stylesheets="@PlaceOrderStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.placeOrder.PlaceOrderController">
    <children>
-      <GridPane fx:id="placeOrderGridPane" layoutX="6.0" layoutY="-14.0" prefHeight="580.0" prefWidth="813.0">
+      <GridPane fx:id="placeOrderGridPane" layoutX="6.0" layoutY="-14.0" prefHeight="624.0" prefWidth="924.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="186.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="241.0" />
@@ -52,29 +52,29 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Label>
-            <AnchorPane prefHeight="80.0" prefWidth="636.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="2">
+            <AnchorPane fx:id="displayOrderDetailsPane" prefHeight="80.0" prefWidth="637.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4" GridPane.rowSpan="2">
                <children>
-                  <TabPane prefHeight="233.0" prefWidth="636.0">
+                  <TabPane fx:id="tablesTabPane" prefHeight="246.0" prefWidth="737.0">
                      <tabs>
-                        <Tab fx:id="productToOrderTab" text="Products To Order">
+                        <Tab fx:id="productToOrderTab" closable="false" text="Products To Order">
                            <content>
                               <TableView fx:id="productsTableView" disable="true" editable="true" prefHeight="162.0" prefWidth="603.0">
                                 <columns>
                                     <TableColumn fx:id="productToOrderColumn" prefWidth="75.0" />
                                   <TableColumn fx:id="productIDColumn" prefWidth="90.0" text="ID" />
-                                  <TableColumn fx:id="productNameColumn" prefWidth="148.0" text="Name" />
-                                    <TableColumn fx:id="productPurchaseFormColumn" minWidth="0.0" prefWidth="117.0" text="Purchase Form" />
-                                    <TableColumn fx:id="productPriceColumn" minWidth="4.0" prefWidth="105.0" text="Price" />
-                                    <TableColumn fx:id="productAmountColumn" prefWidth="101.0" text="Amount" />
+                                  <TableColumn fx:id="productNameColumn" prefWidth="156.0" text="Name" />
+                                    <TableColumn fx:id="productPurchaseFormColumn" minWidth="0.0" prefWidth="158.0" text="Purchase Form" />
+                                    <TableColumn fx:id="productPriceColumn" minWidth="4.0" prefWidth="119.0" text="Price" />
+                                    <TableColumn fx:id="productAmountColumn" prefWidth="139.0" text="Amount" />
                                 </columns>
                               </TableView>
                            </content>
                         </Tab>
-                        <Tab fx:id="storesOrderedFromTab" text="Stores Ordered From">
+                        <Tab fx:id="storesOrderedFromTab" closable="false" text="Stores Ordered From">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="storesOrderedFromTableView" layoutY="-1.0" prefHeight="261.0" prefWidth="626.0">
+                                    <TableView fx:id="storesOrderedFromTableView" layoutY="-1.0" prefHeight="261.0" prefWidth="737.0">
                                       <columns>
                                         <TableColumn fx:id="storeIDColumn" prefWidth="75.0" text="ID" />
                                         <TableColumn fx:id="storeNameColumn" prefWidth="75.0" text="Name" />
@@ -82,25 +82,25 @@
                                           <TableColumn fx:id="storeDistanceColumn" prefWidth="75.0" text="Distance" />
                                           <TableColumn fx:id="storePPKColumn" prefWidth="75.0" text="PPK" />
                                           <TableColumn fx:id="storeDeliveryCostColumn" prefWidth="75.0" text="Delivery Cost" />
-                                          <TableColumn fx:id="storeNumOfProductsTypesColumn" prefWidth="75.0" text="Number Of Prodcuts Types" />
-                                          <TableColumn fx:id="storeProductsCostColumn" prefWidth="75.0" text="ProductsCost" />
+                                          <TableColumn fx:id="storeNumOfProductsTypesColumn" prefWidth="133.0" text="Number Of Prodcuts Types" />
+                                          <TableColumn fx:id="storeProductsCostColumn" prefWidth="153.0" text="ProductsCost" />
                                       </columns>
                                     </TableView>
                                  </children>
                               </AnchorPane>
                           </content>
                         </Tab>
-                        <Tab fx:id="availableDiscountsTab" text="Available Discounts">
+                        <Tab fx:id="availableDiscountsTab" closable="false" text="Available Discounts">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="availableDiscountsTableView" editable="true" prefHeight="241.0" prefWidth="626.0">
+                                    <TableView fx:id="availableDiscountsTableView" editable="true" prefHeight="288.0" prefWidth="737.0">
                                       <columns>
                                           <TableColumn fx:id="discountToGet" prefWidth="75.0" />
                                         <TableColumn fx:id="discountNameColumn" prefWidth="144.0" text="Name" />
                                           <TableColumn fx:id="discountForBuyingColumn" prefWidth="167.0" text="For Buying" />
-                                        <TableColumn fx:id="discountYouGetColumn" prefWidth="157.0" text="You Get" />
-                                          <TableColumn fx:id="discountChosenProductColumn" minWidth="9.0" prefWidth="157.0" text="Select Product" />
+                                        <TableColumn fx:id="discountYouGetColumn" prefWidth="215.0" text="You Get" />
+                                          <TableColumn fx:id="discountChosenProductColumn" minWidth="9.0" prefWidth="135.0" text="Select Product" />
                                       </columns>
                                     </TableView>
                                  </children>

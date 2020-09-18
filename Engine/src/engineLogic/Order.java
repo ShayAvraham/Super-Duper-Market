@@ -87,19 +87,6 @@ public class Order
         return totalCost;
     }
 
-//
-//    public float getCostOfAllProducts()
-//    {
-//        float costOfAllProducts = 0;
-//        for (OrderProduct orderProduct: orderedProducts)
-//        {
-//            costOfAllProducts += orderProduct.getAmount() * orderProduct.getPrice();
-//        }
-//        return  costOfAllProducts;
-//    }
-
-
-
     public float getProductAmountInOrder(Product product)
     {
         float productAmountInOrder = 0;
@@ -118,27 +105,6 @@ public class Order
         return productAmountInOrder;
     }
 
-//    public void addOrderProduct(OrderProduct productToAdd)
-//    {
-//        orderedProducts.add(productToAdd);
-//    }
-//
-//    public int getAllOrderedProductsQuantity()
-//    {
-//        int allOrderedProductsQuantity = 0;
-//
-//        for (OrderProduct orderProduct: orderedProducts)
-//        {
-//            float productQuantity = orderProduct.getAmount();
-//            if(orderProduct.getPurchaseForm() == Product.ProductPurchaseForm.WEIGHT)
-//            {
-//                productQuantity = 1;
-//            }
-//            allOrderedProductsQuantity += productQuantity;
-//
-//        }
-//        return allOrderedProductsQuantity;
-//    }
 
     @Override
     public boolean equals(Object o) {
