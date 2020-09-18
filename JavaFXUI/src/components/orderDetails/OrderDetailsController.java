@@ -149,6 +149,8 @@ public class OrderDetailsController
         productsCostValueLabel.textProperty().bind(productsCostProperty.asString());
         deliveryCostValueLabel.textProperty().bind(deliveryCostProperty.asString());
         orderCostValueLabel.textProperty().bind(orderCostProperty.asString());
+        productsOrderSummaryTab.disableProperty().bind(storeSummaryTableView.getSelectionModel().selectedItemProperty().isNull());
+        discountsOrderSummaryTab.disableProperty().bind(storeSummaryTableView.getSelectionModel().selectedItemProperty().isNull());
     }
 
     public void setOrderDetails(OrderDataContainer orderDetails)
@@ -167,8 +169,6 @@ public class OrderDetailsController
         this.mainAppController = mainController;
     }
 
-
-
     public AnchorPane getRootPane()
     {
         return rootPane;
@@ -176,6 +176,9 @@ public class OrderDetailsController
 
     private void loadOrderSummary()
     {
+        loadProductsCostSummary();
+        loadDeliveryCostSummary();
+        loadOrderCostSummary();
         loadStoresSummary();
     }
 
@@ -216,40 +219,60 @@ public class OrderDetailsController
     private void loadStoresSummary()
     {
         setStoresSummaryTableColumnsProperties();
-        storesOrderProperty.setValue(orderDetails.getProducts().keySet().stream()
-                .collect(Collectors
-                        .collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)));
-        storeSummaryTableView.setOnMouseClicked(event ->
+        tabPane.getSelectionModel().select(storesSummaryTab);
+        storeSummaryTableView.getSelectionModel().clearSelection();
+        if (systemManager.getAllStoresData().size() > 0)
         {
-            loadProductsSummary();
-            loadDiscountsSummary();
-            loadProductsCostSummary();
-            loadDeliveryCostSummary();
-            loadOrderCostSummary();
-        } );
-        storeSummaryTableView.refresh();
+            storesOrderProperty.setValue(orderDetails.getProducts().keySet().stream()
+                    .collect(Collectors
+                            .collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)));
+            storeSummaryTableView.setOnMouseClicked(event ->
+            {
+                loadProductsSummary();
+                loadDiscountsSummary();
+            });
+            storeSummaryTableView.refresh();
+        }
+        else
+        {
+            storeSummaryTableView.setPlaceholder(new Label("No stores to display"));
+        }
     }
 
     private void loadProductsSummary()
     {
         setProductsSummaryTableColumnsProperties();
-        productsOrderProperty.setValue(
-                orderDetails.getProducts().get(selectedStoreProperty.get())
-                        .stream()
-                        .collect(Collectors
-                                .collectingAndThen(Collectors.toList(),
-                                        FXCollections::observableArrayList)));
+        if (orderDetails.getProducts().get(selectedStoreProperty.get()).size() > 0)
+        {
+            productsOrderProperty.setValue(
+                    orderDetails.getProducts().get(selectedStoreProperty.get())
+                            .stream()
+                            .collect(Collectors
+                                    .collectingAndThen(Collectors.toList(),
+                                            FXCollections::observableArrayList)));
+        }
+        else
+        {
+            productsSummaryTableView.setPlaceholder(new Label("No products to display"));
+        }
     }
 
     private void loadDiscountsSummary()
     {
         setDiscountsSummaryTableColumnsProperties();
-        discountsOrderProperty.setValue(systemManager.createSubDiscounts(
-                orderDetails.getDiscounts().get(selectedStoreProperty.get()))
-                .stream()
-                .collect(Collectors
-                        .collectingAndThen(Collectors.toList(),
-                                FXCollections::observableArrayList)));
+        if (orderDetails.getDiscounts().get(selectedStoreProperty.get()).size() > 0)
+        {
+            discountsOrderProperty.setValue(systemManager.createSubDiscounts(
+                    orderDetails.getDiscounts().get(selectedStoreProperty.get()))
+                    .stream()
+                    .collect(Collectors
+                            .collectingAndThen(Collectors.toList(),
+                                    FXCollections::observableArrayList)));
+        }
+        else
+        {
+            discountsSummaryTableView.setPlaceholder(new Label("No discounts to display"));
+        }
     }
 
     private void loadProductsCostSummary()

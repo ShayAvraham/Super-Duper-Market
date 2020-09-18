@@ -10,7 +10,7 @@
       <AnchorPane fx:id="selectOrderPane" prefHeight="94.0" prefWidth="692.0" AnchorPane.bottomAnchor="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="selectOrderLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="23.0" prefHeight="48.0" prefWidth="98.0" text="Select Order" textAlignment="CENTER" />
-            <ComboBox fx:id="selectOrderComboBox" layoutX="151.0" layoutY="35.0" onAction="#OnSelectedOrder" prefWidth="150.0" />
+            <ComboBox fx:id="selectOrderComboBox" layoutX="151.0" layoutY="35.0" prefWidth="150.0" />
             <Button fx:id="displayOrderDetailsButton" layoutX="353.0" layoutY="35.0" mnemonicParsing="false" onAction="#OnDisplayOrderButtonPressed" prefHeight="27.0" prefWidth="87.0" text="Display" />
          </children>
       </AnchorPane>

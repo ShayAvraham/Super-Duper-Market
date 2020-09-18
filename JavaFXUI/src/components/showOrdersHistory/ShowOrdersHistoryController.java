@@ -6,6 +6,7 @@ import components.orderDetails.OrderDetailsController;
 import dataContainers.CustomerDataContainer;
 import dataContainers.OrderDataContainer;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -60,29 +61,7 @@ public class ShowOrdersHistoryController
         selectOrderComboBox.itemsProperty().bind(ordersProperty);
         selectOrderComboBox.setConverter(Utilities.getOrderConverterInShowOrdersHistory());
         selectedOrderProperty.bind(selectOrderComboBox.selectionModelProperty().getValue().selectedItemProperty());
-    }
-
-    public void updateOrders()
-    {
-        ordersProperty.setValue(systemLogic.getAllOrdersData()
-                .stream()
-                .collect(Collectors
-                        .collectingAndThen(Collectors.toList(),
-                                FXCollections::observableArrayList)));
-    }
-
-    @FXML
-    void OnSelectedOrder(ActionEvent event)
-    {
-
-    }
-
-    @FXML
-    void OnDisplayOrderButtonPressed(ActionEvent event)
-    {
-        displayOrderDetailsPane.getChildren().clear();
-        orderDetailsController.setOrderDetails(selectedOrderProperty.getValue());
-        displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
+        displayOrderDetailsButton.disableProperty().bind(selectedOrderProperty.isNull());
     }
 
     public AnchorPane getRootPane()
@@ -103,5 +82,25 @@ public class ShowOrdersHistoryController
     public void setOrderDetailsController(OrderDetailsController orderDetailsController)
     {
         this.orderDetailsController = orderDetailsController;
+    }
+
+    public void updateOrders()
+    {
+        displayOrderDetailsPane.setVisible(false);
+        selectOrderComboBox.getSelectionModel().clearSelection();
+        ordersProperty.setValue(systemLogic.getAllOrdersData()
+                .stream()
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),
+                                FXCollections::observableArrayList)));
+    }
+
+    @FXML
+    void OnDisplayOrderButtonPressed(ActionEvent event)
+    {
+        displayOrderDetailsPane.getChildren().clear();
+        displayOrderDetailsPane.setVisible(true);
+        orderDetailsController.setOrderDetails(selectedOrderProperty.getValue());
+        displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
     }
 }

@@ -12,30 +12,35 @@
 
 <AnchorPane fx:id="rootPane" prefHeight="518.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.orderDetails.OrderDetailsController">
    <children>
-      <AnchorPane prefHeight="518.0" prefWidth="710.0" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane prefHeight="70.0" prefWidth="710.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <GridPane fx:id="orderCostsGridPane" layoutX="43.0" layoutY="-1.0" prefHeight="128.0" prefWidth="710.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <GridPane fx:id="orderCostsGridPane" layoutX="43.0" layoutY="-1.0" prefHeight="73.0" prefWidth="710.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="50.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="583.6666870117188" minWidth="10.0" prefWidth="576.3333435058594" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="342.6666259765625" minWidth="10.0" prefWidth="118.66665649414062" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="productsCostLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="124.0" text="Products Cost" textAlignment="CENTER" />
-                  <Label fx:id="deliveryCostLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="124.0" text="Delivery Cost" textAlignment="CENTER" GridPane.rowIndex="1" />
-                  <Label fx:id="orderCostLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="125.0" text="Order Cost" textAlignment="CENTER" GridPane.rowIndex="2" />
-                  <Label fx:id="productsCostValueLabel" prefHeight="39.0" prefWidth="147.0" textAlignment="CENTER" GridPane.columnIndex="1" />
-                  <Label fx:id="deliveryCostValueLabel" prefHeight="39.0" prefWidth="147.0" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label fx:id="orderCostValueLabel" prefHeight="39.0" prefWidth="147.0" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="productsCostLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="124.0" text="Products Cost" textAlignment="CENTER" GridPane.columnIndex="1" />
+                  <Label fx:id="deliveryCostLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="43.0" prefWidth="124.0" text="Delivery Cost" textAlignment="CENTER" GridPane.columnIndex="4" />
+                  <Label fx:id="orderCostLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="125.0" text="Order Cost" textAlignment="CENTER" GridPane.columnIndex="7" />
+                  <Label fx:id="productsCostValueLabel" prefHeight="39.0" prefWidth="147.0" textAlignment="CENTER" GridPane.columnIndex="2" />
+                  <Label fx:id="deliveryCostValueLabel" prefHeight="39.0" prefWidth="147.0" textAlignment="CENTER" GridPane.columnIndex="5" />
+                  <Label fx:id="orderCostValueLabel" prefHeight="39.0" prefWidth="147.0" textAlignment="CENTER" GridPane.columnIndex="8" />
                </children>
             </GridPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="89.0" prefHeight="369.0" prefWidth="656.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
+      <AnchorPane layoutY="95.0" prefHeight="423.0" prefWidth="710.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
          <children>
             <TabPane fx:id="tabPane" prefHeight="369.0" prefWidth="656.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <tabs>

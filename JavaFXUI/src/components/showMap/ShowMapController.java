@@ -6,6 +6,7 @@ import dataContainers.CustomerDataContainer;
 import dataContainers.StoreDataContainer;
 import engineLogic.SystemManager;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
@@ -60,8 +61,9 @@ public class ShowMapController
     void initialize()
     {
         rootPane.getChildren().add(map);
-        rootPane.setLeftAnchor(map, 50.);
-        rootPane.setTopAnchor(map, 200.);
+        rootPane.setLeftAnchor(map, 30.);
+        rootPane.setTopAnchor(map, 30.);
+        map.setStyle("-fx-border-color: #8b46db; -fx-border-radius: 20 20 20 20;");
     }
 
     public void updateMap()
@@ -101,7 +103,7 @@ public class ShowMapController
         Label label = new Label();
         label.setGraphic(customerImage);
         label.setTooltip(customerInfo);
-        map.add(label, (int) customer.getPosition().getX(), maxYCoordinate -1 - (int) customer.getPosition().getY());
+        map.add(label, (int) customer.getPosition().getX(), maxYCoordinate - 1 - (int) customer.getPosition().getY());
     }
 
     private void addStoreInfoToMap(StoreDataContainer store)
@@ -111,7 +113,7 @@ public class ShowMapController
         Label label = new Label();
         label.setGraphic(storeImage);
         label.setTooltip(customerInfo);
-        map.add(label, (int) store.getPosition().getX(), maxYCoordinate -1 - (int) store.getPosition().getY());
+        map.add(label, (int) store.getPosition().getX(), maxYCoordinate - 1 - (int) store.getPosition().getY());
     }
 
     private Tooltip createCustomerInfoToolTip(CustomerDataContainer customer)
@@ -145,13 +147,13 @@ public class ShowMapController
     private void updateMapCoordinates()
     {
         maxXCoordinate = max(systemLogic.getAllStoresData().stream().map(store -> (int)store.getPosition().getX()).max(Comparator.naturalOrder()).get(),
-                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getX()).max(Comparator.naturalOrder()).get()) + 1;
+                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getX()).max(Comparator.naturalOrder()).get()) + 2;
         minXCoordinate = min(systemLogic.getAllStoresData().stream().map(store -> (int)store.getPosition().getX()).min(Comparator.naturalOrder()).get(),
-                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getX()).min(Comparator.naturalOrder()).get()) - 1;
+                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getX()).min(Comparator.naturalOrder()).get()) - 2;
         maxYCoordinate = max(systemLogic.getAllStoresData().stream().map(store -> (int)store.getPosition().getY()).max(Comparator.naturalOrder()).get(),
-                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getY()).max(Comparator.naturalOrder()).get()) + 1;
+                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getY()).max(Comparator.naturalOrder()).get()) + 2;
         minYCoordinate = min(systemLogic.getAllStoresData().stream().map(store -> (int)store.getPosition().getY()).min(Comparator.naturalOrder()).get(),
-                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getY()).min(Comparator.naturalOrder()).get()) - 1;
+                             systemLogic.getAllCustomersData().stream().map(customer -> (int)customer.getPosition().getY()).min(Comparator.naturalOrder()).get()) - 2;
     }
 
     private void initMap()
@@ -162,7 +164,7 @@ public class ShowMapController
         }
         for(int row = minYCoordinate; row < maxYCoordinate; row++)
         {
-            map.getColumnConstraints().add(new ColumnConstraints(15));
+            map.getRowConstraints().add(new RowConstraints(15));
         }
     }
 }
