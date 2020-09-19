@@ -557,7 +557,50 @@ public class SystemManager
         }
     }
 
-    /** Create Order For Order Summary **/
+    /** Create  New Order  **/
+
+    public Map<StoreDataContainer, Collection<DiscountDataContainer>> CreateOrderDataDiscounts(Map<StoreDataContainer, Collection<DiscountDataContainer>> selectedDiscounts)
+    {
+        Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts = new HashMap<>();
+        if(!selectedDiscounts.isEmpty())
+        {
+            for (StoreDataContainer store : selectedDiscounts.keySet())
+            {
+                discounts.put(store,createOrderDataStoreDiscounts(store,selectedDiscounts.get(store)));
+            }
+        }
+        return discounts;
+    }
+
+    private Collection<DiscountDataContainer> createOrderDataStoreDiscounts(StoreDataContainer store, Collection<DiscountDataContainer> discounts)
+    {
+        Collection<DiscountDataContainer> storeDiscounts = new ArrayList<>();
+        for (DiscountDataContainer discount : discounts)
+        {
+            if (discount.getDiscountType().equals("ONE_OF"))
+            {
+                storeDiscounts.add(createOrderDataStoreOneOfDiscount(discount));
+            }
+            else
+            {
+                storeDiscounts.add(discount);
+            }
+        }
+        return storeDiscounts;
+    }
+
+    private DiscountDataContainer createOrderDataStoreOneOfDiscount(DiscountDataContainer discount)
+    {
+        return new DiscountDataContainer(
+                discount.getDiscountName(),
+                discount.getDiscountType(),
+                discount.getDiscountProduct(),
+                discount.getAmountForDiscount(),
+                new HashMap<ProductDataContainer,Integer>(){{put(discount.selectedOfferProductProperty().get(),
+                        discount.getPriceForOfferProduct().get(discount.selectedOfferProductProperty().get()));}},
+                new HashMap<ProductDataContainer,Double>(){{put(discount.selectedOfferProductProperty().get(),
+                        discount.getAmountForOfferProduct().get(discount.selectedOfferProductProperty().get()));}});
+    }
 
 
     public float getOrderCostOfAllProducts(Map <StoreDataContainer,Collection<ProductDataContainer>> products,
@@ -589,8 +632,11 @@ public class SystemManager
         float costOfAllDiscounts = 0;
         for (DiscountDataContainer discount : discounts)
         {
-            costOfAllDiscounts += discount.getPriceForOfferProduct().values().stream().findFirst().get() *
-                    discount.getAmountForOfferProduct().values().stream().findFirst().get();
+            for(ProductDataContainer product : discount.getPriceForOfferProduct().keySet())
+            {
+                costOfAllDiscounts += discount.getPriceForOfferProduct().get(product) *
+                        discount.getAmountForOfferProduct().get(product);
+            }
         }
         return costOfAllDiscounts;
     }
@@ -696,20 +742,11 @@ public class SystemManager
     private Collection<OfferProduct> createProductsToOffer(StoreDataContainer store,DiscountDataContainer discount)
     {
         Collection<OfferProduct> offerProducts = new ArrayList<>();
-        if(discount.getDiscountType().equals("ONE_OF"))
+        for (ProductDataContainer product : discount.getPriceForOfferProduct().keySet())
         {
-            offerProducts.add(new OfferProduct(systemData.getStores().get(store.getId()).getProductById(discount.getSelectedOfferProduct().getId()),
-                    discount.getPriceForOfferProduct().get(discount.getSelectedOfferProduct()),
-                    discount.getAmountForOfferProduct().get(discount.getSelectedOfferProduct())));
-        }
-        else
-        {
-            for (ProductDataContainer product : discount.getPriceForOfferProduct().keySet())
-            {
-                offerProducts.add(new OfferProduct(systemData.getStores().get(store.getId()).getProductById(product.getId()),
-                        discount.getPriceForOfferProduct().get(product),
-                        discount.getAmountForOfferProduct().get(product)));
-            }
+            offerProducts.add(new OfferProduct(systemData.getStores().get(store.getId()).getProductById(product.getId()),
+                    discount.getPriceForOfferProduct().get(product),
+                    discount.getAmountForOfferProduct().get(product)));
         }
         return offerProducts;
     }
@@ -858,4 +895,5 @@ public class SystemManager
     {
         return systemData.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
     }
+
 }

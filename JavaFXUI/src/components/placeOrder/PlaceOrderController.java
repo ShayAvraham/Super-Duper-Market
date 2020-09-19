@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
+import javax.swing.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -233,7 +234,8 @@ public class PlaceOrderController
         productsTableView.itemsProperty().bind(productsProperty);
         productPriceColumn.visibleProperty().bindBidirectional(isOrderTypeStaticProperty);
 
-        submitProductsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_PRODUCTS));
+        submitProductsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_PRODUCTS)
+                .or(selectedCustomerProperty.isNull()));
     }
 
     private void initSelectDiscountsPhaseProperties()
@@ -497,6 +499,42 @@ public class PlaceOrderController
             return new SimpleObjectProperty<Spinner<Double>>(spinner);
         });
 
+        discountChosenProductColumn.setCellFactory(new Callback<TableColumn<DiscountDataContainer, ProductDataContainer>, TableCell<DiscountDataContainer, ProductDataContainer>>()
+        {
+            @Override
+            public TableCell<DiscountDataContainer, ProductDataContainer> call(TableColumn<DiscountDataContainer, ProductDataContainer> param)
+            {
+                ComboBox<ProductDataContainer> box = new ComboBox<>();
+                TableCell<DiscountDataContainer, ProductDataContainer> cell = new TableCell<DiscountDataContainer, ProductDataContainer>();
+                cell.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        int row = availableDiscountsTableView.getSelectionModel().getSelectedIndex();
+                        DiscountDataContainer discount = availableDiscountsTableView.getSelectionModel().getSelectedItem();
+                        if (event.getButton().equals(MouseButton.PRIMARY)) {
+                            discount.selectedOfferProductProperty().bind(box.selectionModelProperty().get().selectedItemProperty());
+                            if (discount != null && discount.getDiscountType() == "ONE_OF")
+                            {
+                                box.setItems(FXCollections.observableArrayList(discount.getAmountForOfferProduct().keySet()
+                                        .stream()
+                                        .collect(Collectors.toList())));
+
+                            }
+                        }
+                        if (event.getClickCount() == 1 && row == cell.getIndex())
+                        {
+                            box.getSelectionModel().select(0);
+                            cell.setText(null);
+                            if (!box.itemsProperty().get().isEmpty() && box.itemsProperty().get().size() != 1) {
+                                cell.setGraphic(box);
+                            }
+                        }
+                    }
+                });
+                return cell;
+            }
+        });
+
     }
 
     @FXML
@@ -653,7 +691,6 @@ public class PlaceOrderController
                 return cell;
             }
         });
-
     }
 
     @FXML
@@ -700,17 +737,20 @@ public class PlaceOrderController
 
     private void createNewOrder()
     {
-        float costOfAllProducts =  systemManager.getOrderCostOfAllProducts(storeToPurchaseFrom,selectedDiscounts);
+        Map<StoreDataContainer,Collection<DiscountDataContainer>> discounts = systemManager.CreateOrderDataDiscounts(selectedDiscounts);
+        float costOfAllProducts =  systemManager.getOrderCostOfAllProducts(storeToPurchaseFrom,discounts);
         float deliveryCost = systemManager.getOrderDeliveryCost(storeToPurchaseFrom.keySet(),selectedCustomerProperty.get());
+
         order = new OrderDataContainer(selectedDeliveryDate.getValue(),
                 selectedCustomerProperty.get(),
                 storeToPurchaseFrom,
-                selectedDiscounts,
+                discounts,
                 selectedOrderTypeProperty.get().equals(DYNAMIC)?true:false,
                 costOfAllProducts,
                 deliveryCost,
                 costOfAllProducts + deliveryCost);
     }
+
 
     private void showOrderDetails()
     {
