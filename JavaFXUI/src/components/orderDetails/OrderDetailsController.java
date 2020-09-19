@@ -114,7 +114,7 @@ public class OrderDetailsController
     private TableColumn<DiscountDataContainer, Integer> discountsSummaryPriceColumn;
 
     @FXML
-    private TableColumn<DiscountDataContainer, Integer> discountsSummaryTotalPriceColumn;
+    private TableColumn<DiscountDataContainer, Float> discountsSummaryTotalPriceColumn;
 
     private MainAppController mainAppController;
     private SystemManager systemManager;
@@ -211,9 +211,9 @@ public class OrderDetailsController
         discountsSummaryNameColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getName()));
         discountsSummaryPurchaseFormColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getPurchaseForm()));
         discountsSummaryAmountColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()));
-        discountsSummaryPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(systemManager.getProductPrice(selectedStoreProperty.get(),
-                data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get())));
-        discountsSummaryTotalPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()));
+        discountsSummaryPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()));
+        discountsSummaryTotalPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()
+                * data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()));
     }
 
     private void loadStoresSummary()
@@ -221,46 +221,36 @@ public class OrderDetailsController
         setStoresSummaryTableColumnsProperties();
         tabPane.getSelectionModel().select(storesSummaryTab);
         storeSummaryTableView.getSelectionModel().clearSelection();
-        if (systemManager.getAllStoresData().size() > 0)
+        storesOrderProperty.setValue(orderDetails.getProducts().keySet().stream()
+                .collect(Collectors
+                        .collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)));
+        storeSummaryTableView.setOnMouseClicked(event ->
         {
-            storesOrderProperty.setValue(orderDetails.getProducts().keySet().stream()
-                    .collect(Collectors
-                            .collectingAndThen(Collectors.toList(),FXCollections::observableArrayList)));
-            storeSummaryTableView.setOnMouseClicked(event ->
+            if(storeSummaryTableView.getSelectionModel().getSelectedItem() != null)
             {
                 loadProductsSummary();
                 loadDiscountsSummary();
-            });
-            storeSummaryTableView.refresh();
-        }
-        else
-        {
-            storeSummaryTableView.setPlaceholder(new Label("No stores to display"));
-        }
+            }
+        });
+        storeSummaryTableView.refresh();
+
     }
 
     private void loadProductsSummary()
     {
         setProductsSummaryTableColumnsProperties();
-        if (orderDetails.getProducts().get(selectedStoreProperty.get()).size() > 0)
-        {
-            productsOrderProperty.setValue(
-                    orderDetails.getProducts().get(selectedStoreProperty.get())
-                            .stream()
-                            .collect(Collectors
-                                    .collectingAndThen(Collectors.toList(),
-                                            FXCollections::observableArrayList)));
-        }
-        else
-        {
-            productsSummaryTableView.setPlaceholder(new Label("No products to display"));
-        }
+        productsOrderProperty.setValue(
+                orderDetails.getProducts().get(selectedStoreProperty.get())
+                        .stream()
+                        .collect(Collectors
+                                .collectingAndThen(Collectors.toList(),
+                                        FXCollections::observableArrayList)));
     }
 
     private void loadDiscountsSummary()
     {
         setDiscountsSummaryTableColumnsProperties();
-        if (orderDetails.getDiscounts().get(selectedStoreProperty.get()).size() > 0)
+        if(!orderDetails.getDiscounts().isEmpty() && orderDetails.getDiscounts().get(selectedStoreProperty.get())!=null)
         {
             discountsOrderProperty.setValue(systemManager.createSubDiscounts(
                     orderDetails.getDiscounts().get(selectedStoreProperty.get()))
@@ -271,6 +261,7 @@ public class OrderDetailsController
         }
         else
         {
+            discountsOrderProperty.clear();
             discountsSummaryTableView.setPlaceholder(new Label("No discounts to display"));
         }
     }

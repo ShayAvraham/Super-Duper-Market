@@ -30,8 +30,10 @@ public class Discount
         switch (discountType)
         {
             case "ONE-OF":
+            case "ONE_OF":
                 this.discountType = DiscountType.ONE_OF;
                 break;
+            case "ALL_OR_NOTHING":
             case "ALL-OR-NOTHING":
                 this.discountType = DiscountType.ALL_OR_NOTHING;
                 break;

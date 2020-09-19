@@ -10,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -242,7 +243,6 @@ public class PlaceOrderController
 
         availableDiscountsTab.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_DISCOUNTS));
         availableDiscountsTableView.itemsProperty().bind(availableDiscountsProperty);
-        availableDiscountsTableView.setPlaceholder(new Label("No available discounts to display"));
 
         submitDiscountsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_DISCOUNTS));
     }
@@ -342,6 +342,8 @@ public class PlaceOrderController
         displayOrderDetailsPane.getChildren().add(tablesTabPane);
 
         tablesTabPane.getSelectionModel().select(productToOrderTab);
+
+        availableDiscountsTableView.setPlaceholder(new Label("No available discounts to display"));
     }
 
     private void loadCustomers()
@@ -465,6 +467,7 @@ public class PlaceOrderController
                 checkbox.disableProperty().setValue(true);
             }
 
+
             return  checkbox;
         });
 
@@ -476,7 +479,6 @@ public class PlaceOrderController
             {
               c.getValue().checkedProperty().setValue(false);
             }
-
            return  c.getValue().checkedProperty();
         });
 
@@ -672,7 +674,6 @@ public class PlaceOrderController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             Utilities.ShowInformationAlert(e.getMessage());
         }
     }

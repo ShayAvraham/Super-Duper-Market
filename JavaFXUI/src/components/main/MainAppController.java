@@ -1,5 +1,6 @@
 package components.main;
 import common.Utilities;
+import components.addNewStore.AddNewStoreController;
 import components.loadXml.LoadXmlController;
 import components.orderDetails.OrderDetailsController;
 import components.placeOrder.PlaceOrderController;
@@ -33,6 +34,7 @@ public class MainAppController
     private UpdateProductsController updateProductsController;
     private PlaceOrderController placeOrderController;
     private OrderDetailsController orderDetailsController;
+    private AddNewStoreController addNewStoreController;
 
     private SystemManager systemManager;
     private Stage stage;
@@ -75,6 +77,9 @@ public class MainAppController
     private Button showMapButton;
 
     @FXML
+    private Button addNewStoreButton;
+
+    @FXML
     private AnchorPane mainWindow;
 
 
@@ -93,6 +98,7 @@ public class MainAppController
             updateProductsController = initializeUpdateProductsController(this.systemManager);
             placeOrderController = initializePlaceOrderController(this.systemManager);
             showOrdersHistoryController = initializeShowOrdersHistoryController(this.systemManager);
+            addNewStoreController = initializeAddNewStoreController(this.systemManager);
         }
         catch (Exception e)
         {
@@ -100,6 +106,7 @@ public class MainAppController
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }
+
 
     private OrderDetailsController initializeOrderDetailsController(SystemManager systemManager) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -122,6 +129,7 @@ public class MainAppController
         updateProductsButton.disableProperty().bind(isFileLoadedProperty.not());
         placeOrderButton.disableProperty().bind(isFileLoadedProperty.not());
         showMapButton.disableProperty().bind(isFileLoadedProperty.not());
+        addNewStoreButton.disableProperty().bind(isFileLoadedProperty.not());
     }
 
     public void setIsFileLoadedProperty(boolean isFileLoaded)
@@ -227,6 +235,18 @@ public class MainAppController
         return placeOrderController;
     }
 
+    private AddNewStoreController initializeAddNewStoreController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/addNewStore/AddNewStore.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        AddNewStoreController addNewStoreController = loader.getController();
+        addNewStoreController.setMainController(this);
+        addNewStoreController.setSystemLogic(systemManager);
+        return addNewStoreController;
+    }
+
 
     @FXML
     void loadXmlFile(ActionEvent event)
@@ -317,6 +337,18 @@ public class MainAppController
         mainWindow.setLeftAnchor(updateProductsController.getRootPane(), 0.);
         mainWindow.setRightAnchor(updateProductsController.getRootPane(), 0.);
         mainWindow.getChildren().add(updateProductsController.getRootPane());
+    }
+
+    @FXML
+    void addNewStore(ActionEvent event)
+    {
+        mainWindow.getChildren().clear();
+        addNewStoreController.LoadDataToController();
+        mainWindow.setBottomAnchor(addNewStoreController.getRootPane(),0.);
+        mainWindow.setTopAnchor(addNewStoreController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(addNewStoreController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(addNewStoreController.getRootPane(), 0.);
+        mainWindow.getChildren().add(addNewStoreController.getRootPane());
     }
 
     public void setMainStage(Stage primaryStage)

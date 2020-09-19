@@ -141,39 +141,26 @@ public class ShowAllStoresController
     {
         mainTabPane.getSelectionModel().select(storesTab);
         storesView.getSelectionModel().clearSelection();
-        if (systemLogic.getAllStoresData().size() > 0)
-        {
-            storesProperty.setValue(loadStores());
-            storesView.setOnMouseClicked(event -> updateSelectedStoreDataTables());
-            storesView.refresh();
-        }
-        else
-        {
-            storesProperty.setValue(null);
-            storesView.setPlaceholder(new Label("No stores to display"));
-        }
+        storesProperty.setValue(loadStores());
+        storesView.setOnMouseClicked(event -> updateSelectedStoreDataTables());
+        storesView.refresh();
     }
 
     private void updateSelectedStoreDataTables()
     {
-        updateStoreProductsTable();
-        updateStoreOrdersTable();
-        updateStoreDiscountsTable();
+        if(storesView.getSelectionModel().getSelectedItem() != null)
+        {
+            updateStoreProductsTable();
+            updateStoreOrdersTable();
+            updateStoreDiscountsTable();
+        }
     }
 
     private void updateStoreProductsTable()
     {
-        if (selectedStoreProperty.getValue().getProducts().size() > 0)
-        {
-            setProductsTableColumnsProperties();
-            productsProperty.setValue(loadStoreProducts());
-            storeProductsView.refresh();
-        }
-        else
-        {
-            productsProperty.setValue(null);
-            storeProductsView.setPlaceholder(new Label("No products to display"));
-        }
+        setProductsTableColumnsProperties();
+        productsProperty.setValue(loadStoreProducts());
+        storeProductsView.refresh();
     }
 
     private void updateStoreOrdersTable()
@@ -186,7 +173,7 @@ public class ShowAllStoresController
         }
         else
         {
-            ordersProperty.setValue(null);
+            ordersProperty.clear();
             storeOrdersView.setPlaceholder(new Label("No orders to display"));
         }
     }
@@ -201,7 +188,7 @@ public class ShowAllStoresController
         }
         else
         {
-            discountsProperty.setValue(null);
+            discountsProperty.clear();
             storeDiscountsView.setPlaceholder(new Label("No discounts to display"));
         }
     }
