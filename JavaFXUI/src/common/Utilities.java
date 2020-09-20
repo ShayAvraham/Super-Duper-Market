@@ -13,6 +13,7 @@ import javafx.util.converter.IntegerStringConverter;
 
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
@@ -40,35 +41,6 @@ public final class Utilities
         alert.setTitle("Information Dialog");
         alert.setContentText(alertMsg);
         alert.showAndWait();
-    }
-
-    public static UnaryOperator<TextFormatter.Change> getNaturalNumbersFilter()
-    {
-        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
-            String text = change.getControlNewText();
-
-            if (text.matches("[1-9]+[0-9]*")) {
-                return change;
-            }
-            return null;
-        };
-
-        return naturalNumbersFilter;
-    }
-
-    public static UnaryOperator<TextFormatter.Change> getPositiveRealNumbersFilter()
-    {
-
-        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
-            String text = change.getControlNewText();
-            if (text.matches("[1-9]+[0-9]*[.]*[0-9]*"))
-            {
-                return change;
-            }
-            return null;
-        };
-
-        return naturalNumbersFilter;
     }
 
     public static StringConverter<StoreDataContainer> getStoreConverterInPlaceOrder()
@@ -132,25 +104,67 @@ public final class Utilities
         };
     }
 
-
-    public static Spinner<Double> getNaturalNumbersSpinner()
+    public static Spinner SetSpinnerToNaturalNumbers(Spinner spinner , Integer maxValue)
     {
-        Spinner<Double> spinner = new Spinner<>();
-        TextFormatter<Integer> amountFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1, getNaturalNumbersFilter());
-        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 1));
+        TextFormatter<Integer> amountFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1,
+                maxValue == null ? getNaturalNumbersFilter(): getMaxNumberFilter());
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,maxValue == null? Integer.MAX_VALUE : maxValue, 1, 1));
         spinner.getEditor().setTextFormatter(amountFormatter);
+        spinner.getValueFactory().valueProperty().bindBidirectional(amountFormatter.valueProperty());
         spinner.setEditable(true);
         return spinner;
     }
 
-    public static Spinner<Double> getPositiveRealNumbersSpinner()
+    public static UnaryOperator<TextFormatter.Change> getNaturalNumbersFilter()
     {
-        Spinner<Double> spinner = new Spinner<>();
+        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
+            String text = change.getControlNewText();
+
+            if (text.matches("[1-9]+[0-9]*")) {
+                return change;
+            }
+            return null;
+        };
+
+        return naturalNumbersFilter;
+    }
+
+    private static UnaryOperator<TextFormatter.Change> getMaxNumberFilter()
+    {
+        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
+            String text = change.getControlNewText();
+            if (text.matches("[1-4][0-9]?")|| text.matches("[0-9]") || text.matches("[5][0]"))
+            {
+                return change;
+            }
+            return null;
+        };
+
+        return naturalNumbersFilter;
+    }
+
+    public static Spinner SetSpinnerToPositiveRealNumbers(Spinner spinner)
+    {
         TextFormatter<Double> amountFormatter = new TextFormatter<Double>(new DoubleStringConverter(), 1d, getPositiveRealNumbersFilter());
-        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, Integer.MAX_VALUE, 1, 0.1));
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1,Integer.MAX_VALUE , 1, 0.1));
         spinner.getEditor().setTextFormatter(amountFormatter);
+        spinner.getValueFactory().valueProperty().bindBidirectional(amountFormatter.valueProperty());
         spinner.setEditable(true);
         return spinner;
     }
 
+    public static UnaryOperator<TextFormatter.Change> getPositiveRealNumbersFilter()
+    {
+
+        UnaryOperator<TextFormatter.Change> naturalNumbersFilter = change -> {
+            String text = change.getControlNewText();
+            if (text.matches("[1-9]+[0-9]*[.]?[0-9]?[0-9]?"))
+            {
+                return change;
+            }
+            return null;
+        };
+
+        return naturalNumbersFilter;
+    }
 }

@@ -125,9 +125,7 @@ public class UpdateProductsController
     {
         loadStores();
         updateOptionProperty.setValue(updateOptionValues);
-        TextFormatter<Integer> priceFormatter = new TextFormatter<Integer>(new IntegerStringConverter(), 1, Utilities.getNaturalNumbersFilter());
-        priceSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1,Integer.MAX_VALUE,1,1));
-        priceSpinner.getEditor().setTextFormatter(priceFormatter);
+        priceSpinner = Utilities.SetSpinnerToNaturalNumbers(priceSpinner,null);
     }
 
     private void loadStores()

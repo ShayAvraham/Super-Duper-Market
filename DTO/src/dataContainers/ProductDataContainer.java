@@ -16,8 +16,10 @@ public class ProductDataContainer
     private float numOfProductWasOrdered;
     private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
+
     private final BooleanProperty checked = new SimpleBooleanProperty(false);
-    private final DoubleProperty amount = new SimpleDoubleProperty(1);
+    private final SimpleDoubleProperty amount = new SimpleDoubleProperty(1);
+    private final SimpleIntegerProperty price = new SimpleIntegerProperty(1);
 
     public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
@@ -35,6 +37,20 @@ public class ProductDataContainer
         this.purchaseForm = purchaseForm;
         this.pricePerStore = pricePerStore;
         this.soldAmountPerStore = soldAmountPerStore;
+    }
+
+    //product in order
+    public ProductDataContainer(ProductDataContainer product , float amount)
+    {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.purchaseForm = product.getPurchaseForm();
+        this.numberOfStoresSellProduct = product.getNumberOfStoresSellProduct();
+        this.averagePrice = product.getAveragePrice();
+        this.numOfProductWasOrdered = product.getNumOfProductWasOrdered();
+        this.pricePerStore = product.getPricePerStore();
+        this.soldAmountPerStore = product.getSoldAmountPerStore();
+        this.amountProperty().setValue(amount);
     }
 
     public int getId() {
@@ -83,8 +99,16 @@ public class ProductDataContainer
         return amount.get();
     }
 
-    public DoubleProperty amountProperty() {
+    public SimpleDoubleProperty amountProperty() {
         return amount;
+    }
+
+    public int getPrice() {
+        return price.get();
+    }
+
+    public SimpleIntegerProperty priceProperty() {
+        return price;
     }
 
     @Override

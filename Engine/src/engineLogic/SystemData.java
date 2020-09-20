@@ -14,7 +14,6 @@ public class SystemData
     private final int MIN_BOUND = 1;
     private final int MAX_BOUND = 50;
     private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "The %1$s with i.d %2$s position is out of the bounds of [%3$s,%4$s]";
-//    private final String POSITION_ALREADY_TAKEN_MSG = "The position (%1$s,%2$s) already taken by %3$s with i.d %4$s";
     private final String POSITION_ALREADY_TAKEN_MSG = "The position (%1$s,%2$s) already taken by another entities";
     private final String NOT_ALL_PRODUCTS_IN_STORE = "The products with this i.d are not sold in any store: %1$s.";
     private final String PRODUCT_NOT_EXIST_MESSAGE = "Unable to sold the product with this id: %1$s," +
@@ -224,5 +223,10 @@ public class SystemData
     public void updateProductPriceInStore(int storeId, int productId, int newPrice)
     {
         stores.get(storeId).updateProductPrice(productId, newPrice);
+    }
+
+    public void addNewStore(Store newStore)
+    {
+        stores.put(newStore.getId(), newStore);
     }
 }

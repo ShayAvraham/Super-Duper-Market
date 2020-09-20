@@ -38,12 +38,12 @@
             <Spinner fx:id="storeYPosSpinner" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             <Label text="Select PPK" GridPane.rowIndex="3" />
             <Spinner fx:id="storePPKSpinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TableView fx:id="productsTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+            <TableView fx:id="productsTableView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
               <columns>
                 <TableColumn fx:id="selectProductColumn" prefWidth="75.0" />
-                <TableColumn fx:id="productIDColumn" prefWidth="75.0" text="ID" />
-                  <TableColumn fx:id="productNameColumn" prefWidth="175.0" text="Name" />
-                  <TableColumn fx:id="productPurchaseFormColumn" prefWidth="151.0" text="Purchase Form" />
+                <TableColumn fx:id="productIDColumn" editable="false" prefWidth="75.0" text="ID" />
+                  <TableColumn fx:id="productNameColumn" editable="false" prefWidth="175.0" text="Name" />
+                  <TableColumn fx:id="productPurchaseFormColumn" editable="false" prefWidth="151.0" text="Purchase Form" />
                   <TableColumn fx:id="selectProductPriceColumn" prefWidth="107.0" text="Price" />
               </columns>
                <columnResizePolicy>

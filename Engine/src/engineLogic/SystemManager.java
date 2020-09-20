@@ -1,10 +1,13 @@
 package engineLogic;
 
 import dataContainers.*;
+import exceptions.DuplicateValuesException;
 
 import javax.management.InstanceNotFoundException;
+import javax.swing.text.Position;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -39,7 +42,8 @@ public class SystemManager
         return allStoresData;
     }
 
-    public Collection<ProductDataContainer> getAllProductsData() {
+    public Collection<ProductDataContainer> getAllProductsData()
+    {
         return allProductsData;
     }
 
@@ -344,9 +348,10 @@ public class SystemManager
         for(Store store : order.getProducts().keySet())
         {
             Collection<ProductDataContainer> productsData = new ArrayList<>();
-            for(Product product : order.getProducts().get(store))
+            for(OrderProduct product : order.getProducts().get(store))
             {
-                productsData.add(getProductDataById(product.getId()));
+//                productsData.add(getProductDataById(product.getId()));
+                productsData.add(new ProductDataContainer(getProductDataById(product.getId()),product.getAmount()));
             }
             orderProducts.put(getStoreDataById(store.getId()),productsData);
         }
@@ -791,7 +796,12 @@ public class SystemManager
         return discounts;
     }
 
-    /********************************************** Order Summary Logic ****************************************/
+    /********************************************** Order Details Logic ****************************************/
+
+    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)
+    {
+        return systemData.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
+    }
 
     public Collection<DiscountDataContainer> createSubDiscounts(Collection <DiscountDataContainer> discounts)
     {
@@ -829,6 +839,82 @@ public class SystemManager
         }
         return subDiscounts;
     }
+
+
+
+    /********************************************** Add New Store ****************************************/
+    public void ValidateStore(StoreDataContainer store)
+    {
+        validateStoreId(store.getId());
+        validateStorePosition(store.getPosition());
+        validateSelectedProducts(store.getProducts());
+    }
+
+    private void validateStorePosition(Point storePos)
+    {
+        validateNoStoreExistWithPos(storePos);
+        validateNoCustomerExistWithPos(storePos);
+    }
+
+    private void validateNoStoreExistWithPos(Point position)
+    {
+        for(StoreDataContainer store : allStoresData)
+        {
+            if(store.getPosition().equals(position))
+            {
+                throw new DuplicateValuesException("store",position);
+            }
+        }
+    }
+
+    private void validateNoCustomerExistWithPos(Point position)
+    {
+        for(CustomerDataContainer customer : allCustomersData)
+        {
+            if(customer.getPosition().equals(position))
+            {
+                throw new DuplicateValuesException("customer",position);
+            }
+        }
+    }
+
+    private void validateStoreId(int storeID)
+    {
+        if(systemData.getStores().get(storeID) != null)
+        {
+            throw new DuplicateValuesException("store",storeID);
+        }
+    }
+
+    public void addNewStore(StoreDataContainer newStoreDataContainer)
+    {
+        Store newStore = createNewStore(newStoreDataContainer);
+        systemData.addNewStore(newStore);
+        updateDataContainers();
+    }
+
+
+    private Store createNewStore(StoreDataContainer newStoreDataContainer)
+    {
+        return new Store(newStoreDataContainer.getId(),
+                newStoreDataContainer.getName(),
+                newStoreDataContainer.getPosition(),
+                newStoreDataContainer.getPpk(),
+                createStoreProducts(newStoreDataContainer.getProducts()));
+    }
+
+    private Collection<StoreProduct> createStoreProducts(Collection<ProductDataContainer> products)
+    {
+        Collection<StoreProduct> storeProducts = new HashSet<>();
+        for(ProductDataContainer product: products)
+        {
+            storeProducts.add(new StoreProduct(
+                    systemData.getProducts().get(product.getId()),
+                    product.getPrice()));
+        }
+        return storeProducts;
+    }
+
 
     /********************************************** Utilities ****************************************/
 
@@ -891,9 +977,5 @@ public class SystemManager
         return  cost;
     }
 
-    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)
-    {
-        return systemData.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
-    }
 
 }
