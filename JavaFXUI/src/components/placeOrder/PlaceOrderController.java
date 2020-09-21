@@ -303,7 +303,6 @@ public class PlaceOrderController
         initDataMembers();
         initControllers();
         initProperties();
-
     }
 
     private void initDataMembers()
@@ -717,6 +716,10 @@ public class PlaceOrderController
         displayOrderDetailsPane.getChildren().clear();
         orderDetailsController.setOrderDetails(order);
         displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
+        displayOrderDetailsPane.setLeftAnchor(orderDetailsController.getRootPane(), 0.);
+        displayOrderDetailsPane.setTopAnchor(orderDetailsController.getRootPane(), 0.);
+        displayOrderDetailsPane.setRightAnchor(orderDetailsController.getRootPane(), 0.);
+        displayOrderDetailsPane.setBottomAnchor(orderDetailsController.getRootPane(), 0.);
     }
 
     @FXML

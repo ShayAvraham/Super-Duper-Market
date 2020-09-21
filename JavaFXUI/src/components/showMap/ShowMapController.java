@@ -61,8 +61,10 @@ public class ShowMapController
     void initialize()
     {
         rootPane.getChildren().add(map);
-        rootPane.setLeftAnchor(map, 30.);
-        rootPane.setTopAnchor(map, 30.);
+        rootPane.setLeftAnchor(map, 0.);
+        rootPane.setTopAnchor(map, 0.);
+        rootPane.setRightAnchor(map, 0.);
+        rootPane.setBottomAnchor(map, 0.);
         map.setStyle("-fx-border-color: #8b46db; -fx-border-radius: 20 20 20 20;");
     }
 
@@ -160,11 +162,17 @@ public class ShowMapController
     {
         for(int column = minXCoordinate; column < maxXCoordinate; column++)
         {
-            map.getColumnConstraints().add(new ColumnConstraints(15));
+            ColumnConstraints columnConstraints = new ColumnConstraints(15);
+            columnConstraints.setFillWidth(true);
+            columnConstraints.setPercentWidth(100);
+            map.getColumnConstraints().add(columnConstraints);
         }
         for(int row = minYCoordinate; row < maxYCoordinate; row++)
         {
-            map.getRowConstraints().add(new RowConstraints(15));
+            RowConstraints rowConstraints = new RowConstraints(15);
+            rowConstraints.setFillHeight(true);
+            rowConstraints.setPercentHeight(100);
+            map.getRowConstraints().add(rowConstraints);
         }
     }
 }

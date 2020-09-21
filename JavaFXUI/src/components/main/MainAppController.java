@@ -82,6 +82,9 @@ public class MainAppController
     @FXML
     private AnchorPane mainWindow;
 
+    @FXML
+    private Button changeSkinButton;
+
 
     public MainAppController() 
     {
@@ -264,6 +267,10 @@ public class MainAppController
     {
         mainWindow.getChildren().clear();
         placeOrderController.LoadDataToControllers();
+        mainWindow.setBottomAnchor(placeOrderController.getRootPane(),0.);
+        mainWindow.setTopAnchor(placeOrderController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(placeOrderController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(placeOrderController.getRootPane(), 0.);
         mainWindow.getChildren().add(placeOrderController.getRootPane());
     }
 
@@ -349,6 +356,12 @@ public class MainAppController
         mainWindow.setLeftAnchor(addNewStoreController.getRootPane(), 0.);
         mainWindow.setRightAnchor(addNewStoreController.getRootPane(), 0.);
         mainWindow.getChildren().add(addNewStoreController.getRootPane());
+    }
+
+    @FXML
+    void changeSkin(ActionEvent event)
+    {
+
     }
 
     public void setMainStage(Stage primaryStage)

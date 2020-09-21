@@ -102,5 +102,9 @@ public class ShowOrdersHistoryController
         displayOrderDetailsPane.setVisible(true);
         orderDetailsController.setOrderDetails(selectedOrderProperty.getValue());
         displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
+        rootPane.setTopAnchor(displayOrderDetailsPane, 100.);
+        rootPane.setLeftAnchor(displayOrderDetailsPane, 0.);
+        rootPane.setRightAnchor(displayOrderDetailsPane, 0.);
+        rootPane.setBottomAnchor(displayOrderDetailsPane, 0.);
     }
 }

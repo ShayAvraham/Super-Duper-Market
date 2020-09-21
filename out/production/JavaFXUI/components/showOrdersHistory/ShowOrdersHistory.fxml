@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="rootPane" prefHeight="504.0" prefWidth="692.0" stylesheets="@ShowOrdersHistoryStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showOrdersHistory.ShowOrdersHistoryController">
+<AnchorPane fx:id="rootPane" stylesheets="@ShowOrdersHistoryStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.showOrdersHistory.ShowOrdersHistoryController">
    <children>
-      <AnchorPane fx:id="selectOrderPane" prefHeight="94.0" prefWidth="692.0" AnchorPane.bottomAnchor="410.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="selectOrderPane" prefHeight="100.0" prefWidth="1000.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="selectOrderLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="33.0" layoutY="23.0" prefHeight="48.0" prefWidth="98.0" text="Select Order" textAlignment="CENTER" />
-            <ComboBox fx:id="selectOrderComboBox" layoutX="151.0" layoutY="35.0" prefWidth="150.0" />
-            <Button fx:id="displayOrderDetailsButton" layoutX="353.0" layoutY="35.0" mnemonicParsing="false" onAction="#OnDisplayOrderButtonPressed" prefHeight="27.0" prefWidth="87.0" text="Display" />
+            <GridPane prefHeight="100.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="255.66665649414062" minWidth="10.0" prefWidth="175.66665649414062" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.3333435058594" minWidth="10.0" prefWidth="242.33331298828125" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.6666870117188" minWidth="10.0" prefWidth="550.6666870117188" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="73.33332824707031" minHeight="10.0" prefHeight="73.33332824707031" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="selectOrderLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="48.0" prefWidth="101.0" text="Select Order" textAlignment="CENTER" />
+                  <ComboBox fx:id="selectOrderComboBox" prefWidth="150.0" GridPane.columnIndex="1" />
+                  <Button fx:id="displayOrderDetailsButton" mnemonicParsing="false" onAction="#OnDisplayOrderButtonPressed" prefHeight="27.0" prefWidth="87.0" text="Display" GridPane.columnIndex="2" />
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </GridPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="displayOrderDetailsPane" layoutY="132.0" prefHeight="371.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="94.0" />
+      <AnchorPane fx:id="displayOrderDetailsPane" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
    </children>
 </AnchorPane>
