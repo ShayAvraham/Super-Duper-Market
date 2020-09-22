@@ -65,7 +65,7 @@ public class ShowMapController
         rootPane.setTopAnchor(map, 0.);
         rootPane.setRightAnchor(map, 0.);
         rootPane.setBottomAnchor(map, 0.);
-        map.setStyle("-fx-border-color: #8b46db; -fx-border-radius: 20 20 20 20;");
+        map.getStyleClass().add("map");
     }
 
     public void updateMap()

@@ -1,6 +1,7 @@
 package components.main;
 import common.Utilities;
 import components.addNewStore.AddNewStoreController;
+import components.changeSkin.ChangeSkinController;
 import components.loadXml.LoadXmlController;
 import components.orderDetails.OrderDetailsController;
 import components.placeOrder.PlaceOrderController;
@@ -35,6 +36,7 @@ public class MainAppController
     private PlaceOrderController placeOrderController;
     private OrderDetailsController orderDetailsController;
     private AddNewStoreController addNewStoreController;
+    private ChangeSkinController changeSkinController;
 
     private SystemManager systemManager;
     private Stage stage;
@@ -45,6 +47,9 @@ public class MainAppController
 
     @FXML
     private AnchorPane menuBar;
+
+    @FXML
+    private AnchorPane mainWindow;
 
     @FXML
     private ImageView superDuperMarketImage;
@@ -80,9 +85,6 @@ public class MainAppController
     private Button addNewStoreButton;
 
     @FXML
-    private AnchorPane mainWindow;
-
-    @FXML
     private Button changeSkinButton;
 
 
@@ -102,24 +104,13 @@ public class MainAppController
             placeOrderController = initializePlaceOrderController(this.systemManager);
             showOrdersHistoryController = initializeShowOrdersHistoryController(this.systemManager);
             addNewStoreController = initializeAddNewStoreController(this.systemManager);
+            changeSkinController = initializeChangeSkinController();
         }
         catch (Exception e)
         {
             e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
-    }
-
-
-    private OrderDetailsController initializeOrderDetailsController(SystemManager systemManager) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        URL mainFXML = getClass().getResource("/components/orderDetails/OrderDetails.fxml");
-        loader.setLocation(mainFXML);
-        loader.load();
-        OrderDetailsController orderDetailsController = loader.getController();
-        orderDetailsController.setMainController(this);
-        orderDetailsController.setSystemLogic(systemManager);
-        return orderDetailsController;
     }
 
     @FXML
@@ -133,6 +124,7 @@ public class MainAppController
         placeOrderButton.disableProperty().bind(isFileLoadedProperty.not());
         showMapButton.disableProperty().bind(isFileLoadedProperty.not());
         addNewStoreButton.disableProperty().bind(isFileLoadedProperty.not());
+        changeSkinButton.disableProperty().bind(isFileLoadedProperty.not());
     }
 
     public void setIsFileLoadedProperty(boolean isFileLoaded)
@@ -250,6 +242,27 @@ public class MainAppController
         return addNewStoreController;
     }
 
+    private ChangeSkinController initializeChangeSkinController() throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/changeSkin/ChangeSkin.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        ChangeSkinController changeSkinController = loader.getController();
+        return changeSkinController;
+    }
+
+    private OrderDetailsController initializeOrderDetailsController(SystemManager systemManager) throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        URL mainFXML = getClass().getResource("/components/orderDetails/OrderDetails.fxml");
+        loader.setLocation(mainFXML);
+        loader.load();
+        OrderDetailsController orderDetailsController = loader.getController();
+        orderDetailsController.setMainController(this);
+        orderDetailsController.setSystemLogic(systemManager);
+        return orderDetailsController;
+    }
 
     @FXML
     void loadXmlFile(ActionEvent event)
@@ -361,7 +374,12 @@ public class MainAppController
     @FXML
     void changeSkin(ActionEvent event)
     {
-
+        mainWindow.getChildren().clear();
+        changeSkinController.setMainAppPane(this.mainPane);
+        mainWindow.setTopAnchor(changeSkinController.getRootPane(), 0.);
+        mainWindow.setLeftAnchor(changeSkinController.getRootPane(), 0.);
+        mainWindow.setRightAnchor(changeSkinController.getRootPane(), 0.);
+        mainWindow.getChildren().add(changeSkinController.getRootPane());
     }
 
     public void setMainStage(Stage primaryStage)
