@@ -71,7 +71,7 @@ public class ChangeSkinController
         if (selectedSkinTypeProperty.getValue() != null)
         {
             mainAppPane.getStylesheets().clear();
-            mainAppPane.getStylesheets().add("/components/main/MainStyle" + selectedSkinTypeProperty.getValue() + ".css");
+            mainAppPane.getStylesheets().add("/resources/MainStyle" + selectedSkinTypeProperty.getValue() + ".css");
             selectSkinComboBox.getSelectionModel().clearSelection();
         }
     }

@@ -41,7 +41,7 @@
             <Spinner fx:id="storeYPosSpinner" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Label text="Select PPK" GridPane.rowIndex="3" />
             <Spinner fx:id="storePPKSpinner" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TableView fx:id="productsTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4">
+            <TableView fx:id="productsTableView" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4">
               <columns>
                 <TableColumn fx:id="selectProductColumn" prefWidth="75.0" />
                 <TableColumn fx:id="productIDColumn" editable="false" prefWidth="75.0" text="ID" />
