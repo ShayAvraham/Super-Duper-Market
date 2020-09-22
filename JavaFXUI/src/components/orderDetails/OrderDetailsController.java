@@ -188,9 +188,9 @@ public class OrderDetailsController
         storeSummaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         storeSummaryPPKColumn.setCellValueFactory(new PropertyValueFactory<>("ppk"));
         storeSummaryDistanceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(
-                                    systemManager.getDistanceBetweenStoreAndCustomer(cell.getValue(),orderDetails.getCustomer())));
+                systemManager.getDistanceBetweenStoreAndCustomer(cell.getValue(),orderDetails.getCustomer())));
         storeSummaryDeliveryCostColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(
-                                    systemManager.getDeliveryCostFromStore(cell.getValue(),orderDetails.getCustomer())));
+                systemManager.getDeliveryCostFromStore(cell.getValue(),orderDetails.getCustomer())));
     }
 
     private void setProductsSummaryTableColumnsProperties()
@@ -199,7 +199,8 @@ public class OrderDetailsController
         productsSummaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productsSummaryPurchaseFormColumn.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
         productsSummaryAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        productsSummaryPriceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(systemManager.getProductPrice(selectedStoreProperty.get(),cell.getValue())));
+        productsSummaryPriceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(systemManager.getProductPrice(
+                selectedStoreProperty.get(),cell.getValue())));
         productsSummaryTotalPriceColumn.setCellValueFactory(cell ->new SimpleObjectProperty<>(
                 cell.getValue().amountProperty().get() *
                         systemManager.getProductPrice(selectedStoreProperty.get(),cell.getValue())));
@@ -239,6 +240,7 @@ public class OrderDetailsController
     private void loadProductsSummary()
     {
         setProductsSummaryTableColumnsProperties();
+        productsOrderProperty.clear();
         productsOrderProperty.setValue(
                 orderDetails.getProducts().get(selectedStoreProperty.get())
                         .stream()
@@ -250,6 +252,7 @@ public class OrderDetailsController
     private void loadDiscountsSummary()
     {
         setDiscountsSummaryTableColumnsProperties();
+        discountsOrderProperty.clear();
         if(!orderDetails.getDiscounts().isEmpty() && orderDetails.getDiscounts().get(selectedStoreProperty.get())!=null)
         {
             discountsOrderProperty.setValue(systemManager.createSubDiscounts(

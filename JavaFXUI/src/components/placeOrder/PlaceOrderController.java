@@ -10,7 +10,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -86,8 +85,9 @@ public class PlaceOrderController
 
     @FXML
     private TableColumn<ProductDataContainer, String> productNameColumn;
+
     @FXML
-    private TableColumn<ProductDataContainer,Spinner<Double>> productAmountColumn;
+    private TableColumn<ProductDataContainer,Spinner<Number>> productAmountColumn;
 
     @FXML
     private Tab storesOrderedFromTab;
@@ -171,7 +171,7 @@ public class PlaceOrderController
     private SimpleListProperty<DiscountDataContainer> availableDiscountsProperty;
 
     private SimpleObjectProperty<CustomerDataContainer> selectedCustomerProperty;
-    private SimpleObjectProperty<LocalDate> selectedDeliveryDate;
+    private SimpleObjectProperty<LocalDate> selectedDeliveryDateProperty;
     private SimpleStringProperty selectedOrderTypeProperty;
     private SimpleObjectProperty<StoreDataContainer> selectedStoreProperty;
 
@@ -233,7 +233,8 @@ public class PlaceOrderController
         productsTableView.itemsProperty().bind(productsProperty);
         productPriceColumn.visibleProperty().bindBidirectional(isOrderTypeStaticProperty);
 
-        submitProductsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_PRODUCTS));
+        submitProductsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_PRODUCTS)
+                .or(selectedCustomerProperty.isNull()));
     }
 
     private void initSelectDiscountsPhaseProperties()
@@ -244,19 +245,19 @@ public class PlaceOrderController
         availableDiscountsTab.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_DISCOUNTS));
         availableDiscountsTableView.itemsProperty().bind(availableDiscountsProperty);
 
-        submitDiscountsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_DISCOUNTS));
+        submitDiscountsButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SELECT_DISCOUNTS).or(selectedDeliveryDateProperty.isNull()));
     }
 
     private void initSubmitOrderPhaseProperties()
     {
-        submitOrderButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SUBMIT_ORDER) .or(selectedDeliveryDate.isNull()));
+        submitOrderButton.disableProperty().bind(currentPhaseProperty.isNotEqualTo(OrderPhase.SUBMIT_ORDER));
     }
 
     private void initMultiPhasesProperties()
     {
         selectedCustomerProperty.bind(customersComboBox.selectionModelProperty().get().selectedItemProperty());
         selectedOrderTypeProperty.bind(orderTypesComboBox.selectionModelProperty().get().selectedItemProperty());
-        selectedDeliveryDate.bind(deliveryDatePicker.valueProperty());
+        selectedDeliveryDateProperty.bind(deliveryDatePicker.valueProperty());
         selectedStoreProperty.bind(storesComboBox.selectionModelProperty().getValue().selectedItemProperty());
 
         isOrderTypeStaticProperty.bind(selectedOrderTypeProperty.isEqualTo(STATIC));
@@ -275,7 +276,7 @@ public class PlaceOrderController
         availableDiscountsProperty = new SimpleListProperty<>();
 
         selectedCustomerProperty = new SimpleObjectProperty<>();
-        selectedDeliveryDate = new SimpleObjectProperty<>();
+        selectedDeliveryDateProperty = new SimpleObjectProperty<>();
         selectedOrderTypeProperty = new SimpleStringProperty();
         selectedStoreProperty = new SimpleObjectProperty<>();
 
@@ -303,6 +304,7 @@ public class PlaceOrderController
         initDataMembers();
         initControllers();
         initProperties();
+
     }
 
     private void initDataMembers()
@@ -325,9 +327,8 @@ public class PlaceOrderController
         orderTypesProperty.setValue(orderTypeValues);
 
         productsProperty.clear();
-        storesOrderedFromProperty.setValue(null);
-        availableDiscountsProperty.setValue(null);
-
+        storesOrderedFromProperty.clear();
+        availableDiscountsProperty.clear();;
     }
 
     private void initControllers()
@@ -410,6 +411,9 @@ public class PlaceOrderController
     private ObservableList<ProductDataContainer> getProductForTableView()
     {
         return systemManager.getAllProductsData().stream()
+                .map(product ->{
+                    product.checkedProperty().setValue(false);
+                    return product;})
                 .collect(Collectors
                         .collectingAndThen(Collectors.toList(),
                                 FXCollections::observableArrayList));
@@ -418,11 +422,11 @@ public class PlaceOrderController
 
     private void setProductsTableColumnsProperties()
     {
+        setProductToOrderColumn();
         productIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productPurchaseFormColumn.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
         setPriceColumn();
-        setProductToOrderColumn();
         setAmountColumn();
     }
 
@@ -470,15 +474,16 @@ public class PlaceOrderController
             return  checkbox;
         });
 
+
         productToOrderColumn.setCellValueFactory(c ->
         {
             if((isOrderTypeStaticProperty.get() && selectedStoreProperty.getValue() == null)||
                     (selectedStoreProperty.getValue() != null
-                    && !selectedStoreProperty.getValue().getProducts().contains(c.getValue())))
+                            && !selectedStoreProperty.getValue().getProducts().contains(c.getValue())))
             {
-              c.getValue().checkedProperty().setValue(false);
+                c.getValue().checkedProperty().setValue(false);
             }
-           return  c.getValue().checkedProperty();
+            return  c.getValue().checkedProperty();
         });
 
     }
@@ -488,14 +493,13 @@ public class PlaceOrderController
     {
         productAmountColumn.setCellValueFactory(data ->
         {
-            Spinner<Double> spinner;
-            spinner = data.getValue().getPurchaseForm().toLowerCase().equals("weight")?
-                        Utilities.getPositiveRealNumbersSpinner():
-                        Utilities.getNaturalNumbersSpinner();
+            Spinner spinner = new Spinner();
+            spinner = data.getValue().getPurchaseForm().toLowerCase().equals("weight") ?
+                    Utilities.SetSpinnerToPositiveRealNumbers(spinner) :
+                    Utilities.SetSpinnerToNaturalNumbers(spinner,null);
             data.getValue().amountProperty().bind(spinner.valueProperty());
-            return new SimpleObjectProperty<Spinner<Double>>(spinner);
+            return new SimpleObjectProperty<Spinner<Number>>(spinner);
         });
-
     }
 
     @FXML
@@ -652,7 +656,6 @@ public class PlaceOrderController
                 return cell;
             }
         });
-
     }
 
     @FXML
@@ -699,27 +702,26 @@ public class PlaceOrderController
 
     private void createNewOrder()
     {
-        float costOfAllProducts =  systemManager.getOrderCostOfAllProducts(storeToPurchaseFrom,selectedDiscounts);
+        Map<StoreDataContainer,Collection<DiscountDataContainer>> discounts = systemManager.CreateOrderDataDiscounts(selectedDiscounts);
+        float costOfAllProducts =  systemManager.getOrderCostOfAllProducts(storeToPurchaseFrom,discounts);
         float deliveryCost = systemManager.getOrderDeliveryCost(storeToPurchaseFrom.keySet(),selectedCustomerProperty.get());
-        order = new OrderDataContainer(selectedDeliveryDate.getValue(),
+
+        order = new OrderDataContainer(selectedDeliveryDateProperty.getValue(),
                 selectedCustomerProperty.get(),
                 storeToPurchaseFrom,
-                selectedDiscounts,
+                discounts,
                 selectedOrderTypeProperty.get().equals(DYNAMIC)?true:false,
                 costOfAllProducts,
                 deliveryCost,
                 costOfAllProducts + deliveryCost);
     }
 
+
     private void showOrderDetails()
     {
         displayOrderDetailsPane.getChildren().clear();
         orderDetailsController.setOrderDetails(order);
         displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
-        displayOrderDetailsPane.setLeftAnchor(orderDetailsController.getRootPane(), 0.);
-        displayOrderDetailsPane.setTopAnchor(orderDetailsController.getRootPane(), 0.);
-        displayOrderDetailsPane.setRightAnchor(orderDetailsController.getRootPane(), 0.);
-        displayOrderDetailsPane.setBottomAnchor(orderDetailsController.getRootPane(), 0.);
     }
 
     @FXML

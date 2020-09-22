@@ -39,6 +39,19 @@ public class Store
         this.storeOrders = new HashSet<>();
     }
 
+    public Store(int id, String name, Point position, float ppk ,Collection<StoreProduct> storeProducts)
+    {
+        this.id = id;
+        this.name = name;
+        this.position = position;
+        this.ppk = ppk;
+        this.storeProducts = new HashSet<>(storeProducts);
+        this.storeDiscounts = new HashSet<>();
+        this.storeOrders = new HashSet<>();
+    }
+
+
+
     public int getId() {
         return id;
     }

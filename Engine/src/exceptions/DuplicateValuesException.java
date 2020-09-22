@@ -1,18 +1,24 @@
 package exceptions;
 
+import java.awt.*;
+
 public class DuplicateValuesException extends RuntimeException
 {
-    private final String EXCEPTION_MESSAGE = "There is a %1$s already exists with this id: %2$s";
-    private int id;
-    private String instanceName;
+    private final String ID_EXCEPTION_MESSAGE = "There is a %1$s already exists with this id: %2$s";
+    private final String LOCATION_EXCEPTION_MESSAGE = "There is a %1$s already exists with this location: %2$s";
+    private static final String POSITION_FORMAT = "(%1$s, %2$s)";
     private String message;
 
 
     public DuplicateValuesException(String instanceName,int id)
     {
-        this.id = id;
-        this.instanceName = instanceName;
-        this.message = String.format(EXCEPTION_MESSAGE, instanceName, id);
+        this.message = String.format(ID_EXCEPTION_MESSAGE, instanceName, id);
+    }
+
+    public DuplicateValuesException(String instanceName, Point pos)
+    {
+        String posStr = String.format(POSITION_FORMAT, (int)pos.getX(), (int)pos.getY());
+        this.message = String.format(LOCATION_EXCEPTION_MESSAGE, instanceName, posStr);
     }
 
     public DuplicateValuesException(String message)
