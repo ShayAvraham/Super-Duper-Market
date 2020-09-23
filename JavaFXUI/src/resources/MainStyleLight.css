@@ -1,6 +1,6 @@
 *
 {
-    -fx-font-family: "Droid Sans Mono Slashed";
+    -fx-font-family: "Microsoft Sans Serif";
     -fx-font-size: 12px;
     -fx-text-fill: black;
 }
@@ -32,7 +32,6 @@
 .button
 {
     -fx-background-color: darkgray;
-    -fx-background-radius: 30 30 30 30;
 }
 
 .button:hover
@@ -118,11 +117,10 @@
     -fx-background-color: #686868;
 }
 
-/* Scroll bar */
-.scroll-bar:horizontal .thumb,
-.scroll-bar:vertical .thumb
+/* Scroll pane */
+.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb
 {
-    -fx-background-color:derive( #494949,90%);
+    -fx-background-color:derive( #454545,90%);
     -fx-background-insets: 2, 0, 0;
     -fx-background-radius: 2em;
 }
@@ -229,9 +227,16 @@
     -fx-border-color: #3d4950;
 }
 
+/* Spinner */
 .spinner .text-field
 {
-    -fx-background-color: #747474;
+    -fx-background-color: #999999;
+}
+
+/* Text field */
+.text-field
+{
+    -fx-background-color: #999999;
 }
 
 /* map */

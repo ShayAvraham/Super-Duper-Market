@@ -716,12 +716,16 @@ public class PlaceOrderController
                 costOfAllProducts + deliveryCost);
     }
 
-
+    /* added lines 725-728 */
     private void showOrderDetails()
     {
         displayOrderDetailsPane.getChildren().clear();
         orderDetailsController.setOrderDetails(order);
         displayOrderDetailsPane.getChildren().add(orderDetailsController.getRootPane());
+        displayOrderDetailsPane.setLeftAnchor(orderDetailsController.getRootPane(), 0.);
+        displayOrderDetailsPane.setTopAnchor(orderDetailsController.getRootPane(), 0.);
+        displayOrderDetailsPane.setRightAnchor(orderDetailsController.getRootPane(), 0.);
+        displayOrderDetailsPane.setBottomAnchor(orderDetailsController.getRootPane(), 0.);
     }
 
     @FXML
