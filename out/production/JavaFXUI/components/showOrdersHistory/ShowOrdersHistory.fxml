@@ -15,16 +15,16 @@
             <children>
                 <GridPane prefHeight="100.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="255.66665649414062" minWidth="10.0" prefWidth="175.66665649414062" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.3333435058594" minWidth="10.0" prefWidth="242.33331298828125" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.6666870117188" minWidth="10.0" prefWidth="550.6666870117188" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="255.66665649414062" minWidth="10.0" prefWidth="132.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.3333435058594" minWidth="10.0" prefWidth="307.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="550.6666870117188" minWidth="10.0" prefWidth="531.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="73.33332824707031" minHeight="10.0" prefHeight="73.33332824707031" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <Label fx:id="selectOrderLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="48.0" prefWidth="101.0" text="Select Order" textAlignment="CENTER" />
-                        <ComboBox fx:id="selectOrderComboBox" prefWidth="150.0" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="selectOrderComboBox" prefHeight="28.0" prefWidth="266.0" GridPane.columnIndex="1" />
                         <Button fx:id="displayOrderDetailsButton" mnemonicParsing="false" onAction="#OnDisplayOrderButtonPressed" prefHeight="27.0" prefWidth="87.0" text="Display" GridPane.columnIndex="2" />
                     </children>
                     <padding>

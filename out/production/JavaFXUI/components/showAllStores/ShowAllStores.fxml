@@ -45,7 +45,8 @@
                     <content>
                         <TableView fx:id="storeOrdersView" prefHeight="200.0" prefWidth="200.0">
                             <columns>
-                                <TableColumn fx:id="date" prefWidth="121.0" sortable="false" text="Date" />
+                        <TableColumn fx:id="id" prefWidth="98.33331298828125" sortable="false" text="ID" />
+                                <TableColumn fx:id="date" prefWidth="235.66668701171875" sortable="false" text="Date" />
                                 <TableColumn fx:id="totalNumOfProducts" prefWidth="132.0" sortable="false" text="Total Products" />
                                 <TableColumn fx:id="totalProductsCost" prefWidth="175.0" sortable="false" text="Total Products Cost" />
                                 <TableColumn fx:id="deliveryCost" prefWidth="131.0" sortable="false" text="Delivery Cost" />
