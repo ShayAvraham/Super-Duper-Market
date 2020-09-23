@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JavaFXUI:jar">
+    <output-path>$PROJECT_DIR$/../Submit</output-path>
+    <root id="archive" name="JavaFXUI.jar">
+      <element id="module-output" name="JavaFXUI" />
+    </root>
+  </artifact>
+</component>

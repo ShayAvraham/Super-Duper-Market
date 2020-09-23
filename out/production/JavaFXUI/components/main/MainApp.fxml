@@ -85,6 +85,9 @@
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
+               <children>
+                  <Label fx:id="welcomeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="92.0" layoutY="80.0" prefHeight="600.0" prefWidth="850.0" text="Welcome To Our Super Duper Market!" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
             </AnchorPane>
          </children>
       </AnchorPane>

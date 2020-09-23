@@ -22,8 +22,13 @@
 
 #superDuperMarketLabel
 {
-    -fx-font-size: 30px;
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
+}
+
+#welcomeLabel
+{
+    -fx-font-size: 30px;
 }
 
 /* Button */
