@@ -1,23 +1,21 @@
 package components.showAllStores;
 
+import common.Utilities;
 import components.main.MainAppController;
-import dataContainers.*;
-import engineLogic.Discount;
+import dataContainers.DiscountDataContainer;
+import dataContainers.OrderDataContainer;
+import dataContainers.ProductDataContainer;
+import dataContainers.StoreDataContainer;
 import engineLogic.SystemManager;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -207,16 +205,17 @@ public class ShowAllStoresController
         productName.setCellValueFactory(new PropertyValueFactory<>("name"));
         purchaseForm.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
         price.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getPricePerStore().get(selectedStoreProperty.getValue().getId())));
-        howMuchSoldInStore.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getSoldAmountPerStore().get(selectedStoreProperty.getValue().getId())));
+        howMuchSoldInStore.setCellValueFactory(cellData -> new SimpleObjectProperty<>(Float.valueOf(Utilities.DECIMAL_FORMAT.format(cellData.getValue().getSoldAmountPerStore().get(selectedStoreProperty.getValue().getId())))));
     }
 
     private void setOrdersTableColumnsProperties()
     {
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
-        totalNumOfProducts.setCellValueFactory(new PropertyValueFactory<>("numOfProducts"));
+        totalNumOfProducts.setCellValueFactory(new PropertyValueFactory<>("amountOfProductsTypes"));
         totalProductsCost.setCellValueFactory(new PropertyValueFactory<>("costOfAllProducts"));
         deliveryCost.setCellValueFactory(new PropertyValueFactory<>("deliveryCost"));
-        totalOrderCost.setCellValueFactory(new PropertyValueFactory<>("totalCost"));
+        totalOrderCost.setCellValueFactory(cellData -> new SimpleObjectProperty<>(Float.valueOf(Utilities.DECIMAL_FORMAT.format(cellData.getValue().getTotalCost()))));
+
     }
 
     private void setDiscountsTableColumnsProperties()

@@ -1,7 +1,5 @@
 package engineLogic;
 
-import dataContainers.DiscountDataContainer;
-
 import java.util.Collection;
 import java.util.Objects;
 
@@ -76,5 +74,20 @@ public class Discount
     public int hashCode()
     {
         return Objects.hash(getName());
+    }
+
+    public float getOfferProductAmount(Product product)
+    {
+        float amount = 0;
+        for (OfferProduct offerProduct: productsToOffer)
+        {
+            if(offerProduct.getId() == product.getId())
+            {
+                amount = new Double(offerProduct.getOfferAmount()).floatValue();
+                break;
+            }
+        }
+        return amount;
+
     }
 }

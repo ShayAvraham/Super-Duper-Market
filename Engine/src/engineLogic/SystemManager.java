@@ -4,7 +4,6 @@ import dataContainers.*;
 import exceptions.DuplicateValuesException;
 
 import javax.management.InstanceNotFoundException;
-import javax.swing.text.Position;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
 import java.awt.*;
@@ -24,7 +23,6 @@ public class SystemManager
     private Collection<ProductDataContainer> allProductsData;
     private Collection<OrderDataContainer> allOrdersData;
     private Collection<CustomerDataContainer> allCustomersData;
-    //    private boolean isFileWasLoadSuccessfully = false;
     private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
     private static DecimalFormat DECIMAL_FORMAT;
 
@@ -55,10 +53,6 @@ public class SystemManager
         return allCustomersData;
     }
 
-/*    public boolean isFileWasLoadSuccessfully() {
-        return isFileWasLoadSuccessfully;
-    }*/
-
     /********************************************** Load XML Logic ****************************************/
 
 
@@ -67,7 +61,6 @@ public class SystemManager
         SystemData newSystemData = xmlSystemDataBuilder.deserializeXmlToSystemData(xmlFilePath);
         systemData = newSystemData;
         updateDataContainers();
-        //       isFileWasLoadSuccessfully = true;
     }
 
     /********************************************** Update Data Containers ****************************************/
@@ -95,8 +88,8 @@ public class SystemManager
                 customer.getId(),
                 customer.getName(),
                 getCustomerNumOfOrders(customer),
-                getCustomerOrderCostAvg(customer),
-                getCustomerDeliveryCostAvg(customer),
+                Float.valueOf(DECIMAL_FORMAT.format(getCustomerOrderCostAvg(customer))),
+                Float.valueOf(DECIMAL_FORMAT.format(getCustomerDeliveryCostAvg(customer))),
                 customer.getPosition());
     }
 
@@ -142,7 +135,7 @@ public class SystemManager
                     product.getName(),
                     product.getPurchaseForm().name(),
                     getHowManyStoresSellProduct(product),
-                    getProductAvgPrice(product),
+                    Float.valueOf(DECIMAL_FORMAT.format(getProductAvgPrice(product))),
                     getHowManyTimesProductSold(product)));
         }
     }
@@ -339,7 +332,8 @@ public class SystemManager
                 order.isDynamic(),
                 order.getCostOfAllProducts(),
                 order.getDeliveryCost(),
-                order.getTotalCost());
+                order.getTotalCost(),
+                order.getProductTypesAmountInOrder());
     }
 
     private Map<StoreDataContainer, Collection<ProductDataContainer>> createOrderProductsData(Order order)
@@ -350,7 +344,6 @@ public class SystemManager
             Collection<ProductDataContainer> productsData = new ArrayList<>();
             for(OrderProduct product : order.getProducts().get(store))
             {
-//                productsData.add(getProductDataById(product.getId()));
                 productsData.add(new ProductDataContainer(getProductDataById(product.getId()),product.getAmount()));
             }
             orderProducts.put(getStoreDataById(store.getId()),productsData);

@@ -1,5 +1,6 @@
 package components.orderDetails;
 
+import common.Utilities;
 import components.main.MainAppController;
 import dataContainers.DiscountDataContainer;
 import dataContainers.OrderDataContainer;
@@ -90,7 +91,7 @@ public class OrderDetailsController
     private TableColumn<ProductDataContainer, Integer> productsSummaryPriceColumn;
 
     @FXML
-    private TableColumn<ProductDataContainer, Double> productsSummaryTotalPriceColumn;
+    private TableColumn<ProductDataContainer, Float> productsSummaryTotalPriceColumn;
 
     @FXML
     private Tab discountsOrderSummaryTab;
@@ -198,12 +199,13 @@ public class OrderDetailsController
         productsSummaryIDColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productsSummaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         productsSummaryPurchaseFormColumn.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
-        productsSummaryAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        productsSummaryAmountColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(Float.valueOf(
+                Utilities.DECIMAL_FORMAT.format(data.getValue().getAmount()))));
         productsSummaryPriceColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(systemManager.getProductPrice(
                 selectedStoreProperty.get(),cell.getValue())));
         productsSummaryTotalPriceColumn.setCellValueFactory(cell ->new SimpleObjectProperty<>(
-                cell.getValue().amountProperty().get() *
-                        systemManager.getProductPrice(selectedStoreProperty.get(),cell.getValue())));
+                Float.valueOf(Utilities.DECIMAL_FORMAT.format(cell.getValue().amountProperty().get() *
+                        systemManager.getProductPrice(selectedStoreProperty.get(),cell.getValue())))));
     }
 
     private void setDiscountsSummaryTableColumnsProperties()
@@ -211,10 +213,14 @@ public class OrderDetailsController
         discountsSummaryIDColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getId()));
         discountsSummaryNameColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getName()));
         discountsSummaryPurchaseFormColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().keySet().stream().findFirst().get().getPurchaseForm()));
-        discountsSummaryAmountColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()));
+        discountsSummaryAmountColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(Float.valueOf(
+                Utilities.DECIMAL_FORMAT.format(
+                        data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()))));
         discountsSummaryPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()));
-        discountsSummaryTotalPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()
-                * data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()));
+        discountsSummaryTotalPriceColumn.setCellValueFactory(data -> new SimpleObjectProperty<>(
+                Float.valueOf(Utilities.DECIMAL_FORMAT.format(
+                        data.getValue().getPriceForOfferProduct().values().stream().findFirst().get()
+                * data.getValue().getAmountForOfferProduct().values().stream().findFirst().get().floatValue()))));
     }
 
     private void loadStoresSummary()
@@ -271,16 +277,16 @@ public class OrderDetailsController
 
     private void loadProductsCostSummary()
     {
-        productsCostProperty.set(orderDetails.getCostOfAllProducts());
+        productsCostProperty.set(Float.valueOf(Utilities.DECIMAL_FORMAT.format(orderDetails.getCostOfAllProducts())));
     }
 
     private void loadDeliveryCostSummary()
     {
-        deliveryCostProperty.set(orderDetails.getDeliveryCost());
+        deliveryCostProperty.set(Float.valueOf(Utilities.DECIMAL_FORMAT.format(orderDetails.getDeliveryCost())));
     }
 
     private void loadOrderCostSummary()
     {
-        orderCostProperty.set(orderDetails.getTotalCost());
+        orderCostProperty.set(Float.valueOf(Utilities.DECIMAL_FORMAT.format(orderDetails.getTotalCost())));
     }
 }

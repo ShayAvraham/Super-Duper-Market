@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
@@ -19,7 +20,7 @@ public class ChangeSkinController
     private final String DARK = "Dark";
     private final String LIGHT = "Light";
 
-    private AnchorPane mainAppPane;
+    private ScrollPane mainAppPane;
     private ObservableList<String> skinTypeValue = FXCollections.observableArrayList(PURPLE, DARK, LIGHT);
 
     private SimpleListProperty<String> skinTypesProperty;
@@ -40,11 +41,10 @@ public class ChangeSkinController
     @FXML
     private Button applySkinButton;
 
-    public void setMainAppPane(AnchorPane mainAppPane)
+    public void setMainAppPane(ScrollPane mainAppPane)
     {
         this.mainAppPane = mainAppPane;
     }
-
     public AnchorPane getRootPane()
     {
         return rootPane;
