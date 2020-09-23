@@ -16,6 +16,7 @@ public class OrderDataContainer
     private float costOfAllProducts;
     private float deliveryCost;
     private float totalCost;
+    private int amountOfProductsTypes;
 
     /** Create new Order **/
 
@@ -39,7 +40,7 @@ public class OrderDataContainer
     public OrderDataContainer(int id, LocalDate date, CustomerDataContainer customer,
                               Map<StoreDataContainer, Collection<ProductDataContainer>> products,
                               Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,boolean isDynamic,
-                              float costOfAllProducts, float deliveryCost, float totalCost)
+                              float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes)
     {
         this.id = id;
         this.date = date;
@@ -50,6 +51,7 @@ public class OrderDataContainer
         this.costOfAllProducts = costOfAllProducts;
         this.deliveryCost = deliveryCost;
         this.totalCost = totalCost;
+        this.amountOfProductsTypes = amountOfProductsTypes;
 
     }
 
@@ -88,4 +90,9 @@ public class OrderDataContainer
     public float getTotalCost() {
         return totalCost;
     }
+
+    public int getAmountOfProductsTypes() {
+        return amountOfProductsTypes;
+    }
+
 }

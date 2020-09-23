@@ -1,9 +1,6 @@
 package dataContainers;
 
 import javafx.beans.property.*;
-import javafx.collections.ObservableList;
-
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -88,11 +85,11 @@ public class DiscountDataContainer
 
     private void createIfYouBuyDescription()
     {
-        String purchaseFormStr = createPurchaseFormStr(discountProduct);
+        String purchaseFormStr = createPurchaseFormStr(discountProduct,amountForDiscount > 1? true:false);
         ifYouBuyDescription = String.format("%1$s %2$s of %3$s",amountForDiscount,purchaseFormStr,discountProduct.getName());
     }
 
-    private String createPurchaseFormStr(ProductDataContainer product)
+    private String createPurchaseFormStr(ProductDataContainer product,boolean isBiggerThanOne)
     {
         String purchaseFormStr = "";
         switch (product.getPurchaseForm())
@@ -102,7 +99,7 @@ public class DiscountDataContainer
                 break;
             case "QUANTITY":
                 purchaseFormStr = "unit";
-                if(amountForDiscount > 1)
+                if(isBiggerThanOne)
                 {
                     purchaseFormStr += "s";
                 }
@@ -118,7 +115,7 @@ public class DiscountDataContainer
 
         for(ProductDataContainer offerProduct : priceForOfferProduct.keySet())
         {
-            String purchaseFormStr = createPurchaseFormStr(offerProduct);
+            String purchaseFormStr = createPurchaseFormStr(offerProduct,amountForOfferProduct.get(offerProduct)>1?true:false);
             if(!offerProduct.equals(priceForOfferProduct.keySet().stream().findFirst().get()))
             {
                 thenYouGetDescription += discountTypeStr;

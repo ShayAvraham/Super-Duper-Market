@@ -112,7 +112,6 @@ public class MainAppController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }

@@ -343,6 +343,7 @@ public class PlaceOrderController
 
         tablesTabPane.getSelectionModel().select(productToOrderTab);
 
+        productsTableView.setPlaceholder(new Label());
         availableDiscountsTableView.setPlaceholder(new Label("No available discounts to display"));
     }
 
@@ -363,7 +364,7 @@ public class PlaceOrderController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Utilities.ShowErrorAlert(e.getMessage());
         }
     }
 
@@ -385,7 +386,7 @@ public class PlaceOrderController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Utilities.ShowErrorAlert(e.getMessage());
         }
     }
 
@@ -512,7 +513,7 @@ public class PlaceOrderController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            Utilities.ShowErrorAlert(e.getMessage());
         }
     }
 

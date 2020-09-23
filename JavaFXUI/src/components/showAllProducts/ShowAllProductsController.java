@@ -1,8 +1,10 @@
 package components.showAllProducts;
 
+import common.Utilities;
 import components.main.MainAppController;
 import dataContainers.ProductDataContainer;
 import engineLogic.SystemManager;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+
 
 public class ShowAllProductsController
 {
@@ -76,6 +79,7 @@ public class ShowAllProductsController
         purchaseForm.setCellValueFactory(new PropertyValueFactory<>("purchaseForm"));
         numberOfStoresSellThisProduct.setCellValueFactory(new PropertyValueFactory<>("numberOfStoresSellProduct"));
         averagePrice.setCellValueFactory(new PropertyValueFactory<>("averagePrice"));
-        totalNumberOfSales.setCellValueFactory(new PropertyValueFactory<>("numOfProductWasOrdered"));
+        totalNumberOfSales.setCellValueFactory(cellData -> new SimpleObjectProperty<>(Float.valueOf(
+                Utilities.DECIMAL_FORMAT.format(cellData.getValue().getNumOfProductWasOrdered()))));
     }
 }

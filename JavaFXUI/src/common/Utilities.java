@@ -12,6 +12,7 @@ import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -19,8 +20,13 @@ import java.util.function.UnaryOperator;
 
 public final class Utilities
 {
-    //    private final String LOAD_FILE_FAILURE_MESSAGE = "Failed to load the file, cause of failure:\n";
     private static final String POSITION_FORMAT = "(%1$s, %2$s)";
+    public static DecimalFormat DECIMAL_FORMAT;
+
+    static
+    {
+        DECIMAL_FORMAT = new DecimalFormat("#.##");
+    }
     private Utilities()
     {
     }

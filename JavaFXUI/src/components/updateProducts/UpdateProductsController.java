@@ -145,7 +145,6 @@ public class UpdateProductsController
         }
         catch (Exception e)
         {
-//            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }
@@ -201,7 +200,6 @@ public class UpdateProductsController
         }
         catch (Exception e)
         {
-//            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }
@@ -224,7 +222,6 @@ public class UpdateProductsController
         }
         catch (Exception e)
         {
-//            e.printStackTrace();
             Utilities.ShowErrorAlert(e.getMessage());
         }
     }

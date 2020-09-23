@@ -72,32 +72,16 @@ public class Store
         return ppk;
     }
 
-    public void getPPK(float ppk) {
-        this.ppk = ppk;
-    }
-
     public Point getPosition() {
         return position;
-    }
-
-    public void setPosition(Point position) {
-        this.position = position;
     }
 
     public Collection<Order> getStoreOrders() {
         return storeOrders;
     }
 
-    public void setStoreOrders(Collection<Order> storeOrders) {
-        this.storeOrders = storeOrders;
-    }
-
     public Collection<StoreProduct> getStoreProducts() {
         return storeProducts;
-    }
-
-    public void setStoreProducts(Collection<StoreProduct> storeProducts) {
-        this.storeProducts = storeProducts;
     }
 
     public Collection<Discount> getStoreDiscounts() {
@@ -130,19 +114,6 @@ public class Store
             }
         }
         return discount;
-    }
-
-
-    float getDistanceToCustomer(Point customerPosition)
-    {
-        float distanceToCustomer = Math.abs((float) position.distance(customerPosition));
-        return Float.valueOf(DECIMAL_FORMAT.format(distanceToCustomer));
-    }
-
-    float getDeliveryCostByLocation(Point customerPosition)
-    {
-        float deliveryCost = getDistanceToCustomer(customerPosition) * ppk;
-        return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
     }
 
     float getHowManyTimesProductSold(Product product)

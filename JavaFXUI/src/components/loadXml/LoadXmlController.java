@@ -101,8 +101,7 @@ public class LoadXmlController
         }
         catch (Exception e)
         {
-            e.printStackTrace();
-          //Utilities.ShowAlert(LOAD_FILE_FAILURE_MESSAGE + e.getMessage());
+          Utilities.ShowErrorAlert(LOAD_FILE_FAILURE_MESSAGE + e.getMessage());
         }
     }
 
@@ -157,7 +156,6 @@ public class LoadXmlController
         statusMessageLabel.textProperty().unbind();
         progressPercentLabel.textProperty().unbind();
         loadProgressBar.progressProperty().unbind();
-      //  mainAppController.setIsFileLoadedProperty(true);
     }
 
 

@@ -1,5 +1,4 @@
 package engineLogic;
-import dataContainers.*;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -89,20 +88,92 @@ public class Order
 
     public float getProductAmountInOrder(Product product)
     {
-        float productAmountInOrder = 0;
+        float productAmountInOrder = getProductAmount(product);
+        productAmountInOrder += getProductAmountInOrderDiscounts(product);
+        return productAmountInOrder;
+    }
 
+    private float getProductAmount(Product product)
+    {
+        float amount = 0;
         for(Store store : products.keySet())
         {
             for (OrderProduct orderProduct : products.get(store))
             {
                 if (orderProduct.getId() == product.getId())
                 {
-                    productAmountInOrder = orderProduct.getAmount();
+                    amount = orderProduct.getAmount();
                     break;
                 }
             }
         }
-        return productAmountInOrder;
+        return  amount;
+    }
+
+    private float getProductAmountInOrderDiscounts(Product product)
+    {
+        float amount = 0;
+        for(Store store : discounts.keySet())
+        {
+            for (Discount discount : discounts.get(store))
+            {
+                amount += discount.getOfferProductAmount(product);
+            }
+        }
+
+        return amount;
+    }
+
+    public int getProductTypesAmountInOrder()
+    {
+        int numOfProductsTypes = getProductTypesAmount();
+        numOfProductsTypes += getProductTypesAmountInOrderDiscounts();
+        return numOfProductsTypes;
+    }
+
+    private int getProductTypesAmount()
+    {
+        int amount = 0;
+        for(Store store : products.keySet())
+        {
+            amount += products.get(store).size();
+        }
+        return  amount;
+    }
+
+    private int getProductTypesAmountInOrderDiscounts()
+    {
+        int amount = 0;
+        ArrayList productsId = getProductsIdList();
+        for(Store store : discounts.keySet())
+        {
+            for (Discount discount : discounts.get(store))
+            {
+                for (OfferProduct offerProduct : discount.getProductsToOffer())
+                {
+                    if(!productsId.contains(offerProduct.getId()))
+                    {
+                        productsId.add(offerProduct.getId());
+                        amount++;
+                    }
+                }
+            }
+        }
+
+        return amount;
+    }
+
+    private ArrayList<Integer> getProductsIdList()
+    {
+        ArrayList<Integer> productsId = new ArrayList<>();
+        for(Store store : products.keySet())
+        {
+            for (OrderProduct orderProduct : products.get(store))
+            {
+                productsId.add(orderProduct.getId());
+            }
+        }
+        return productsId;
     }
 
 

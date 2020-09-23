@@ -1,8 +1,6 @@
 package engineLogic;
 
-import jaxb.generated.Location;
 import jaxb.generated.SDMCustomer;
-
 import java.awt.*;
 import java.util.Objects;
 

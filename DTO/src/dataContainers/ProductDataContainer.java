@@ -31,7 +31,8 @@ public class ProductDataContainer
         this.numOfProductWasOrdered = numOfProductWasOrdered;
     }
 
-    public ProductDataContainer(int id, String name, String purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore) {
+    public ProductDataContainer(int id, String name, String purchaseForm, Map<Integer, Integer> pricePerStore, Map<Integer, Float> soldAmountPerStore)
+    {
         this.id = id;
         this.name = name;
         this.purchaseForm = purchaseForm;
@@ -39,7 +40,7 @@ public class ProductDataContainer
         this.soldAmountPerStore = soldAmountPerStore;
     }
 
-    //product in order
+
     public ProductDataContainer(ProductDataContainer product , float amount)
     {
         this.id = product.getId();

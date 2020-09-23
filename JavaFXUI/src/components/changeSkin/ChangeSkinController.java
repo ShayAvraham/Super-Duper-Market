@@ -20,7 +20,7 @@ public class ChangeSkinController
     private final String DARK = "Dark";
     private final String LIGHT = "Light";
 
-    private ScrollPane  mainAppPane;
+    private ScrollPane mainAppPane;
     private ObservableList<String> skinTypeValue = FXCollections.observableArrayList(PURPLE, DARK, LIGHT);
 
     private SimpleListProperty<String> skinTypesProperty;
@@ -45,7 +45,6 @@ public class ChangeSkinController
     {
         this.mainAppPane = mainAppPane;
     }
-
     public AnchorPane getRootPane()
     {
         return rootPane;
