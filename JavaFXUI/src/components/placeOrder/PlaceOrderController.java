@@ -717,7 +717,7 @@ public class PlaceOrderController
                 costOfAllProducts + deliveryCost);
     }
 
-
+    /* added lines 725-728 */
     private void showOrderDetails()
     {
         displayOrderDetailsPane.getChildren().clear();

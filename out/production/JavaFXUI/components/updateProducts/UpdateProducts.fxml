@@ -11,52 +11,52 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="components.updateProducts.UpdateProductsController">
-   <children>
-      <GridPane layoutY="26.0" prefHeight="642.0" prefWidth="968.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="0.0" prefWidth="1.66668701171875" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="417.0" minWidth="10.0" prefWidth="179.66665649414062" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="524.0" minWidth="10.0" prefWidth="302.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="524.0" minWidth="10.0" prefWidth="139.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="524.0" minWidth="10.0" prefWidth="305.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="215.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="245.0" minHeight="10.0" prefHeight="123.66667175292969" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="237.0" minHeight="10.0" prefHeight="154.33334350585938" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="228.33334350585938" minHeight="10.0" prefHeight="144.66665649414062" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="218.66665649414062" minHeight="10.0" prefHeight="147.33334350585938" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <ComboBox fx:id="storeComboBox" onAction="#onStoreSelected" prefHeight="31.0" prefWidth="211.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <ComboBox fx:id="productComboBox" prefHeight="31.0" prefWidth="212.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Label contentDisplay="CENTER" prefHeight="42.0" prefWidth="133.0" text="Choose store" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label contentDisplay="CENTER" prefHeight="42.0" prefWidth="140.0" text="Choose product" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <Label fx:id="priceLabel" contentDisplay="CENTER" prefHeight="41.0" prefWidth="122.0" text="Set new price" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Spinner fx:id="priceSpinner" editable="true" prefHeight="31.0" prefWidth="109.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets right="10.0" />
-               </GridPane.margin></Spinner>
-            <Button fx:id="submitButton" mnemonicParsing="false" onAction="#updateProduct" prefHeight="34.0" prefWidth="69.0" text="Submit" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="TOP">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Button>
-            <Label contentDisplay="CENTER" prefHeight="46.0" prefWidth="205.0" text="Choose Update Option" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <GridPane.margin>
-                  <Insets left="10.0" />
-               </GridPane.margin>
-            </Label>
-            <ComboBox fx:id="updateOptionComboBox" onAction="#onUpdateOptionSelected" prefHeight="31.0" prefWidth="214.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-         </children>
-      </GridPane>
-   </children>
+    <children>
+        <GridPane layoutY="26.0" prefHeight="642.0" prefWidth="968.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="0.0" prefWidth="1.66668701171875" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="417.0" minWidth="10.0" prefWidth="179.66665649414062" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="524.0" minWidth="10.0" prefWidth="288.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="524.0" minWidth="10.0" prefWidth="150.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="524.0" minWidth="10.0" prefWidth="333.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="215.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="245.0" minHeight="10.0" prefHeight="123.66667175292969" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="237.0" minHeight="10.0" prefHeight="154.33334350585938" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="228.33334350585938" minHeight="10.0" prefHeight="144.66665649414062" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="218.66665649414062" minHeight="10.0" prefHeight="147.33334350585938" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <ComboBox fx:id="storeComboBox" onAction="#onStoreSelected" prefHeight="31.0" prefWidth="211.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                <ComboBox fx:id="productComboBox" prefHeight="31.0" prefWidth="212.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                <Label contentDisplay="CENTER" prefHeight="42.0" prefWidth="133.0" text="Choose store" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label contentDisplay="CENTER" prefHeight="42.0" prefWidth="140.0" text="Choose product" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label fx:id="priceLabel" contentDisplay="CENTER" prefHeight="41.0" prefWidth="122.0" text="Set new price" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                <Spinner fx:id="priceSpinner" editable="true" prefHeight="31.0" prefWidth="109.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets right="10.0" />
+                    </GridPane.margin></Spinner>
+                <Button fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#updateProduct" prefHeight="34.0" prefWidth="69.0" text="Submit" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </Button>
+                <Label contentDisplay="CENTER" prefHeight="46.0" prefWidth="205.0" text="Choose Update Option" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <GridPane.margin>
+                        <Insets left="10.0" />
+                    </GridPane.margin>
+                </Label>
+                <ComboBox fx:id="updateOptionComboBox" onAction="#onUpdateOptionSelected" prefHeight="31.0" prefWidth="214.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            </children>
+        </GridPane>
+    </children>
 </AnchorPane>

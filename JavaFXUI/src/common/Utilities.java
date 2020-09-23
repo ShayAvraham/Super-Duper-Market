@@ -100,7 +100,8 @@ public final class Utilities
             public String toString(OrderDataContainer object)
             {
                 return "ID: " + object.getId() + " | " +
-                        "Date: " + object.getDate();
+                        "Date: " + object.getDate() + " | " +
+                        "Customer: " + object.getCustomer().getId() + ". " + object.getCustomer().getName();
             }
 
             @Override

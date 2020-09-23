@@ -32,7 +32,7 @@
 .button
 {
     -fx-background-color: #8d3cd9;
-    -fx-background-radius: 30 30 30 30;
+    -fx-background-radius: 10 10 10 10;
 }
 
 .button:hover
@@ -118,11 +118,10 @@
     -fx-background-color: #413cbf;
 }
 
-/* Scroll bar */
-.scroll-bar:horizontal .thumb,
-.scroll-bar:vertical .thumb
+/* Scroll pane */
+.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb
 {
-    -fx-background-color:derive( #6622CC,90%);
+    -fx-background-color:derive( #413cbf,90%);
     -fx-background-insets: 2, 0, 0;
     -fx-background-radius: 2em;
 }
@@ -228,7 +227,14 @@
     -fx-border-color: #1783CC;
 }
 
+/* Spinner */
 .spinner .text-field
+{
+    -fx-background-color: #5c37b1;
+}
+
+/* Text field */
+.text-field
 {
     -fx-background-color: #5c37b1;
 }

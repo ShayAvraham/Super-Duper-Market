@@ -1,6 +1,6 @@
 *
 {
-    -fx-font-family: "Microsoft Sans Serif";
+    -fx-font-family: "Droid Sans Mono Slashed";
     -fx-font-size: 12px;
     -fx-text-fill: ghostwhite;
 }
@@ -22,8 +22,13 @@
 
 #superDuperMarketLabel
 {
+    -fx-font-size: 13px;
     -fx-font-weight: bold;
-    -fx-font-size: 20px;
+}
+
+#welcomeLabel
+{
+    -fx-font-size: 30px;
 }
 
 /* Button */
@@ -116,11 +121,10 @@
     -fx-background-color: #37363d;
 }
 
-/* Scroll bar */
-.scroll-bar:horizontal .thumb,
-.scroll-bar:vertical .thumb
+/* Scroll pane */
+.scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb
 {
-    -fx-background-color:derive( #282634,90%);
+    -fx-background-color:derive( #050017,90%);
     -fx-background-insets: 2, 0, 0;
     -fx-background-radius: 2em;
 }
@@ -227,7 +231,14 @@
     -fx-border-color: #19415c;
 }
 
+/* Spinner */
 .spinner .text-field
+{
+    -fx-background-color: #19415c;
+}
+
+/* Text field */
+.text-field
 {
     -fx-background-color: #19415c;
 }

@@ -83,6 +83,9 @@ public class ShowAllStoresController
     private TableView<OrderDataContainer> storeOrdersView;
 
     @FXML
+    private TableColumn<OrderDataContainer, Integer> id;
+
+    @FXML
     private TableColumn<OrderDataContainer, Date> date;
 
     @FXML
@@ -210,6 +213,7 @@ public class ShowAllStoresController
 
     private void setOrdersTableColumnsProperties()
     {
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
         totalNumOfProducts.setCellValueFactory(new PropertyValueFactory<>("amountOfProductsTypes"));
         totalProductsCost.setCellValueFactory(new PropertyValueFactory<>("costOfAllProducts"));

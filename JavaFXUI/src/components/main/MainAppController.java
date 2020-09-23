@@ -62,6 +62,9 @@ public class MainAppController
     private Label superDuperMarketLabel;
 
     @FXML
+    private Label welcomeLabel;
+
+    @FXML
     private Button loadXmlButton;
 
     @FXML
