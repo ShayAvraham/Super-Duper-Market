@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/DTO/DTO.iml" filepath="$PROJECT_DIR$/DTO/DTO.iml" />
       <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
       <module fileurl="file://$PROJECT_DIR$/JavaFXUI/JavaFXUI.iml" filepath="$PROJECT_DIR$/JavaFXUI/JavaFXUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SDM/SDM.iml" filepath="$PROJECT_DIR$/SDM/SDM.iml" />
       <module fileurl="file://$PROJECT_DIR$/UI/UI.iml" filepath="$PROJECT_DIR$/UI/UI.iml" />
     </modules>
   </component>

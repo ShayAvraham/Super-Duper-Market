@@ -1,4 +1,4 @@
-import components.main.MainAppController;
+//import components.main.MainAppController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,15 +16,15 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        FXMLLoader loader = new FXMLLoader();
-        URL mainFXML = getClass().getResource("/components/main/MainApp.fxml");
-        loader.setLocation(mainFXML);
-        Parent root = loader.load();
-        MainAppController mainAppController = loader.getController();
-        mainAppController.setMainStage(primaryStage);
-        primaryStage.setTitle("Super Duper Market");
-        Scene scene = new Scene(root, 1050, 620);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+//        FXMLLoader loader = new FXMLLoader();
+//        URL mainFXML = getClass().getResource("/components/main/MainApp.fxml");
+//        loader.setLocation(mainFXML);
+//        Parent root = loader.load();
+//        MainAppController mainAppController = loader.getController();
+//        mainAppController.setMainStage(primaryStage);
+//        primaryStage.setTitle("Super Duper Market");
+//        Scene scene = new Scene(root, 1050, 620);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
 }
