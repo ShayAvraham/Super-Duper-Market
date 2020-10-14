@@ -29,14 +29,13 @@ public class LoginServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        System.out.println(request.getReader().lines().collect(Collectors.joining()));
+
         response.setContentType("text/plain;charset=UTF-8");
         UserDataContainer userFromSession = SessionUtils.getUser(request);
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
         if (userFromSession == null)
         {
-            Gson gson = new Gson();
-            UserDataContainer user = gson.fromJson(request.getReader(), UserDataContainer.class);
+            UserDataContainer user = new UserDataContainer(request.getParameter("username"),request.getParameter("userrole"));
             synchronized (this)
             {
                 try

@@ -1,5 +1,6 @@
 package managers;
 
+import builders.UserDataContainerBuilder;
 import dataContainers.ProductDataContainer;
 import dataContainers.RegionDataContainer;
 import dataContainers.StoreDataContainer;
@@ -7,6 +8,7 @@ import dataContainers.UserDataContainer;
 import builders.RegionDataContainerBuilder;
 import engineLogic.Owner;
 import engineLogic.Region;
+import engineLogic.User;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
@@ -43,15 +45,16 @@ public class SystemManager
         regionsData = new HashMap<>();
     }
 
-    /********************************************** Load XML Logic ****************************************/
-    public void AddNewUser(UserDataContainer user)
+    /********************************************** Add New User Logic ****************************************/
+    public synchronized void AddNewUser(UserDataContainer userData)
     {
-        //dataManager.addNewUser(user);
+        User user = dataManager.addNewUser(userData);
+        usersData.put(user.getId(), UserDataContainerBuilder.createUserData(user));
     }
 
     /********************************************** Load XML Logic ****************************************/
 
-    public void loadDataFromXMLFile(int ownerID, String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
+    public void LoadDataFromXMLFile(int ownerID, String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         Region newRegion = dataManager.deserializeXMLToRegion(ownerID,xmlFilePath);
         regionsData.put(newRegion.getName(),RegionDataContainerBuilder.createRegionData(usersData.get(ownerID).getName(),newRegion));

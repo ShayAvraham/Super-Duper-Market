@@ -2,6 +2,8 @@ package dataContainers;
 
 import javax.swing.text.Position;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class UserDataContainer
 {
@@ -11,6 +13,8 @@ public class UserDataContainer
     private int numOfOrders;
     private float orderCostAvg;
     private float deliveryCostAvg;
+    private Collection<TransactionDataContainer> transactions;
+    private float balance;
 
 
     /** new user form client to server **/
@@ -22,10 +26,13 @@ public class UserDataContainer
         this.numOfOrders = 0;
         this.orderCostAvg = 0;
         this.deliveryCostAvg = 0;
+        this.transactions = new ArrayList<>();
+        this.balance = 0;
     }
 
     /** from exist user **/
-    public UserDataContainer(int id, String name,String role,int numOfOrders, float orderCostAvg, float deliveryCostAvg)
+    public UserDataContainer(int id, String name,String role,int numOfOrders, float orderCostAvg,
+                             float deliveryCostAvg,float balance,Collection<TransactionDataContainer> transactions)
     {
         this.id = id;
         this.name = name;
@@ -33,6 +40,9 @@ public class UserDataContainer
         this.numOfOrders = numOfOrders;
         this.orderCostAvg = orderCostAvg;
         this.deliveryCostAvg = deliveryCostAvg;
+        this.transactions = transactions;
+        this.balance = balance;
+
     }
 
     public int getId() {
@@ -53,6 +63,18 @@ public class UserDataContainer
 
     public float getDeliveryCostAvg() {
         return deliveryCostAvg;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public Collection<TransactionDataContainer> getTransactions() {
+        return transactions;
+    }
+
+    public float getBalance() {
+        return balance;
     }
 
     @Override

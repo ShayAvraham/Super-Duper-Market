@@ -5,9 +5,9 @@ import java.util.*;
 public class Owner extends User
 {
     private Map<String,Region> regions;
-    public Owner (int id, String name)
+    public Owner (String name,float balance, Collection<Transaction>transactions)
     {
-        super(id,name);
+        super(name,balance,transactions);
         regions = new HashMap<>();
     }
 

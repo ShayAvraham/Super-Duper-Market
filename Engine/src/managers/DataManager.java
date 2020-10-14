@@ -1,8 +1,7 @@
 package managers;
 
-import engineLogic.Owner;
-import engineLogic.Region;
-import engineLogic.User;
+import dataContainers.UserDataContainer;
+import engineLogic.*;
 import exceptions.DuplicateValuesException;
 import jaxb.generated.SuperDuperMarketDescriptor;
 
@@ -68,17 +67,38 @@ public class DataManager
         }
     }
 
+    /********************************************** Add New User  ***************************************/
+
+    public User addNewUser(UserDataContainer userData)
+    {
+        validateUser(userData);
+        User newUser = userData.getRole().equals("customer")?
+                new Customer(userData.getName(),
+                        userData.getBalance(),
+                        new ArrayList<Transaction>()):
+                new Owner(userData.getName(),
+                        userData.getBalance(),
+                        new ArrayList<Transaction>());
+        allUsers.put(newUser.getId(),newUser);
+        return newUser;
+    }
+
+    private void validateUser(UserDataContainer userData)
+    {
+        if(allUsers.size()!=0)
+        {
+            for (User user : allUsers.values())
+            {
+                if (user.getName().equals(userData.getName()))
+                {
+                    throw new DuplicateValuesException("user", user.getName());
+                }
+            }
+        }
+    }
+
 //    private final Set<String> usersSet;
 //
-//    public UserManager()
-//    {
-//        usersSet = new HashSet<>();
-//    }
-//
-//    public synchronized void addUser(String username)
-//    {
-//        usersSet.add(username);
-//    }
 //
 //    public synchronized void removeUser(String username)
 //    {
@@ -90,8 +110,5 @@ public class DataManager
 //        return Collections.unmodifiableSet(usersSet);
 //    }
 //
-//    public boolean isUserExists(String username)
-//    {
-//        return usersSet.contains(username);
-//    }
+
 }

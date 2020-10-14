@@ -1,5 +1,6 @@
 package engineLogic;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,9 +8,9 @@ public class Customer extends User
 {
     private Set<Order> orders;
 
-    public Customer (int id, String name)
+    public Customer (String name,float balance, Collection<Transaction> transactions)
     {
-        super(id,name);
+        super(name,balance,transactions);
         orders = new HashSet<>();
     }
 
