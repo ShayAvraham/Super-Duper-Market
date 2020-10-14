@@ -1,14 +1,18 @@
 package servlets;
 
-import users.UserManager;
+import com.google.gson.Gson;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import dataContainers.UserDataContainer;
+import exceptions.DuplicateValuesException;
+import managers.SystemManager;
 import utilities.ServletUtils;
 import utilities.SessionUtils;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 
 public class LoginServlet extends HttpServlet
@@ -25,36 +29,27 @@ public class LoginServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
+        System.out.println(request.getReader().lines().collect(Collectors.joining()));
         response.setContentType("text/plain;charset=UTF-8");
-        String usernameFromSession = SessionUtils.getUsername(request);
-        UserManager userManager = ServletUtils.getUserManager(getServletContext());
-        if (usernameFromSession == null)
+        UserDataContainer userFromSession = SessionUtils.getUser(request);
+        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
+        if (userFromSession == null)
         {
-            String usernameFromParameter = request.getParameter("username");
-            if (usernameFromParameter == null || usernameFromParameter.isEmpty())
+            Gson gson = new Gson();
+            UserDataContainer user = gson.fromJson(request.getReader(), UserDataContainer.class);
+            synchronized (this)
             {
-                response.setStatus(409);
-                response.getOutputStream().println("/index.html");
-            }
-            else
-            {
-                usernameFromParameter = usernameFromParameter.trim();
-                synchronized (this)
+                try
                 {
-                    if (userManager.isUserExists(usernameFromParameter))
-                    {
-                        String errorMessage = "Username " + usernameFromParameter + " already exists. Please enter a different username.";
-                        response.setStatus(401);
-                        response.getOutputStream().println(errorMessage);
-                    }
-                    else
-                    {
-                        userManager.addUser(usernameFromParameter);
-                        request.getSession(true).setAttribute("username", usernameFromParameter);
-                        System.out.println("On login, request URI is: " + request.getRequestURI());
-                        response.setStatus(200);
-                        response.getOutputStream().println("pages/dashboard/dashboard.html");
-                    }
+                    systemManager.AddNewUser(user);
+                    request.getSession(true).setAttribute("user", user);
+                    response.setStatus(200);
+                    response.getOutputStream().println("pages/dashboard/dashboard.html");
+                }
+                catch (DuplicateValuesException e)
+                {
+                    response.setStatus(401);
+                    response.getOutputStream().println(e.getMessage());
                 }
             }
         }

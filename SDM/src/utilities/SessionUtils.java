@@ -1,19 +1,19 @@
 package utilities;
 
-import com.google.gson.Gson;
+import dataContainers.UserDataContainer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class SessionUtils
 {
-    private static final String USERNAME = "username";
+    private static final String USER = "user";
 
-    public static String getUsername (HttpServletRequest request)
+    public static UserDataContainer getUser(HttpServletRequest request)
     {
         HttpSession session = request.getSession(false);
-        Object sessionAttribute = session != null ? session.getAttribute(USERNAME) : null;
-        return sessionAttribute != null ? sessionAttribute.toString() : null;
+        Object sessionAttribute = session != null ? session.getAttribute(USER) : null;
+        return sessionAttribute != null ? (UserDataContainer) sessionAttribute : null;
     }
 
     public static void clearSession (HttpServletRequest request) {

@@ -14,8 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DataManager
 {
@@ -68,4 +67,31 @@ public class DataManager
             throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
         }
     }
+
+//    private final Set<String> usersSet;
+//
+//    public UserManager()
+//    {
+//        usersSet = new HashSet<>();
+//    }
+//
+//    public synchronized void addUser(String username)
+//    {
+//        usersSet.add(username);
+//    }
+//
+//    public synchronized void removeUser(String username)
+//    {
+//        usersSet.remove(username);
+//    }
+//
+//    public synchronized Set<String> getUsers()
+//    {
+//        return Collections.unmodifiableSet(usersSet);
+//    }
+//
+//    public boolean isUserExists(String username)
+//    {
+//        return usersSet.contains(username);
+//    }
 }

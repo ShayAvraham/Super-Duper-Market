@@ -1,6 +1,7 @@
 $(function() { // onload...do
     //add a function to the submit event
     $("#loginForm").submit(function() {
+        console.log($(this).serialize());
         $.ajax({
             data: $(this).serialize(),
             url: this.action,

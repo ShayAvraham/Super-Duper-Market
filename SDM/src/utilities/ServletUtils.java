@@ -1,25 +1,21 @@
 package utilities;
 
-import users.UserManager;
-
+import managers.SystemManager;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
 
 public class ServletUtils
 {
-    private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
+    private static final String USER_MANAGER_ATTRIBUTE_NAME = "systemManager";
     private static final Object userManagerLock = new Object();
 
 
-    public static UserManager getUserManager(ServletContext servletContext)
+    public static SystemManager getSystemManager(ServletContext servletContext)
     {
-
         synchronized (userManagerLock) {
             if (servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME) == null) {
-                servletContext.setAttribute(USER_MANAGER_ATTRIBUTE_NAME, new UserManager());
+                servletContext.setAttribute(USER_MANAGER_ATTRIBUTE_NAME, new SystemManager());
             }
         }
-        return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
+        return (SystemManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
     }
 }
