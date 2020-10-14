@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Online Chat</title>
+
+    <!--    <script src="../../common/jquery-2.0.3.min.js"></script>-->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <link rel="stylesheet" href="../../common/bootstrap.min.css">
+    <script src="index.js"></script>
+
 </head>
 <body>
-
+<div class="container">
+    <h1>Welcome to Super Duper Market</h1>
+    <br/>
+    <h2>Please enter a unique user name:</h2>
+    <form id="loginForm" method="GET" action="loginShortResponse">
+        <input type="text" name="username" class=""/>
+        <input type="submit" value="Login"/>
+    </form>
+    <div id="error-placeholder" class="alert-danger" role="alert"></div>
+</div>
 </body>
 </html>
