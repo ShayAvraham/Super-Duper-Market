@@ -1,49 +1,41 @@
 package engineLogic;
 
-import jaxb.generated.SDMCustomer;
-import java.awt.*;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Customer
+public class Customer extends User
 {
-    private int id;
-    private String name;
-    private Point position;
+    private Set<Order> orders;
 
-    public Customer (SDMCustomer customer,Point position)
+    public Customer (int id, String name)
     {
-        this.id = customer.getId();
-        this.name = customer.getName();
-        this.position = position;
+        super(id,name);
+        orders = new HashSet<>();
     }
 
-    public int getId()
+    public double getCustomerOrderCostAvg()
     {
-        return id;
+        return orders.stream()
+                .mapToDouble(Order::getCostOfAllProducts)
+                .average()
+                .orElse(0.0);
     }
 
-    public String getName()
+    public double getCustomerDeliveryCostAvg()
     {
-        return name;
+        return orders.stream()
+                .mapToDouble(Order::getDeliveryCost)
+                .average()
+                .orElse(0.0);
     }
 
-    public Point getPosition()
+    public Set<Order> getOrders()
     {
-        return position;
+        return orders;
     }
 
-    @Override
-    public boolean equals(Object o)
+    public void addOrder(Order order)
     {
-        if (this == o) return true;
-        if (!(o instanceof Customer)) return false;
-        Customer customer = (Customer) o;
-        return getId() == customer.getId();
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(getId());
+        orders.add(order);
     }
 }

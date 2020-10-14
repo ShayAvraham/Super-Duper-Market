@@ -2,13 +2,12 @@ package dataContainers;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 
 public class OrderDataContainer
 {
     private int id;
-    private CustomerDataContainer customer;
+    private UserDataContainer customer;
     private LocalDate date;
     private Map<StoreDataContainer, Collection<ProductDataContainer>> products;
     private Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts;
@@ -20,7 +19,7 @@ public class OrderDataContainer
 
     /** Create new Order **/
 
-    public OrderDataContainer(LocalDate date,CustomerDataContainer customer ,Map<StoreDataContainer,
+    public OrderDataContainer(LocalDate date, UserDataContainer customer , Map<StoreDataContainer,
             Collection<ProductDataContainer>> products, Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,
                               boolean isDynamic, float costOfAllProducts, float deliveryCost, float totalCost)
     {
@@ -37,7 +36,7 @@ public class OrderDataContainer
 
     /** Create Order From Data **/
 
-    public OrderDataContainer(int id, LocalDate date, CustomerDataContainer customer,
+    public OrderDataContainer(int id, LocalDate date, UserDataContainer customer,
                               Map<StoreDataContainer, Collection<ProductDataContainer>> products,
                               Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,boolean isDynamic,
                               float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes)
@@ -55,11 +54,31 @@ public class OrderDataContainer
 
     }
 
+
+    /** New **/
+
+    public OrderDataContainer(int id, LocalDate date,
+                              Map<StoreDataContainer, Collection<ProductDataContainer>> products,
+                              Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,boolean isDynamic,
+                              float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes)
+    {
+        this.id = id;
+        this.date = date;
+        this.products = products;
+        this.discounts = discounts;
+        this.isDynamic = isDynamic;
+        this.costOfAllProducts = costOfAllProducts;
+        this.deliveryCost = deliveryCost;
+        this.totalCost = totalCost;
+        this.amountOfProductsTypes = amountOfProductsTypes;
+
+    }
+
     public int getId() {
         return id;
     }
 
-    public CustomerDataContainer getCustomer() {
+    public UserDataContainer getCustomer() {
         return customer;
     }
 

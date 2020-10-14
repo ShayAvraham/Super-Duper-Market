@@ -1,15 +1,13 @@
 package engineLogic;
 
 import exceptions.DiscountRemoveException;
-import jaxb.generated.SDMDiscounts;
 import jaxb.generated.SDMStore;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.lang.Math.round;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 public class Store
 {
@@ -28,7 +26,7 @@ public class Store
         DECIMAL_FORMAT = new DecimalFormat("#.##");
     }
 
-    public Store(SDMStore store,Point position, Collection<StoreProduct> storeProducts,Collection<Discount>storeDiscounts)
+    public Store(SDMStore store, Point position, Collection<StoreProduct> storeProducts, Collection<Discount>storeDiscounts)
     {
         this.id = store.getId();
         this.name = store.getName();
@@ -116,7 +114,7 @@ public class Store
         return discount;
     }
 
-    float getHowManyTimesProductSold(Product product)
+    public float getHowManyTimesProductSold(Product product)
     {
         float howManyTimesProductSold = 0;
 
@@ -179,6 +177,17 @@ public class Store
     public void updateProductPrice(int productId, int newPrice)
     {
         getProductById(productId).setPrice(newPrice);
+    }
+
+    public float getStoreTotalIncomeFromDeliveries()
+    {
+        float totalIncomeFromDeliveries = 0;
+
+        for (Order order: storeOrders)
+        {
+            totalIncomeFromDeliveries += order.getDeliveryCost();
+        }
+        return totalIncomeFromDeliveries;
     }
 
     @Override

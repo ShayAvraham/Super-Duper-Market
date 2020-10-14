@@ -5,70 +5,52 @@ import exceptions.StoreDoesNotSellProductException;
 import jaxb.generated.*;
 
 import javax.management.InstanceNotFoundException;
-import javax.swing.text.Position;
 import java.awt.*;
 import java.util.*;
 
-public class SystemData
+public class Region
 {
     private final int MIN_BOUND = 1;
     private final int MAX_BOUND = 50;
-    private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "The %1$s with i.d %2$s position is out of the bounds of [%3$s,%4$s]";
-    private final String POSITION_ALREADY_TAKEN_MSG = "The position (%1$s,%2$s) already taken by another entities";
+    private final String POSITION_VALUES_OUT_OF_BOUNDS_MSG = "The store with i.d %1$s position is out of the bounds of [%2$s,%3$s]";
+    private final String POSITION_ALREADY_TAKEN_MSG = "The position (%1$s,%2$s) already taken by another store";
     private final String NOT_ALL_PRODUCTS_IN_STORE = "The products with this i.d are not sold in any store: %1$s.";
     private final String PRODUCT_NOT_EXIST_MESSAGE = "Unable to sold the product with this id: %1$s," +
             " this product not defined in the system.";
 
+    private String name;
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
-    private Map<Integer,Customer> customers;
-    private Set<Point> objectPositions;
-    private Set<Order> orders;
-    private Set<Product>productsOnSale;
+    private int numOfOrders;
+    private float orderCost;
 
-    public SystemData(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
+    public Region(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
     {
-        objectPositions = new HashSet<>();
-        customers = new HashMap<>();
-        products = new HashMap<>();
-        productsOnSale = new HashSet<>();
-        stores = new HashMap<>();
-        orders = new HashSet<>();
-
-        createCustomersFromSDMCustomers(marketDescription.getSDMCustomers());
+        this.name = marketDescription.getSDMZone().getName();
         createProductsFromSDMItems(marketDescription.getSDMItems());
         createStoresFromSDMStores(marketDescription.getSDMStores());
-        checkIfAllProductsInStores();
+        numOfOrders = 0;
+        orderCost = 0;
     }
 
-    private void createCustomersFromSDMCustomers(SDMCustomers generatedCustomers)
+    public String getName()
     {
-        for(SDMCustomer customer: generatedCustomers.getSDMCustomer())
-        {
-            Point position = createPositionFromLocation(customer.getLocation(),"customer",customer.getId());
-            if(customers.putIfAbsent(customer.getId(),new Customer(customer,position)) != null)
-            {
-                throw new DuplicateValuesException("customer", customer.getId());
-            }
-        }
+        return name;
     }
 
-    private Point createPositionFromLocation(Location location,String objectType,int id)
+    public int getNumOfOrders()
     {
-        Point position = new Point(location.getX(),location.getY());
-        if((position.getX() > MAX_BOUND)||(position.getX() < MIN_BOUND)||(position.getY() > MAX_BOUND)||(position.getY() < MIN_BOUND))
-        {
-            throw new IndexOutOfBoundsException(String.format(POSITION_VALUES_OUT_OF_BOUNDS_MSG,objectType,id,MIN_BOUND,MAX_BOUND));
-        }
-        if(!objectPositions.add(position))
-        {
-            throw new DuplicateValuesException(String.format(POSITION_ALREADY_TAKEN_MSG,position.getX(),position.getY()));
-        }
-        return position;
+        return numOfOrders;
+    }
+
+    public float getOrderCost()
+    {
+        return orderCost;
     }
 
     private void createProductsFromSDMItems(SDMItems generatedItems)
     {
+        products = new HashMap<>();
         for(SDMItem item: generatedItems.getSDMItem())
         {
             if(products.putIfAbsent(item.getId(),new Product(item)) != null)
@@ -80,10 +62,14 @@ public class SystemData
 
     private void createStoresFromSDMStores(SDMStores generatedStores) throws InstanceNotFoundException
     {
+        stores = new HashMap<>();
+        HashSet<Point> storePositions = new HashSet<>();
+        HashSet<Product> productsOnSale = new HashSet<>();
+
         for(SDMStore store: generatedStores.getSDMStore())
         {
-            Point position = createPositionFromLocation(store.getLocation(),"store",store.getId());
-            Map<Integer,StoreProduct> storeProducts = createStoreProducts(store.getSDMPrices(),store.getId());
+            Point position = createPositionFromLocation(store,storePositions);
+            Map<Integer,StoreProduct> storeProducts = createStoreProducts(store.getSDMPrices(),store.getId(),productsOnSale);
             Collection<Discount> storeDiscounts = createStoreDiscounts(store.getSDMDiscounts(),storeProducts,store.getId());
 
             if(stores.putIfAbsent(store.getId(), new Store(store, position, storeProducts.values(),storeDiscounts)) != null)
@@ -91,10 +77,26 @@ public class SystemData
                 throw new DuplicateValuesException("store", store.getId());
             }
         }
+        checkIfAllProductsInStores(productsOnSale);
     }
 
-    private Map<Integer,StoreProduct> createStoreProducts(SDMPrices generatedPrices,int storeId) throws InstanceNotFoundException
+    private Point createPositionFromLocation(SDMStore store, HashSet<Point> storePositions)
     {
+        Point position = new Point(store.getLocation().getX(),store.getLocation().getY());
+        if((position.getX() > MAX_BOUND)||(position.getX() < MIN_BOUND)||(position.getY() > MAX_BOUND)||(position.getY() < MIN_BOUND))
+        {
+            throw new IndexOutOfBoundsException(String.format(POSITION_VALUES_OUT_OF_BOUNDS_MSG,store.getId(),MIN_BOUND,MAX_BOUND));
+        }
+        if(!storePositions.add(position))
+        {
+            throw new DuplicateValuesException(String.format(POSITION_ALREADY_TAKEN_MSG, position.getX(), position.getY()));
+        }
+        return position;
+    }
+
+    private Map<Integer,StoreProduct> createStoreProducts(SDMPrices generatedPrices,int storeId,HashSet<Product> productsOnSale) throws InstanceNotFoundException
+    {
+
         Map<Integer,StoreProduct> storeProducts = new HashMap<>();
         for (SDMSell itemInStore : generatedPrices.getSDMSell())
         {
@@ -165,7 +167,7 @@ public class SystemData
         }
     }
 
-    private void checkIfAllProductsInStores()
+    private void checkIfAllProductsInStores(HashSet<Product> productsOnSale)
     {
         if(productsOnSale.size()!=products.size())
         {
@@ -181,12 +183,58 @@ public class SystemData
         }
     }
 
-    public void addNewOrder(Order newOrder, Map <Integer,Order> newSubOrders)
+    public int getHowManyStoresSellProduct(Product product)
     {
-        orders.add(newOrder);
+        int howManyStoresSellProduct = 0;
+
+        for (Store store: stores.values())
+        {
+            if (store.isProductInStore(product))
+            {
+                howManyStoresSellProduct++;
+            }
+        }
+        return howManyStoresSellProduct;
+    }
+
+    public float getProductAvgPrice(Product selectedProduct)
+    {
+        float sumOfProductPrices = 0;
+        int numOfStoresWhoSellsProduct = getHowManyStoresSellProduct(selectedProduct);
+
+        for (Store store: stores.values())
+        {
+            StoreProduct product = store.getProductById(selectedProduct.getId());
+            if (product != null)
+            {
+                sumOfProductPrices += product.getPrice();
+            }
+        }
+        return (sumOfProductPrices/numOfStoresWhoSellsProduct);
+    }
+
+    public float getHowManyTimesProductSold(Product product)
+    {
+        float howManyTimesProductSold = 0;
+
+        for (Store store: stores.values())
+        {
+            howManyTimesProductSold += store.getHowManyTimesProductSold(product);
+        }
+        return howManyTimesProductSold;
+    }
+
+
+
+    /*******************************************************************************************************/
+
+    public void addNewOrder(Map <Integer,Order> newSubOrders)
+    {
+        numOfOrders++;
         for(Integer storeId : newSubOrders.keySet())
         {
             stores.get(storeId).addNewOrder(newSubOrders.get(storeId));
+            orderCost += newSubOrders.get(storeId).getCostOfAllProducts();
         }
     }
 
@@ -198,15 +246,6 @@ public class SystemData
     public Map<Integer,Store> getStores()
     {
         return stores;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public Map<Integer, Customer> getCustomers()
-    {
-        return customers;
     }
 
     public void removeProductFromStore(int storeId, int productId)
