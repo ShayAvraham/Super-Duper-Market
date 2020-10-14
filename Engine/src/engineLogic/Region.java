@@ -22,7 +22,7 @@ public class Region
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
     private int numOfOrders;
-    private float orderCost;
+    private float ordersCost;
 
     public Region(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
     {
@@ -30,7 +30,7 @@ public class Region
         createProductsFromSDMItems(marketDescription.getSDMItems());
         createStoresFromSDMStores(marketDescription.getSDMStores());
         numOfOrders = 0;
-        orderCost = 0;
+        ordersCost = 0;
     }
 
     public String getName()
@@ -43,9 +43,14 @@ public class Region
         return numOfOrders;
     }
 
-    public float getOrderCost()
+    public float getOrdersCost()
     {
-        return orderCost;
+        return ordersCost;
+    }
+
+    public float getOrderCostAvg()
+    {
+        return numOfOrders == 0 ? 0:ordersCost/numOfOrders;
     }
 
     private void createProductsFromSDMItems(SDMItems generatedItems)
@@ -234,7 +239,7 @@ public class Region
         for(Integer storeId : newSubOrders.keySet())
         {
             stores.get(storeId).addNewOrder(newSubOrders.get(storeId));
-            orderCost += newSubOrders.get(storeId).getCostOfAllProducts();
+            ordersCost += newSubOrders.get(storeId).getCostOfAllProducts();
         }
     }
 

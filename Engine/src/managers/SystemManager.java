@@ -1,9 +1,12 @@
-package engineLogic;
+package managers;
 
 import dataContainers.ProductDataContainer;
+import dataContainers.RegionDataContainer;
 import dataContainers.StoreDataContainer;
 import dataContainers.UserDataContainer;
 import builders.RegionDataContainerBuilder;
+import engineLogic.Owner;
+import engineLogic.Region;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
@@ -22,7 +25,7 @@ public class SystemManager
 
     private DataManager dataManager;
     private Map<Integer, UserDataContainer> usersData;
-    private Map <String,RegionDataContainerBuilder> regionsData;
+    private Map <String, RegionDataContainer> regionsData;
 
     private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
 
@@ -51,12 +54,8 @@ public class SystemManager
     public void loadDataFromXMLFile(int ownerID, String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         Region newRegion = dataManager.deserializeXMLToRegion(ownerID,xmlFilePath);
-        RegionDataContainerBuilder newRegionData = new RegionDataContainerBuilder(
-                usersData.get(ownerID).getName(),
-                newRegion);
-        regionsData.put(newRegion.getName(),newRegionData);
+        regionsData.put(newRegion.getName(),RegionDataContainerBuilder.createRegionData(usersData.get(ownerID).getName(),newRegion));
      }
-
 
     /********************************************** Update Products Logic ****************************************/
 //

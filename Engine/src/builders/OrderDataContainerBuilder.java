@@ -11,24 +11,25 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OrderDataContainerBuilder
+public final class OrderDataContainerBuilder
 {
-    private Map<Integer,ProductDataContainer> productsData;
-    private Map<Integer,StoreDataContainer> storesData;
+    private static Map<Integer,ProductDataContainer> productsData;
+    private static Map<Integer,StoreDataContainer> storesData;
 
-    public OrderDataContainerBuilder(Map<Integer,ProductDataContainer> productsData, Map<Integer,StoreDataContainer> storesData)
+    private OrderDataContainerBuilder()
     {
-        this.productsData = productsData;
-        this.storesData = storesData;
+
     }
 
-    public OrderDataContainer createOrderData(Order order)
+    public static OrderDataContainer createOrderData(Order order,Map<Integer,StoreDataContainer> stores,
+                                              Map<Integer,ProductDataContainer> products)
     {
-        UserDataContainerBuilder userBuilder = new UserDataContainerBuilder();
+        storesData = stores;
+        productsData = products;
         return new OrderDataContainer(
                 order.getId(),
                 order.getDate(),
-                userBuilder.createUserData(order.getCustomer()),
+                UserDataContainerBuilder.createUserData(order.getCustomer()),
                 createOrderProductsData(order),
                 createOrderDiscountsData(order),
                 order.isDynamic(),
@@ -40,22 +41,22 @@ public class OrderDataContainerBuilder
 
 
 
-    private Map<StoreDataContainer, Collection<ProductDataContainer>> createOrderProductsData(Order order)
+    private static Map<StoreDataContainer, Collection<ProductDataContainer>> createOrderProductsData(Order order)
     {
         Map<StoreDataContainer, Collection<ProductDataContainer>> orderProducts = new HashMap<>();
         for(Store store : order.getProducts().keySet())
         {
-            Collection<ProductDataContainer> productsData = new ArrayList<>();
+            Collection<ProductDataContainer> products = new ArrayList<>();
             for(OrderProduct product : order.getProducts().get(store))
             {
-                productsData.add(new ProductDataContainer(this.productsData.get(product.getId()),product.getAmount()));
+                products.add(new ProductDataContainer(productsData.get(product.getId()),product.getAmount()));
             }
-            orderProducts.put(storesData.get(store.getId()),productsData);
+            orderProducts.put(storesData.get(store.getId()),products);
         }
         return  orderProducts;
     }
 
-    private Map<StoreDataContainer, Collection<DiscountDataContainer>> createOrderDiscountsData(Order order)
+    private static Map<StoreDataContainer, Collection<DiscountDataContainer>> createOrderDiscountsData(Order order)
     {
         Map<StoreDataContainer, Collection<DiscountDataContainer>> orderDiscounts = new HashMap<>();
         if(!order.getDiscounts().isEmpty())
@@ -63,10 +64,9 @@ public class OrderDataContainerBuilder
             for (Store store : order.getDiscounts().keySet())
             {
                 Collection<DiscountDataContainer> discountsData = new ArrayList<>();
-                DiscountDataContainerBuilder discountBuilder = new DiscountDataContainerBuilder(productsData);
                 for (Discount discount : order.getDiscounts().get(store))
                 {
-                    discountsData.add(discountBuilder.createDiscountData(discount));
+                    discountsData.add(DiscountDataContainerBuilder.createDiscountData(productsData,discount));
                 }
                 orderDiscounts.put(storesData.get(store.getId()), discountsData);
             }

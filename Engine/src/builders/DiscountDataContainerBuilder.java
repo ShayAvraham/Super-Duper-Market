@@ -9,17 +9,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DiscountDataContainerBuilder
+public final class DiscountDataContainerBuilder
 {
-    private Map<Integer,ProductDataContainer> productsData;
+    private static Map<Integer,ProductDataContainer> productsData;
 
-    public DiscountDataContainerBuilder(Map<Integer,ProductDataContainer> productsData)
+    private DiscountDataContainerBuilder()
     {
-        this.productsData = productsData;
     }
 
-    public DiscountDataContainer createDiscountData(Discount discount)
+    public static DiscountDataContainer createDiscountData(Map<Integer,ProductDataContainer> products,Discount discount)
     {
+        productsData = products;
         return new DiscountDataContainer(discount.getName(),
                 discount.getDiscountType().name(),
                 productsData.get(discount.getDiscountProduct().getId()),
@@ -28,7 +28,7 @@ public class DiscountDataContainerBuilder
                 createAmountForOfferProduct(discount.getProductsToOffer()));
     }
 
-    private Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
+    private static Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
     {
         Map <ProductDataContainer,Integer> priceForOfferProduct = new HashMap<>();
         for (OfferProduct offerProduct:productsToOffer)
@@ -38,7 +38,7 @@ public class DiscountDataContainerBuilder
         return priceForOfferProduct;
     }
 
-    private Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
+    private static Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
     {
         Map <ProductDataContainer,Double> amountForOfferProduct = new HashMap<>();
         for (OfferProduct offerProduct:productsToOffer)

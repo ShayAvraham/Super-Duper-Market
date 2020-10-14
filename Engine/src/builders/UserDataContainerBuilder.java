@@ -6,7 +6,7 @@ import engineLogic.User;
 
 import java.text.DecimalFormat;
 
-public class UserDataContainerBuilder
+public final class UserDataContainerBuilder
 {
     private static DecimalFormat DECIMAL_FORMAT;
 
@@ -15,7 +15,11 @@ public class UserDataContainerBuilder
         DECIMAL_FORMAT = new DecimalFormat("#.##");
     }
 
-    public UserDataContainer createUserData(User user)
+    private UserDataContainerBuilder()
+    {
+    }
+
+    public static UserDataContainer createUserData(User user)
     {
         return new UserDataContainer(
                 user.getId(),

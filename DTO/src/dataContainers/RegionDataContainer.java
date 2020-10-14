@@ -1,5 +1,7 @@
 package dataContainers;
 
+import java.util.Map;
+
 public class RegionDataContainer
 {
     private String name;
@@ -7,14 +9,20 @@ public class RegionDataContainer
     private int numOfStores;
     private int numOfOrders;
     private float orderCostAvg;
+    private Map<Integer,ProductDataContainer> productsData;
+    private Map<Integer,StoreDataContainer> storesData;
 
-    public RegionDataContainer(String name, String ownerName, int numOfStores, int numOfOrders, float orderCostAvg)
+    public RegionDataContainer(String name, String ownerName, int numOfStores, int numOfOrders, float orderCostAvg,
+                               Map<Integer,ProductDataContainer> productsData,Map<Integer,StoreDataContainer> storesData)
     {
         this.name = name;
         this.ownerName = ownerName;
         this.numOfStores = numOfStores;
         this.numOfOrders = numOfOrders;
         this.orderCostAvg = orderCostAvg;
+        this.productsData = productsData;
+        this.storesData = storesData;
+
     }
 
     public String getName() {

@@ -1,5 +1,8 @@
-package engineLogic;
+package managers;
 
+import engineLogic.Owner;
+import engineLogic.Region;
+import engineLogic.User;
 import exceptions.DuplicateValuesException;
 import jaxb.generated.SuperDuperMarketDescriptor;
 
@@ -16,8 +19,8 @@ import java.util.Map;
 
 public class DataManager
 {
-    private Map<String,Region> allRegions;
-    private Map<Integer,User> allUsers;
+    private Map<String, Region> allRegions;
+    private Map<Integer, User> allUsers;
 
     private final String JAXB_PACKAGE_NAME = "jaxb.generated";
     private final String FILE_NOT_EXIST_ERROR_MSG = "No xml file was found in this path: ";

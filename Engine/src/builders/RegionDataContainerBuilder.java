@@ -6,15 +6,11 @@ import engineLogic.*;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class RegionDataContainerBuilder
+public final class RegionDataContainerBuilder
 {
 
-    private Map<Integer,ProductDataContainer> productsData;
-    private Map<Integer,StoreDataContainer> storesData;
-    private Map<Integer,OrderDataContainer> ordersData;
-    private RegionDataContainer regionData;
-
-    private HashSet orders;
+    private static Map<Integer,ProductDataContainer> productsData;
+    private static Map<Integer,StoreDataContainer> storesData;
 
     private static DecimalFormat DECIMAL_FORMAT;
 
@@ -23,31 +19,26 @@ public class RegionDataContainerBuilder
         DECIMAL_FORMAT = new DecimalFormat("#.##");
     }
 
-    public RegionDataContainerBuilder(String ownerName,Region region)
+    private RegionDataContainerBuilder()
     {
-        productsData = createProductsData(region);
-        storesData = createStoresData(region);
-        ordersData = new HashMap<>();
-        regionData = createRegionData(ownerName, region);
     }
 
-    public  Map<Integer,ProductDataContainer> getAllProductsData() { return productsData; }
-
-    public Map<Integer,StoreDataContainer> getStoresData() { return storesData; }
-
-    public Map<Integer,OrderDataContainer> getOrdersData() { return ordersData; }
-
-    public RegionDataContainer getRegionData() { return regionData; }
-
-    public void updateData(Region region)
+    public static RegionDataContainer createRegionData(String ownerName,Region region)
     {
         productsData = createProductsData(region);
         storesData = createStoresData(region);
-        orders = new HashSet<>();
+
+        return new RegionDataContainer(region.getName(),
+                ownerName,
+                region.getStores().size(),
+                region.getNumOfOrders(),
+                region.getOrderCostAvg(),
+                productsData,
+                storesData);
     }
 
     /** Create Products Data Containers **/
-    private  Map<Integer,ProductDataContainer> createProductsData(Region region)
+    private static Map<Integer,ProductDataContainer> createProductsData(Region region)
     {
         Map<Integer,ProductDataContainer> productsData = new HashMap<>();
         for (Product product:region.getProducts().values())
@@ -57,7 +48,7 @@ public class RegionDataContainerBuilder
         return productsData;
     }
 
-    private ProductDataContainer createProductData(Product product,Region region)
+    private static ProductDataContainer createProductData(Product product,Region region)
     {
         return new ProductDataContainer(
                 product.getId(),
@@ -69,7 +60,7 @@ public class RegionDataContainerBuilder
     }
 
     /** Create Stores Data Containers **/
-    private Map<Integer,StoreDataContainer> createStoresData(Region region)
+    private static Map<Integer,StoreDataContainer> createStoresData(Region region)
     {
         Map<Integer,StoreDataContainer> storesData = new HashMap<>();
         for (Store store:region.getStores().values())
@@ -79,7 +70,7 @@ public class RegionDataContainerBuilder
         return storesData;
     }
 
-    private StoreDataContainer createStoreData(Store store, Region region)
+    private static StoreDataContainer createStoreData(Store store, Region region)
     {
         return new StoreDataContainer(
                 store.getId(),
@@ -92,7 +83,7 @@ public class RegionDataContainerBuilder
                 getStoreDiscountsData(store));
     }
 
-    private Collection<ProductDataContainer> getStoreProductsData(Store store,Region region)
+    private static Collection<ProductDataContainer> getStoreProductsData(Store store,Region region)
     {
         Collection<ProductDataContainer> allProductsData = new ArrayList<>();
         for (StoreProduct product: store.getStoreProducts())
@@ -108,7 +99,7 @@ public class RegionDataContainerBuilder
         return allProductsData;
     }
 
-    private Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct,Region region)
+    private static Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct,Region region)
     {
         Map<Integer,Integer> productPricePerStore = new HashMap<>();
         for (Store store: region.getStores().values())
@@ -125,7 +116,7 @@ public class RegionDataContainerBuilder
         return productPricePerStore;
     }
 
-    private Map<Integer, Float> getSoldAmountPerStore(StoreProduct selectedProduct, Region region)
+    private static Map<Integer, Float> getSoldAmountPerStore(StoreProduct selectedProduct, Region region)
     {
         Map<Integer,Float> soldAmountPerStore = new HashMap<>();
         float soldAmount;
@@ -137,20 +128,18 @@ public class RegionDataContainerBuilder
         return soldAmountPerStore;
     }
 
-    private Collection<OrderDataContainer> getStoreOrdersData(Store store)
+    private static Collection<OrderDataContainer> getStoreOrdersData(Store store)
     {
         Collection<OrderDataContainer> allOrdersData = new ArrayList<>();
-        OrderDataContainerBuilder orderBuilder = new OrderDataContainerBuilder(productsData,storesData);
-        UserDataContainerBuilder userBuilder = new UserDataContainerBuilder();
         for (Order order: store.getStoreOrders())
         {
-            allOrdersData.add(orderBuilder.createOrderData(order));
+            allOrdersData.add(OrderDataContainerBuilder.createOrderData(order,storesData,productsData));
         }
 
         return allOrdersData;
     }
 
-    private Collection<DiscountDataContainer> getStoreDiscountsData(Store store)
+    private static Collection<DiscountDataContainer> getStoreDiscountsData(Store store)
     {
         Collection<DiscountDataContainer> allDiscountData = new ArrayList<>();
         if(!store.getStoreDiscounts().isEmpty())
@@ -164,7 +153,7 @@ public class RegionDataContainerBuilder
         return allDiscountData;
     }
 
-    private DiscountDataContainer createDiscountData(Discount discount)
+    private static DiscountDataContainer createDiscountData(Discount discount)
     {
         return new DiscountDataContainer(discount.getName(),
                 discount.getDiscountType().name(),
@@ -174,7 +163,7 @@ public class RegionDataContainerBuilder
                 createAmountForOfferProduct(discount.getProductsToOffer()));
     }
 
-    private Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
+    private static Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
     {
         Map <ProductDataContainer,Integer> priceForOfferProduct = new HashMap<>();
         for (OfferProduct offerProduct:productsToOffer)
@@ -184,7 +173,7 @@ public class RegionDataContainerBuilder
         return priceForOfferProduct;
     }
 
-    private Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
+    private static Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
     {
         Map <ProductDataContainer,Double> amountForOfferProduct = new HashMap<>();
         for (OfferProduct offerProduct:productsToOffer)
@@ -193,20 +182,4 @@ public class RegionDataContainerBuilder
         }
         return amountForOfferProduct;
     }
-
-
-    /** Create Region Data Container **/
-    private RegionDataContainer createRegionData(String ownerName, Region region)
-    {
-        return new RegionDataContainer(region.getName(),
-                ownerName,
-                storesData.size(),
-                region.getNumOfOrders(),
-                region.getOrderCost());
-    }
-
-
-
-
-
 }
