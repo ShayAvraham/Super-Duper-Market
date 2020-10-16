@@ -24,11 +24,11 @@ public class Region
     private int numOfOrders;
     private float ordersCost;
 
-    public Region(SuperDuperMarketDescriptor marketDescription) throws InstanceNotFoundException
+    public Region(SuperDuperMarketDescriptor marketDescription,String ownerName) throws InstanceNotFoundException
     {
         this.name = marketDescription.getSDMZone().getName();
         createProductsFromSDMItems(marketDescription.getSDMItems());
-        createStoresFromSDMStores(marketDescription.getSDMStores());
+        createStoresFromSDMStores(marketDescription.getSDMStores(),ownerName);
         numOfOrders = 0;
         ordersCost = 0;
     }
@@ -65,7 +65,7 @@ public class Region
         }
     }
 
-    private void createStoresFromSDMStores(SDMStores generatedStores) throws InstanceNotFoundException
+    private void createStoresFromSDMStores(SDMStores generatedStores,String ownerName) throws InstanceNotFoundException
     {
         stores = new HashMap<>();
         HashSet<Point> storePositions = new HashSet<>();
@@ -77,7 +77,7 @@ public class Region
             Map<Integer,StoreProduct> storeProducts = createStoreProducts(store.getSDMPrices(),store.getId(),productsOnSale);
             Collection<Discount> storeDiscounts = createStoreDiscounts(store.getSDMDiscounts(),storeProducts,store.getId());
 
-            if(stores.putIfAbsent(store.getId(), new Store(store, position, storeProducts.values(),storeDiscounts)) != null)
+            if(stores.putIfAbsent(store.getId(), new Store(store,ownerName,position, storeProducts.values(),storeDiscounts)) != null)
             {
                 throw new DuplicateValuesException("store", store.getId());
             }

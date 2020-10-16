@@ -44,4 +44,13 @@ public class RegionDataContainer
     public float getOrderCostAvg() {
         return orderCostAvg;
     }
+
+    public Map<Integer, ProductDataContainer> getProductsData()
+    {
+        return productsData;
+    }
+
+    public Map<Integer, StoreDataContainer> getStoresData() {
+        return storesData;
+    }
 }

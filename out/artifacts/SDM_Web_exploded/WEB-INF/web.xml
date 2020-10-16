@@ -7,8 +7,25 @@
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>servlets.LoginServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadProductsServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadProductsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadStoresServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadStoresServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/loginShortResponse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadProductsServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadProducts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadStoresServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadStores</url-pattern>
     </servlet-mapping>
 </web-app>

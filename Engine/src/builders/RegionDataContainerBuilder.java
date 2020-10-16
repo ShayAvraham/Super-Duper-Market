@@ -75,9 +75,11 @@ public final class RegionDataContainerBuilder
         return new StoreDataContainer(
                 store.getId(),
                 store.getName(),
+                store.getOwnerName(),
                 store.getPosition(),
                 store.getPPK(),
                 store.getStoreTotalIncomeFromDeliveries(),
+                store.getStoreTotalIncomeFromProducts(),
                 getStoreProductsData(store,region),
                 getStoreOrdersData(store),
                 getStoreDiscountsData(store));

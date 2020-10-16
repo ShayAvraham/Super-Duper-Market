@@ -54,11 +54,30 @@ public class SystemManager
 
     /********************************************** Load XML Logic ****************************************/
 
-    public void LoadDataFromXMLFile(int ownerID, String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
+    public void LoadDataFromXMLFile(int ownerID,String ownerName, String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException//change
     {
-        Region newRegion = dataManager.deserializeXMLToRegion(ownerID,xmlFilePath);
+        AddNewUser(new UserDataContainer("dani","owner"));
+        Region newRegion = dataManager.deserializeXMLToRegion(ownerID,ownerName,xmlFilePath);
         regionsData.put(newRegion.getName(),RegionDataContainerBuilder.createRegionData(usersData.get(ownerID).getName(),newRegion));
      }
+
+    /********************************************** Load Region Data ****************************************///change
+    public Collection<ProductDataContainer> GetRegionProducts(String region)
+    {
+        try {
+            LoadDataFromXMLFile(1,"dani", "C:\\Users\\Daniel\\Documents\\GitHub\\Super-Duper-Market\\Engine\\src\\recourses\\ex3-small.xml");
+        }
+        catch(Exception e)
+        {
+            int y =4;
+        }
+        return regionsData.get(region).getProductsData().values();
+    }
+
+    public Collection<StoreDataContainer> GetRegionStores(String region)
+    {
+        return regionsData.get(region).getStoresData().values();
+    }
 
     /********************************************** Update Products Logic ****************************************/
 //

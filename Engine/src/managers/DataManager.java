@@ -33,14 +33,14 @@ public class DataManager
 
     /********************************************** Load XML  ****************************************/
 
-    public Region deserializeXMLToRegion(int ownerID,String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
+    public Region deserializeXMLToRegion(int ownerID,String ownerName,String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         this.xmlFilePath = xmlFilePath;
         InputStream inputStream = createInputStreamFromPath();
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
-        Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(inputStream));
-        if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)
+        Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(inputStream),ownerName);
+        if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)//change
         {
             throw new DuplicateValuesException("region",newRegion.getName());
         }

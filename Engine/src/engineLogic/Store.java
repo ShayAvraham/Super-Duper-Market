@@ -15,6 +15,7 @@ public class Store
 
     private int id;
     private String name;
+    private String ownerName;
     private Collection<StoreProduct> storeProducts;
     private Collection<Order> storeOrders;
     private Collection<Discount> storeDiscounts;
@@ -26,10 +27,11 @@ public class Store
         DECIMAL_FORMAT = new DecimalFormat("#.##");
     }
 
-    public Store(SDMStore store, Point position, Collection<StoreProduct> storeProducts, Collection<Discount>storeDiscounts)
+    public Store(SDMStore store,String ownerName, Point position, Collection<StoreProduct> storeProducts, Collection<Discount>storeDiscounts)
     {
         this.id = store.getId();
         this.name = store.getName();
+        this.ownerName = ownerName;
         this.position = position;
         this.ppk = store.getDeliveryPpk();
         this.storeProducts = new HashSet<>(storeProducts);
@@ -62,8 +64,13 @@ public class Store
         return name;
     }
 
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
     }
 
     public float getPPK() {
@@ -182,12 +189,21 @@ public class Store
     public float getStoreTotalIncomeFromDeliveries()
     {
         float totalIncomeFromDeliveries = 0;
-
         for (Order order: storeOrders)
         {
             totalIncomeFromDeliveries += order.getDeliveryCost();
         }
         return totalIncomeFromDeliveries;
+    }
+
+    public float getStoreTotalIncomeFromProducts()
+    {
+        float totalIncomeFromProducts = 0;
+        for (Order order: storeOrders)
+        {
+            totalIncomeFromProducts += order.getCostOfAllProducts();
+        }
+        return totalIncomeFromProducts;
     }
 
     @Override
