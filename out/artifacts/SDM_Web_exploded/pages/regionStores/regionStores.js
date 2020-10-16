@@ -115,7 +115,6 @@ $(function() {
                //     $("#productsTab").not('.active').removeClass("disabled")
 
                 });
-
             }
         });
         return false;

@@ -22,8 +22,7 @@ public class DataManager
 
     private final String JAXB_PACKAGE_NAME = "jaxb.generated";
     private final String FILE_NOT_EXIST_ERROR_MSG = "No xml file was found in this path: ";
-    private final String FILE_NOT_XML_ERROR_MSG = "The file in the path is not xml file.";
-    private String xmlFilePath;
+//    private String xmlFilePath;
 
     public DataManager()
     {
@@ -33,13 +32,11 @@ public class DataManager
 
     /********************************************** Load XML  ****************************************/
 
-    public Region deserializeXMLToRegion(int ownerID,String ownerName,String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException
+    public Region deserializeXMLToRegion(int ownerID,String ownerName,InputStream xmlFileInputStream) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
-        this.xmlFilePath = xmlFilePath;
-        InputStream inputStream = createInputStreamFromPath();
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
-        Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(inputStream),ownerName);
+        Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(xmlFileInputStream),ownerName);
         if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)//change
         {
             throw new DuplicateValuesException("region",newRegion.getName());
@@ -48,24 +45,24 @@ public class DataManager
         return newRegion;
     }
 
-    private InputStream createInputStreamFromPath() throws FileNotFoundException
-    {
-        validateXmlFileFormat();
-        InputStream inputStream = new FileInputStream(new File(xmlFilePath));
-        if (inputStream == null)
-        {
-            throw new FileNotFoundException(FILE_NOT_EXIST_ERROR_MSG + xmlFilePath);
-        }
-        return inputStream;
-    }
+//    private InputStream createInputStreamFromPath() throws FileNotFoundException
+//    {
+//        validateXmlFileFormat();
+//        InputStream inputStream = new FileInputStream(new File(xmlFilePath));
+//        if (inputStream == null)
+//        {
+//            throw new FileNotFoundException(FILE_NOT_EXIST_ERROR_MSG + xmlFilePath);
+//        }
+//        return inputStream;
+//    }
 
-    private void validateXmlFileFormat()
-    {
-        if(!xmlFilePath.endsWith(".xml"))
-        {
-            throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
-        }
-    }
+//    private void validateXmlFileFormat()
+//    {
+//        if(!xmlFilePath.endsWith(".xml"))
+//        {
+//            throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
+//        }
+//    }
 
     /********************************************** Add New User  ***************************************/
 

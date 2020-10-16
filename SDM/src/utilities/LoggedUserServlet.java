@@ -1,21 +1,20 @@
-package servlets;
+package utilities;
 
 import com.google.gson.Gson;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import dataContainers.UserDataContainer;
 import exceptions.DuplicateValuesException;
 import managers.SystemManager;
-import utilities.ServletUtils;
-import utilities.SessionUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.stream.Collectors;
+import java.io.PrintWriter;
 
 
-public class LoginServlet extends HttpServlet
+public class LoggedUserServlet extends HttpServlet
 {
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,32 +28,14 @@ public class LoginServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("application/json");
         UserDataContainer userFromSession = SessionUtils.getUser(request);
-        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
-        if (userFromSession == null)
-        {
-            UserDataContainer user = new UserDataContainer(request.getParameter("username"),request.getParameter("userrole"));
-            synchronized (this)
-            {
-                try
-                {
-                    request.getSession(true).setAttribute("user", systemManager.AddNewUser(user));
-                    response.setStatus(200);
-                    response.getOutputStream().println("pages/dashboard/dashboard.html");
-                }
-                catch (DuplicateValuesException e)
-                {
-                    response.setStatus(401);
-                    response.getOutputStream().println(e.getMessage());
-                }
-            }
-        }
-        else
-        {
-            response.setStatus(200);
-            response.getOutputStream().println("pages/dashboard/dashboard.html");
-        }
+        Gson gson = new Gson();
+        String loggedUser = gson.toJson(userFromSession);
+        response.setStatus(200);
+        PrintWriter out = response.getWriter();
+        out.print(loggedUser);
+        out.flush();
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

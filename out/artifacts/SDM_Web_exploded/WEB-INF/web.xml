@@ -15,7 +15,10 @@
         <servlet-name>LoadStoresServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoresServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>LoggedUserServlet</servlet-name>
+        <servlet-class>utilities.LoggedUserServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/loginShortResponse</url-pattern>
@@ -28,4 +31,15 @@
         <servlet-name>LoadStoresServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadStores</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoggedUserServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loggedUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoggedUserServlet</servlet-name>
+        <url-pattern>/pages/dashboard/loggedUser</url-pattern>
+    </servlet-mapping>
+
+
+    uploadFile
 </web-app>

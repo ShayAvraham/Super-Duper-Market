@@ -25,75 +25,49 @@ import java.util.Scanner;
 
 @WebServlet("/uploadFile")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
-public class FileUploadServlet extends HttpServlet {
+public class FileUploadServlet extends HttpServlet
+{
+    private static final String SUCCESS_MSG = "File was loaded successfully";
+    private static final String FILE_NOT_XML_ERROR_MSG = "File is not xml file";
+
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException
+    {
+        response.setContentType("text/plain;charset=UTF-8");
+        Collection<Part> parts = request.getParts();
+        UserDataContainer userFromSession = SessionUtils.getUser(request);
+        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
+        Part part = parts.stream().findFirst().orElse(null);
+        try
+        {
+            assert part != null;
+            validateFileFormat(part);
+            systemManager.LoadDataFromXMLFile(userFromSession.getId(), userFromSession.getName(), part.getInputStream());
+            response.getWriter().print(SUCCESS_MSG);
+        }
+        catch (Exception e)
+        {
+            response.getWriter().print(e.getMessage());
+        }
+    }
+
+    private void validateFileFormat(Part file)
+    {
+        if(!file.getSubmittedFileName().endsWith(".xml"))
+        {
+            throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        processRequest(request, response);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("pages/loadXml/loadXml.html");
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html");
-        UserDataContainer userFromSession = SessionUtils.getUser(request);
-        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
-        System.out.println("file loaded 1");
-        System.out.println(getServletContext().getRealPath("/"));
-        System.out.println(getInitParameter("file"));
-        try {
-            systemManager.LoadDataFromXMLFile(userFromSession.getId(), getServletContext().getRealPath("/"));
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (InstanceNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println("file loaded 2");
-        PrintWriter out = response.getWriter();
-
-        Collection<Part> parts = request.getParts();
-
-
-        out.println("<h2> Total parts : " + parts.size() + "</h2>");
-
-        StringBuilder fileContent = new StringBuilder();
-
-        for (Part part : parts) {
-            printPart(part, out);
-            //to write the content of the file to an actual file in the system (will be created at c:\samplefile)
-            part.write("samplefile");
-
-            //to write the content of the file to a string
-            fileContent.append(readFromInputStream(part.getInputStream()));
-        }
-
-        printFileContent(fileContent.toString(), out);
-    }
-
-    private void printPart(Part part, PrintWriter out) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<p>")
-                .append("Parameter Name (From html form): ").append(part.getName())
-                .append("<br>")
-                .append("Content Type (of the file): ").append(part.getContentType())
-                .append("<br>")
-                .append("Size (of the file): ").append(part.getSize())
-                .append("<br>");
-        for (String header : part.getHeaderNames()) {
-            sb.append(header).append(" : ").append(part.getHeader(header)).append("<br>");
-        }
-        sb.append("</p>");
-        out.println(sb.toString());
-
-    }
-
-    private String readFromInputStream(InputStream inputStream) {
-        return new Scanner(inputStream).useDelimiter("\\Z").next();
-    }
-
-    private void printFileContent(String content, PrintWriter out) {
-        out.println("<h2>File content:</h2>");
-        out.println("<textarea style=\"width:100%;height:400px\">");
-        out.println(content);
-        out.println("</textarea>");
+        processRequest(request, response);
     }
 }

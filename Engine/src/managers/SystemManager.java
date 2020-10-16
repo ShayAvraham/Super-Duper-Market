@@ -13,6 +13,7 @@ import engineLogic.User;
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,38 +47,40 @@ public class SystemManager
     }
 
     /********************************************** Add New User Logic ****************************************/
-    public synchronized void AddNewUser(UserDataContainer userData)
+    public synchronized UserDataContainer AddNewUser(UserDataContainer userData)
     {
         User user = dataManager.addNewUser(userData);
-        usersData.put(user.getId(), UserDataContainerBuilder.createUserData(user));
+        UserDataContainer userDataContainer = UserDataContainerBuilder.createUserData(user);
+        usersData.put(user.getId(), userDataContainer);
+        return userDataContainer;
     }
 
     /********************************************** Load XML Logic ****************************************/
 
-    public void LoadDataFromXMLFile(int ownerID,String ownerName, String xmlFilePath) throws JAXBException, FileNotFoundException, InstanceNotFoundException//change
+    public void LoadDataFromXMLFile(int ownerID,String ownerName, InputStream xmlFileInputStream) throws JAXBException, FileNotFoundException, InstanceNotFoundException//change
     {
-        AddNewUser(new UserDataContainer("dani","owner"));
-        Region newRegion = dataManager.deserializeXMLToRegion(ownerID,ownerName,xmlFilePath);
+        //AddNewUser(new UserDataContainer("dani","owner"));
+        Region newRegion = dataManager.deserializeXMLToRegion(ownerID,ownerName,xmlFileInputStream);
         regionsData.put(newRegion.getName(),RegionDataContainerBuilder.createRegionData(usersData.get(ownerID).getName(),newRegion));
      }
 
     /********************************************** Load Region Data ****************************************///change
-    public Collection<ProductDataContainer> GetRegionProducts(String region)
-    {
-        try {
-            LoadDataFromXMLFile(1,"dani", "C:\\Users\\Daniel\\Documents\\GitHub\\Super-Duper-Market\\Engine\\src\\recourses\\ex3-small.xml");
-        }
-        catch(Exception e)
-        {
-            int y =4;
-        }
-        return regionsData.get(region).getProductsData().values();
-    }
-
-    public Collection<StoreDataContainer> GetRegionStores(String region)
-    {
-        return regionsData.get(region).getStoresData().values();
-    }
+//    public Collection<ProductDataContainer> GetRegionProducts(String region)
+//    {
+//        try {
+//            LoadDataFromXMLFile(1,"dani", "C:\\Users\\shaya\\Desktop\\shay\\לימודים\\JAVA\\Super-Duper-Market\\Engine\\src\\recourses\\ex3-big.xml");
+//        }
+//        catch(Exception e)
+//        {
+//            int y =4;
+//        }
+//        return regionsData.get(region).getProductsData().values();
+//    }
+//
+//    public Collection<StoreDataContainer> GetRegionStores(String region)
+//    {
+//        return regionsData.get(region).getStoresData().values();
+//    }
 
     /********************************************** Update Products Logic ****************************************/
 //

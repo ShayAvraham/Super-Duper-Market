@@ -23,17 +23,16 @@ public class LoadProductsServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        response.setContentType("text/plain;charset=UTF-8");
-        String regionName = SessionUtils.getRegionName(request);
-        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
-        Collection<ProductDataContainer> regionProducts = systemManager.GetRegionProducts(regionName);
-        Gson gson = new Gson();
-        String jsonResponse = gson.toJson(regionProducts);
-        response.setStatus(200);
-        PrintWriter out = response.getWriter();
-        out.print(jsonResponse);
-        out.flush();
-
+//        response.setContentType("text/plain;charset=UTF-8");
+//        String regionName = SessionUtils.getRegionName(request);
+//        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
+//        Collection<ProductDataContainer> regionProducts = systemManager.GetRegionProducts(regionName);
+//        Gson gson = new Gson();
+//        String jsonResponse = gson.toJson(regionProducts);
+//        response.setStatus(200);
+//        PrintWriter out = response.getWriter();
+//        out.print(jsonResponse);
+//        out.flush();
     }
 
     @Override
