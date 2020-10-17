@@ -1,205 +1,104 @@
-/*
- data will arrive in the next form:
- {
-    "products": [
-        {
-            "id":1,
-            "name":"moshe",
-            "purchaseForm":WEIGHT
-            "numberOfStoresSellProduct":1,
-            "averagePrice":25.7,
-            "numOfProductWasOrdered":0
-        },...
-    ]
- }
- */
-
 $(function() {
-    $("#btnProducts").click(function () {
-        $.ajax({
-            url: "loadProducts",
-            timeout: 2000,
-            dataType: 'json',
-            error: function(errorObject) {
-                $("#error-placeholder").append(errorObject.responseText)
-            },
-            success: function(data) {
-                createProductsTable();
-                $.each(data || [], appendToProductsTable);
-
-            }
-        });
-        return false;
-    })
-
-
+    $("#show-products-btn").on("click", function () {
+        $("#loader").load('common/showProducts/showProducts.html');
+    });
+    $("#show-stores-btn").on("click", function () {
+        $("#loader").load('common/showStores/showStores.html');
+    });
 });
 
-function createProductsTable()
-{
-    $("#tablesContainer").empty();
-    $("<h2>Products</h2>").appendTo($("#tablesContainer"))
-    $("    <table class=\"table\" id =\"productsTable\">\n" +
-        "        <thead>\n" +
-        "        <tr>\n" +
-        "            <th scope=\"col\">I.D</th>\n" +
-        "            <th scope=\"col\">Name</th>\n" +
-        "            <th scope=\"col\">Purchase Form</th>\n" +
-        "            <th scope=\"col\">Number Of Stores That Sold</th>\n" +
-        "            <th scope=\"col\">Average Price</th>\n" +
-        "            <th scope=\"col\">Sold Amount</th>\n" +
-        "        </tr>\n" +
-        "        </thead>\n" +
-        "        <tbody/> "+
-        "    </table>").appendTo($("#tablesContainer"))
-}
-
-function appendToProductsTable(index,product)
-{
-    var newRowContent = "<tr>\n" +
-        "      <th scope=\"row\">" + product.id + "</th>\n" +
-        "      <td>" + product.name+ "</td>\n" +
-        "      <td>" + product.purchaseForm +"</td>\n" +
-        "      <td>" + product.numberOfStoresSellProduct + "</td>\n" +
-        "      <td>" + product.averagePrice + "</td>\n" +
-        "      <td>" + product.numOfProductWasOrdered + "</td>\n" +
-        "    </tr>"
-
-    $("#productsTable tbody").append(newRowContent);
-}
-
-/*
- data will arrive in the next form:
- {
-    "stores": [
-        {
-            "id":1,
-            "name":"super1",
-            "ownerName":"moshe"
-            "position":(1,3),
-            "ppk":25,
-            "totalIncomeFromDeliveries":0
-            "totalIncomeFromProducts":0
-            "products":[{,...,}],
-            "orders":[{,...,}],
-            "discounts":[{,...,}]
-        },...
-    ]
- }
- */
-
-
 $(function() {
-    $("#btnStores").click(function () {
-        $.ajax({
-            url: "loadStores",
-            timeout: 2000,
-            dataType: 'json',
-            error: function(errorObject) {
-                $("#error-placeholder").append(errorObject.responseText)
-            },
-            success: function(data)
-            {
-               // createTabs()
-                createStoresTable();
-                $.each(data || [], appendToStoreTable);
-                createStoreProductsTable();
-                $.each(data || [], appendToStoreProductsTable);
-                // $('table tr td a').click(function(){
-                //     var selectedRow = $(this).closest("td").text();
-                // });
-                $('#tablesContainer').on("click", "#storesTable", function()
-                {
-                    var id = $(this).closest("tr").find('#name1').text()
-                    var selectedRow = $(this).closest("tr").find('td:eq(2)').text()
-               //     $("#productsTab").not('.active').removeClass("disabled")
-
-                });
-            }
-        });
-        return false;
-    })
+    $.ajax({
+        url: "loggedUser",
+        dataType: "json",
+        timeout: 2000,
+        error: function (errorObject) {
+            $("#error-placeholder").text(errorObject.responseText);
+        },
+        success: function (data) {
+            loadUserButtons(data.role)
+        }
+    });
 });
 
-// function createTabs()
-// {
-//     $("#tablesContainer").empty();
-//     $("<ul class=\"nav nav-tabs\">\n" +
-//         "  <li class=\"nav-item active\" >\n" +
-//         "    <a class=\"nav-link\" href=\"#\">Active</a>\n" +
-//         "  </li>\n" +
-//         "  <li class=\"nav-item disabled\" id=\"productsTab\" >\n" +
-//         "    <a class=\"nav-link\" href=\"#\">Products</a>\n" +
-//         "  </li>" +
-//         "</ul>" ).appendTo($("#tablesContainer"))
-// }
-
-function createStoresTable()
+function loadUserButtons(userRole)
 {
-    $("#tablesContainer").empty();
-    $("    <table class=\"table table-hover\" id =\"storesTable\">\n" +
-        "        <thead class=\"thead-dark\">\n" +
-        "        <tr>\n" +
-        "            <th scope=\"col\" id=\"name1 \">I.D</th>\n" +
-        "            <th scope=\"col\">Name</th>\n" +
-        "            <th scope=\"col\">Owner</th>\n" +
-        "            <th scope=\"col\">Location</th>\n" +
-        "            <th scope=\"col\">PPK</th>\n" +
-        "            <th scope=\"col\">Number Of Orders</th>\n" +
-        "            <th scope=\"col\">Total Ordered Products Cost</th>\n" +
-        "            <th scope=\"col\">Total Orders Income</th>\n" +
-        "        </tr>\n" +
-        "        </thead>\n" +
-        "        <tbody/> "+
-        "    </table>").appendTo($("#tablesContainer"))
-}
+        switch(userRole) {
+        case "customer":
+            createCustomerButtons()
+            addCustomerButtonsEvents()
 
-function appendToStoreTable(index,store)
-{
-    var location = "(" + store.position.x.toString() +"," + store.position.y.toString() +")"
-    var newRowContent = "<tr>\n" +
-        "      <th scope=\"row\">" + store.id + "</th>\n" +
-        "      <td>" + store.name+ "</td>\n" +
-        "      <td>" + store.ownerName + "</td>\n" +
-        "      <td>" + location +"</td>\n" +
-        "      <td>" + store.ppk + "</td>\n" +
-        "      <td>" + store.orders.length + "</td>\n" +
-        "      <td>" + store.totalIncomeFromProducts + "</td>\n" +
-        "      <td>" + store.totalIncomeFromDeliveries + "</td>\n" +
-        "    </tr>"
-
-    $("#storesTable tbody").append(newRowContent);
-}
-
-function createStoreProductsTable()
-{
-    $("<h2>Store Products </h2>").appendTo($("#tablesContainer"))
-    $("    <table class=\"table table-hover\" id =\"storeProductsTable\">\n" +
-        "        <thead class=\"thead-dark\">\n" +
-        "        <tr>\n" +
-        "            <th scope=\"col\">I.D</th>\n" +
-        "            <th scope=\"col\">Name</th>\n" +
-        "            <th scope=\"col\">Purchase Form</th>\n" +
-        "            <th scope=\"col\">Price</th>\n" +
-        "            <th scope=\"col\">Sold Amount</th>\n" +
-        "        </tr>\n" +
-        "        </thead>\n" +
-        "        <tbody/> "+
-        "    </table>").appendTo($("#tablesContainer"))
-}
-
-function appendToStoreProductsTable(index,product)
-{
-    // var newRowContent = "<tr>\n" +
-    //     "      <th scope=\"row\">" + product.id + "</th>\n" +
-    //     "      <td>" + product.name+ "</td>\n" +
-    //     "      <td>" + product.purchaseForm +"</td>\n" +
-    //     "      <td>" + product.numberOfStoresSellProduct + "</td>\n" +
-    //     "      <td>" + product.averagePrice + "</td>\n" +
-    //     "      <td>" + product.numOfProductWasOrdered + "</td>\n" +
-    //     "    </tr>"
-    //
-    // $("#productsTable tbody").append(newRowContent);
+            break;
+        case "owner":
+            createOwnerButtons()
+            addOwnerButtonsEvents()
+            break;
+        }
 }
 
 
+function createCustomerButtons()
+{
+    var newLiContent = "                   <li class=\"nav-item\">\n" +
+        "                        <a id=\"place-order-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"users\"></span>\n" +
+        "                            Place Order\n" +
+        "                        </a>\n" +
+        "                    </li>" +
+        "                   <li class=\"nav-item\">\n" +
+        "                        <a id=\"orders-history-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"users\"></span>\n" +
+        "                            Orders History\n" +
+        "                        </a>\n" +
+        "                    </li>"
+
+    $("#button-columns").append(newLiContent);
+}
+
+function addCustomerButtonsEvents ()
+{
+    $("#place-order-btn").on("click", function () {
+        $("#loader").load('customer/placeOrder/placeOrder.html');
+    });
+    $("#orders-history-btn").on("click", function () {
+        $("#loader").load('customer/ordersHistory/ordersHistory.html');
+    });
+}
+
+function createOwnerButtons()
+{
+    var newLiContent = "                   <li class=\"nav-item\">\n" +
+        "                        <a id=\"store-orders-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"users\"></span>\n" +
+        "                            Store Orders History\n" +
+        "                        </a>\n" +
+        "                    </li>" +
+        "                   <li class=\"nav-item\">\n" +
+        "                        <a id=\"show-feedbacks-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"users\"></span>\n" +
+        "                            Show Feedbacks\n" +
+        "                        </a>\n" +
+        "                    </li>" +
+        "                   <li class=\"nav-item\">\n" +
+        "                        <a id=\"add-new-store-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"users\"></span>\n" +
+        "                            Add New Store\n" +
+        "                        </a>\n" +
+        "                    </li>"
+
+    $("#button-columns").append(newLiContent);
+}
+
+
+function addOwnerButtonsEvents ()
+{
+    $("#store-orders-btn").on("click", function () {
+        $("#loader").load('owner/storeOrders/storeOrders.html');
+    });
+    $("#show-feedbacks-btn").on("click", function () {
+        $("#loader").load('owner/showFeedbacks/showFeedbacks.html');
+    });
+    $("#add-new-store-btn").on("click", function () {
+        $("#loader").load('owner/addNewStore/addNewStore.html');
+    });
+}

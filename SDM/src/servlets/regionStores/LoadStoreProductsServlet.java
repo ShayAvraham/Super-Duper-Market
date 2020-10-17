@@ -2,10 +2,7 @@ package servlets.regionStores;
 
 import com.google.gson.Gson;
 import dataContainers.ProductDataContainer;
-import dataContainers.RegionDataContainer;
-import dataContainers.UserDataContainer;
-import exceptions.DuplicateValuesException;
-import jdk.nashorn.internal.ir.CatchNode;
+import dataContainers.StoreDataContainer;
 import managers.SystemManager;
 import utilities.ServletUtils;
 import utilities.SessionUtils;
@@ -18,7 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-public class LoadProductsServlet extends HttpServlet
+public class LoadStoreProductsServlet extends HttpServlet
 {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
@@ -26,9 +23,10 @@ public class LoadProductsServlet extends HttpServlet
         response.setContentType("application/json");
         String regionName = SessionUtils.getRegionName(request);
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
-        Collection<ProductDataContainer> regionProducts = systemManager.GetRegionProducts(regionName);
+        int storeId = ServletUtils.getIntParameter(request,"storeID");
+        Collection<ProductDataContainer> storeProducts = systemManager.GetStoreProducts(regionName,storeId);
         Gson gson = new Gson();
-        String jsonResponse = gson.toJson(regionProducts);
+        String jsonResponse = gson.toJson(storeProducts);
         response.setStatus(200);
         PrintWriter out = response.getWriter();
         out.print(jsonResponse);
