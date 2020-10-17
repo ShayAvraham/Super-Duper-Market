@@ -64,23 +64,21 @@ public class SystemManager
         regionsData.put(newRegion.getName(),RegionDataContainerBuilder.createRegionData(usersData.get(ownerID).getName(),newRegion));
      }
 
-    /********************************************** Load Region Data ****************************************///change
-//    public Collection<ProductDataContainer> GetRegionProducts(String region)
-//    {
-//        try {
-//            LoadDataFromXMLFile(1,"dani", "C:\\Users\\shaya\\Desktop\\shay\\לימודים\\JAVA\\Super-Duper-Market\\Engine\\src\\recourses\\ex3-big.xml");
-//        }
-//        catch(Exception e)
-//        {
-//            int y =4;
-//        }
-//        return regionsData.get(region).getProductsData().values();
-//    }
-//
-//    public Collection<StoreDataContainer> GetRegionStores(String region)
-//    {
-//        return regionsData.get(region).getStoresData().values();
-//    }
+    /********************************************** Load Region Data ****************************************/
+    public Collection<ProductDataContainer> GetRegionProducts(String region)
+    {
+        return regionsData.get(region).getProductsData().values();
+    }
+
+    public Collection<StoreDataContainer> GetRegionStores(String region)
+    {
+        return regionsData.get(region).getStoresData().values();
+    }
+
+    public Collection<ProductDataContainer> GetStoreProducts(String regionName, int storeId)//change
+    {
+        return regionsData.get(regionName).getStoresData().get(storeId).getProducts();
+    }
 
     /********************************************** Update Products Logic ****************************************/
 //

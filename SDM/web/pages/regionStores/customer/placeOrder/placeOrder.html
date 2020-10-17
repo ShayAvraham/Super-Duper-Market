@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../common/jquery-3.5.1.min.js"></script>
+    <script src="customer/placeOrder/placeOrder.js"></script>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <form class="needs-validation" novalidate>
+            <div class="form-row">
+                <div class = "col">
+                    <label for="order-type">Order Type</label>
+                    <select class="form-control select" id="order-type" required>
+                        <option selected disabled value="">Static</option>
+                        <option>Dynamic</option>
+                    </select>
+                </div>
+                <div class = "col">
+                    <label for="locationText">Location</label>
+                    <input id="name1" type="text" class = "form-control" id="locationText">
+                </div>
+                <div class = "col">
+                <label for="date">Date For Delivery</label>
+                <input type="date" class = "form-control" id="date">
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit form</button>
+        </form>
+    </div>
+</body>
+</html>
