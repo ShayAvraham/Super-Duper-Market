@@ -1,5 +1,6 @@
 package engineLogic;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +13,7 @@ public class Order
 
     private int id;
     private Customer customer;
+    private Point orderDestination;
     private LocalDate date;
     private Map<Store, Collection<OrderProduct>> products;
     private Map<Store, Collection<Discount>> discounts;

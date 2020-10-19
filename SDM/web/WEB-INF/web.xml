@@ -20,10 +20,25 @@
         <servlet-class>servlets.regionStores.LoadStoreProductsServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadAvailableDiscountsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadDynamicAllocationServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadDynamicAllocationServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoggedUserServlet</servlet-name>
         <servlet-class>utilities.LoggedUserServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>LoadUsersInfoServlet</servlet-name>
+<!--        <servlet-class>servlets.LoadUsersInfoServlet</servlet-class>-->
+    </servlet>
+    <servlet>
+        <servlet-name>LoadRegionsInfoServlet</servlet-name>
+<!--        <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>-->
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -41,6 +56,16 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadStoreProducts</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadAvailableDiscounts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadDynamicAllocationServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadDynamicAllocation</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>LoggedUserServlet</servlet-name>
         <url-pattern>/pages/regionStores/loggedUser</url-pattern>
@@ -48,5 +73,13 @@
     <servlet-mapping>
         <servlet-name>LoggedUserServlet</servlet-name>
         <url-pattern>/pages/dashboard/loggedUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadUsersInfoServlet</servlet-name>
+        <url-pattern>/pages/dashboard/users/loadUsersInfo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadRegionsInfoServlet</servlet-name>
+        <url-pattern>/pages/dashboard/stores/loadRegionsInfo</url-pattern>
     </servlet-mapping>
 </web-app>

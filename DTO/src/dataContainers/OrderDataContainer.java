@@ -1,5 +1,6 @@
 package dataContainers;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
@@ -8,6 +9,7 @@ public class OrderDataContainer
 {
     private int id;
     private UserDataContainer customer;
+    private Point OrderDestination;
     private LocalDate date;
     private Map<StoreDataContainer, Collection<ProductDataContainer>> products;
     private Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts;

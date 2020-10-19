@@ -19,6 +19,16 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoreProductsServlet</servlet-class>
     </servlet>
+<!-- change -->
+    <servlet>
+        <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadAvailableDiscountsServlet</servlet-class>
+    </servlet>
+<!-- change -->
+    <servlet>
+        <servlet-name>LoadDynamicAllocationServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadDynamicAllocationServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>LoggedUserServlet</servlet-name>
         <servlet-class>utilities.LoggedUserServlet</servlet-class>
@@ -41,6 +51,17 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadStoreProducts</url-pattern>
     </servlet-mapping>
+<!--   change -->
+    <servlet-mapping>
+        <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadAvailableDiscounts</url-pattern>
+    </servlet-mapping>
+    <!--   change -->
+    <servlet-mapping>
+        <servlet-name>LoadDynamicAllocationServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadDynamicAllocation</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>LoggedUserServlet</servlet-name>
         <url-pattern>/pages/regionStores/loggedUser</url-pattern>
