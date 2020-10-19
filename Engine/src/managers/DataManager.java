@@ -94,6 +94,7 @@ public class DataManager
         }
     }
 
+
 //    private final Set<String> usersSet;
 //
 //
@@ -107,5 +108,39 @@ public class DataManager
 //        return Collections.unmodifiableSet(usersSet);
 //    }
 //
+
+/********************************************** Place Order Logic ****************************************/
+
+/** Dynamic Store Allocation **/
+
+public Store getStoreWithTheCheapestPrice(String regionName, int productId)
+{
+    Store cheapestStore = null;
+    for(Store store : allRegions.get(regionName).getStores().values())
+    {
+        StoreProduct product = store.getProductById(productId);
+        if(product != null)
+        {
+            if(cheapestStore == null)
+            {
+                cheapestStore = store;
+            }
+            else if(cheapestStore.getProductById(productId).getPrice() > product.getPrice())
+            {
+                cheapestStore = store;
+            }
+        }
+    }
+    return cheapestStore;
+}
+
+
+    /** Available Discounts **/
+
+    public Discount getDiscount(String regionName, int storeID, String discountName)
+    {
+       return allRegions.get(regionName).getStores().get(storeID).getDiscountByName(discountName);
+    }
+
 
 }

@@ -1,39 +1,13 @@
-// $(function() {
-//     'use strict';
-//     window.addEventListener('load', function() {
-//         // Fetch all the forms we want to apply custom Bootstrap validation styles to
-//         var forms = document.getElementsByClassName('needs-validation');
-//         // Loop over them and prevent submission
-//         var validation = Array.prototype.filter.call(forms, function(form) {
-//             form.addEventListener('submit', function(event) {
-//                 if (form.checkValidity() === false) {
-//                     event.preventDefault();
-//                     event.stopPropagation();
-//                 }
-//                 form.classList.add('was-validated');
-//             }, false);
-//         });
-//     }, false);
-// });
+var orderType;
+var selectedStore
+var xPosition;
+var yPosition;
+var deliveryDate;
+var availableDiscounts;
+var storesToBuyFrom;
+var productsAmounts;
 
-// function isNumberKey(evt)
-// {
-//     var charCode = (evt.which) ? evt.which : evt.keyCode;
-//     if (charCode != 46 && charCode > 31
-//         && (charCode < 48 || charCode > 57))
-//         return false;
-//     return true;
-// }
-//
-// $("#name1").addEventListener()
+$(function() {
+    $("#main-place-order-container").load('customer/placeOrder/chooseProducts/chooseProducts.html');
 
-$('#name1').keypress(function(e) {
-    var a = [];
-    var k = e.which;
-
-    for (i = 48; i < 58; i++)
-        a.push(i);
-
-    if (!(a.indexOf(k)>=0))
-        e.preventDefault();
 });

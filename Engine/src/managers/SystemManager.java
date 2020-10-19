@@ -1,13 +1,12 @@
 package managers;
 
+import builders.DiscountDataContainerBuilder;
 import builders.UserDataContainerBuilder;
-import dataContainers.ProductDataContainer;
-import dataContainers.RegionDataContainer;
-import dataContainers.StoreDataContainer;
-import dataContainers.UserDataContainer;
+import dataContainers.*;
 import builders.RegionDataContainerBuilder;
 import engineLogic.Owner;
 import engineLogic.Region;
+import engineLogic.Store;
 import engineLogic.User;
 
 import javax.management.InstanceNotFoundException;
@@ -15,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class SystemManager
     private Map<Integer, UserDataContainer> usersData;
     private Map <String, RegionDataContainer> regionsData;
 
-    private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
+ //   private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
 
     private static DecimalFormat DECIMAL_FORMAT;
 
@@ -59,7 +59,6 @@ public class SystemManager
 
     public void LoadDataFromXMLFile(int ownerID,String ownerName, InputStream xmlFileInputStream) throws JAXBException, FileNotFoundException, InstanceNotFoundException//change
     {
-        //AddNewUser(new UserDataContainer("dani","owner"));
         Region newRegion = dataManager.deserializeXMLToRegion(ownerID,ownerName,xmlFileInputStream);
         regionsData.put(newRegion.getName(),RegionDataContainerBuilder.createRegionData(usersData.get(ownerID).getName(),newRegion));
      }
@@ -80,14 +79,14 @@ public class SystemManager
         return regionsData.get(regionName).getStoresData().get(storeId).getProducts();
     }
 
-    /********************************************** Load All Regions data ****************************************/
+    /**************** Load All Regions data **************/
 
     public Collection<RegionDataContainer> GetAllRegions()
     {
         return regionsData.values();
     }
 
-    /********************************************** Load All Users data ****************************************/
+    /**************** Load All Users data **************/
 
     public Collection<UserDataContainer> GetAllUsers()
     {
@@ -152,97 +151,75 @@ public class SystemManager
 //    }
 //
     /********************************************** Place Order Logic ****************************************/
-//
-//    public void validateSelectedProducts(Collection<ProductDataContainer>selectedProducts)
-//    {
-//        if(selectedProducts.isEmpty())
-//        {
-//            throw new IllegalArgumentException("You must select at least one product");
-//        }
-//    }
-//
-//
+
     /** Dynamic Store Allocation **/
-//    public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(Collection <ProductDataContainer> productsToPurchase)
-//    {
-//        storeToPurchaseFrom = new HashMap();
-//        for (ProductDataContainer productToPurchase : productsToPurchase)
-//        {
-//            //   StoreDataContainer store = getStoreDataContainer(getStoreWithTheCheapestPrice(productToPurchase.getId()));
-//            StoreDataContainer store = getStoreDataById(getStoreWithTheCheapestPrice(productToPurchase.getId()).getId());
-//
-//            ArrayList<ProductDataContainer> products = new ArrayList<ProductDataContainer>();
-//            products.add(productToPurchase);
-//            if(storeToPurchaseFrom.putIfAbsent(store, products) != null)
-//            {
-//                storeToPurchaseFrom.get(store).add(productToPurchase);
-//            }
-//        }
-//        return storeToPurchaseFrom;
-//
-//    }
-//
-//    private Store getStoreWithTheCheapestPrice(int productId)
-//    {
-//        Store cheapestStore = null;
-//        for(Store store : region.getStores().values())
-//        {
-//            StoreProduct product = store.getProductById(productId);
-//            if(product != null)
-//            {
-//                if(cheapestStore == null)
-//                {
-//                    cheapestStore = store;
-//                }
-//                else if(cheapestStore.getProductById(productId).getPrice() > product.getPrice())
-//                {
-//                    cheapestStore = store;
-//                }
-//            }
-//        }
-//        return cheapestStore;
-//    }
-//
+    public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(String regionName,Collection<Integer> productsToPurchase)
+    {
+        Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom = new HashMap();
+        for (Integer productToPurchaseID : productsToPurchase)
+        {
+            StoreDataContainer store = regionsData.get(regionName).getStoresData().
+                    get(dataManager.getStoreWithTheCheapestPrice(regionName,productToPurchaseID).getId());
+
+            ArrayList<ProductDataContainer> products = new ArrayList<>();
+            ProductDataContainer product = store.getProductDataContainerById(productToPurchaseID);
+            products.add(product);
+            if(storeToPurchaseFrom.putIfAbsent(store, products) != null)
+            {
+                storeToPurchaseFrom.get(store).add(product);
+            }
+        }
+        return storeToPurchaseFrom;
+
+    }
     /** Available Discounts **/
-//
-//    public Map<StoreDataContainer,Collection<DiscountDataContainer>> getAvailableDiscounts(Map<StoreDataContainer, Collection<ProductDataContainer>> storeToPurchaseFrom)
-//    {
-//        Map<StoreDataContainer,Collection<DiscountDataContainer>> availableDiscounts = new HashMap<>();
-//        for (StoreDataContainer store: storeToPurchaseFrom.keySet())
-//        {
-//            Collection <DiscountDataContainer> availableStoreDiscounts = getAvailableDiscountsInStore(store,storeToPurchaseFrom.get(store));
-//            if(availableStoreDiscounts != null)
-//            {
-//                availableDiscounts.put(store,availableStoreDiscounts);
-//            }
-//        }
-//        return availableDiscounts;
-//    }
-//
-//    private Collection<DiscountDataContainer> getAvailableDiscountsInStore(StoreDataContainer store, Collection<ProductDataContainer> products)
-//    {
-//        Collection<DiscountDataContainer> availableStoreDiscounts = new ArrayList<>();
-//        for(DiscountDataContainer discount : store.getDiscounts())
-//        {
-//            for (ProductDataContainer product : products)
-//            {
-//                if (discount.getDiscountProduct().equals(product))
-//                {
-//                    for(double i = product.amountProperty().get(); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
-//                    {
-//                        availableStoreDiscounts.add(createDiscountData(region.getStores().get
-//                                (store.getId())
-//                                .getDiscountByName(discount.getDiscountName())));
-//                    }
-//                }
-//            }
-//        }
-//        if(availableStoreDiscounts.isEmpty())
-//        {
-//            return null;
-//        }
-//        return availableStoreDiscounts;
-//    }
+
+    public Map<StoreDataContainer,Collection<DiscountDataContainer>> getAvailableDiscounts(String regionName,
+                           Map<Integer, Collection<Integer>> storeToPurchaseFrom, Map<Integer, Float> productsAmounts)
+    {
+
+        Map<StoreDataContainer,Collection<DiscountDataContainer>> availableDiscounts = new HashMap<>();
+        for (int storeID : storeToPurchaseFrom.keySet())
+        {
+            StoreDataContainer store = regionsData.get(regionName).getStoresData().get(storeID);
+            Collection <DiscountDataContainer> availableStoreDiscounts = getAvailableDiscountsInStore(
+                    regionName,store,storeToPurchaseFrom.get(storeID),productsAmounts);
+            if(availableStoreDiscounts != null)
+            {
+                availableDiscounts.put(store,availableStoreDiscounts);
+            }
+        }
+        return availableDiscounts;
+    }
+
+    private Collection<DiscountDataContainer> getAvailableDiscountsInStore(String regionName, StoreDataContainer store,
+                                                       Collection<Integer> products, Map<Integer, Float> productsAmounts)
+    {
+        Collection<DiscountDataContainer> availableStoreDiscounts = new ArrayList<>();
+        for(DiscountDataContainer discount : store.getDiscounts())
+        {
+            for (int productID : products)
+            {
+                ProductDataContainer product = store.getProductDataContainerById(productID);
+                if (discount.getDiscountProduct().equals(product))
+                {
+                    for(double i = productsAmounts.get(productID); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
+                    {
+                        availableStoreDiscounts.add(DiscountDataContainerBuilder.createDiscountData(
+                                regionsData.get(regionName).getProductsData(),
+                                dataManager.getDiscount(regionName,store.getId(),discount.getDiscountName())
+
+                        ));
+                    }
+                }
+            }
+        }
+        if(availableStoreDiscounts.isEmpty())
+        {
+            return null;
+        }
+        return availableStoreDiscounts;
+    }
 //
 //    public void validateSelectedDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
 //    {
@@ -636,18 +613,9 @@ public class SystemManager
 //
     /********************************************** Utilities ****************************************/
 //
-//    public StoreDataContainer getStoreDataById(int storeId)
+//    public StoreDataContainer getStoreDataById(String regionName,int storeId)
 //    {
-//        StoreDataContainer storeDataContainer = null;
-//        for (StoreDataContainer storeData : allStoresData)
-//        {
-//            if(storeData.getId() == storeId)
-//            {
-//                storeDataContainer = storeData;
-//                break;
-//            }
-//        }
-//        return storeDataContainer;
+//        return regionsData.get(regionName).getStoresData().get(storeId);
 //    }
 //
 //    public ProductDataContainer getProductDataById(int productId)

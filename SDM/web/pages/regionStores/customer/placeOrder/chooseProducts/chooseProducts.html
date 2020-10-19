@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../common/jquery-3.5.1.min.js"></script>
+    <script src="customer/placeOrder/chooseProducts/chooseProducts.js"></script>
+</head>
+<body>
+            <form  id="products-form" >
+            <div class="form-row">
+                <div class = "col">
+                    <label for="order-type">Order Type</label>
+                    <select class="form-control select" id="order-type" required>
+                        <option>Dynamic</option>
+                        <option>Static</option>
+                    </select>
+                </div>
+                <div class = "col">
+                    <label for="x-location-text">X Location </label>
+                    <input type="number" class = "form-control" id="x-location-text" min = 0 max = 50 step= 1 required>
+                </div>
+                <div class = "col">
+                    <label for="y-location-text">Y Location</label>
+                    <input type="number" class = "form-control" id="y-location-text" min = 0 max = 50 step=1 required>
+                </div>
+                <div class = "col">
+                <label for="date">Date For Delivery</label>
+                <input type="date" class = "form-control" id="date" required>
+                </div>
+            </div>
+            <div class="form-row" id=static-order-row></div>
+            <div class="form-row" id=table-error-row>
+                <div id="table-error-placeholder" class="form-row alert-danger" role="alert"></div>
+            </div>
+            <div class="form-row" id=products-table-row>
+                <div class = "col">
+                    <table class="table responsive-lg" id ="products-table" >
+                        <thead>
+                        <tr>
+                            <th scope="col">Select</th>
+                            <th scope="col">I.D</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Purchase Form</th>
+                            <th scope="col">Amount</th>
+                        </tr>
+                        </thead>
+                        <tbody place>
+                    </table>
+                </div>
+            </div>
+            <div class="form-row" id=submit-row>
+                <button class="btn btn-primary" type="submit" id="submit-btn">Submit</button>
+            </div>
+        </form>
+</body>
+</html>
