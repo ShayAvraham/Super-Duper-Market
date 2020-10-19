@@ -1,76 +1,37 @@
-
-
-$(function () {
-    $("#users-btn").on("click", function () {
-        $("#loader").empty();
-        $("#loader").append(UsersContainer);
-    });
-    $("#stores-btn").on("click", function () {
-        $("#loader").empty();
-        $("#loader").append(StoreAreasContainer);
-    });
-    $("#account-btn").on("click", function () {
-        $("#loader").empty();
-        $("#loader").append(AccountContainer);
-    });
-});
-
-$(function () {
-    $.ajax({
-        url: "loggedUser",
-        timeout: 2000,
-        dataType: "json",
-        error: function (errorObject) {
-            $("#error-placeholder").text(errorObject.responseText);
-        },
-        success: function (data) {
-            loadUserButtons(data.role)
-        }
-    });
-});
-
-function loadUserButtons(userRole) {
-    if (userRole === "owner") {
-        createOwnerButtons()
-        addOwnerButtonsEvents()
-    }
-}
-
-function createOwnerButtons() {
-    var newLiContent = "                   <li class=\"nav-item\">\n" +
-        "                        <a id=\"load-xml-btn\" class=\"nav-link active\">\n" +
-        "                            <span data-feather=\"file\"></span>\n" +
-        "                            Load XML\n" +
-        "                        </a>\n" +
-        "                    </li>"
-
-    $("#nav-bar-buttons").prepend(newLiContent);
-}
-
-function addOwnerButtonsEvents() {
-    $("#load-xml-btn").on("click", function () {
-        $("#loader").empty();
-        $("#loader").append(selectFileContainer);
-    });
-}
-
-
-
+/*
+ data will arrive in the next form:
+ {
+    "stores": [
+        {
+            "id":1,
+            "name":"super1",
+            "ownerName":"moshe"
+            "position":(1,3),
+            "ppk":25,
+            "totalIncomeFromDeliveries":0
+            "totalIncomeFromProducts":0
+            "products":[{,...,}],
+            "orders":[{,...,}],
+            "discounts":[{,...,}]
+        },...
+    ]
+ }
+ */
 
 $(function() {
-    $.ajax({
-        url: "loadStores",
-        timeout: 2000,
-        dataType: 'json',
-        error: function(errorObject) {
-            $("#error-placeholder").append(errorObject.responseText)
-        },
-        success: function(data)
-        {
-            $.each(data || [], appendToStoreTable);
-        }
-    });
-    return false;
+        $.ajax({
+            url: "loadStores",
+            timeout: 2000,
+            dataType: 'json',
+            error: function(errorObject) {
+                $("#error-placeholder").append(errorObject.responseText)
+            },
+            success: function(data)
+            {
+                $.each(data || [], appendToStoreTable);
+            }
+        });
+        return false;
 });
 
 function appendToStoreTable(index,store)
@@ -94,10 +55,10 @@ $(function() {
     {
         $(this).addClass('highlight').siblings().removeClass('highlight');
         var selectedStoreID = $(this).closest("tr").find('th').eq(0).text()
-        if(!$("#storeProductsTable").length) {
-            createStoreProductsTable();
-        }
-        loadStoreProducts(selectedStoreID)
+            if(!$("#storeProductsTable").length) {
+                createStoreProductsTable();
+            }
+            loadStoreProducts(selectedStoreID)
     });
 });
 
@@ -179,4 +140,3 @@ function appendToStoreProductsTable(product,storeID)
 
     $("#storeProductsTable tbody").append(newRowContent);
 }
-

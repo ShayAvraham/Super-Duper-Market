@@ -23,6 +23,14 @@
         <servlet-name>LoggedUserServlet</servlet-name>
         <servlet-class>utilities.LoggedUserServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadUsersInfoServlet</servlet-name>
+        <servlet-class>servlets.LoadUsersInfoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadRegionsInfoServlet</servlet-name>
+        <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -48,5 +56,13 @@
     <servlet-mapping>
         <servlet-name>LoggedUserServlet</servlet-name>
         <url-pattern>/pages/dashboard/loggedUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadUsersInfoServlet</servlet-name>
+        <url-pattern>/pages/dashboard/users/loadUsersInfo</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadRegionsInfoServlet</servlet-name>
+        <url-pattern>/pages/dashboard/stores/loadRegionsInfo</url-pattern>
     </servlet-mapping>
 </web-app>

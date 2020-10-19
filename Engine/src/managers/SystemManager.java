@@ -80,6 +80,20 @@ public class SystemManager
         return regionsData.get(regionName).getStoresData().get(storeId).getProducts();
     }
 
+    /********************************************** Load All Regions data ****************************************/
+
+    public Collection<RegionDataContainer> GetAllRegions()
+    {
+        return regionsData.values();
+    }
+
+    /********************************************** Load All Users data ****************************************/
+
+    public Collection<UserDataContainer> GetAllUsers()
+    {
+        return usersData.values();
+    }
+
     /********************************************** Update Products Logic ****************************************/
 //
     /** Remove Product Logic **/
