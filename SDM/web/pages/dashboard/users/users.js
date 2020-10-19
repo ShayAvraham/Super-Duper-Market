@@ -11,3 +11,4 @@ const UsersContainer = '<h2>Users</h2>\n' +
                         '</tbody>\n' +
                         '</table>\n' +
                         '</div>';
+

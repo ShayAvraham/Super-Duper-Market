@@ -33,11 +33,11 @@
     </servlet>
     <servlet>
         <servlet-name>LoadUsersInfoServlet</servlet-name>
-<!--        <servlet-class>servlets.LoadUsersInfoServlet</servlet-class>-->
+        <servlet-class>servlets.LoadUsersInfoServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoadRegionsInfoServlet</servlet-name>
-<!--        <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>-->
+        <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
