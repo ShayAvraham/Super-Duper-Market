@@ -26,8 +26,6 @@ public class ChargeMoneyServlet extends HttpServlet
         response.setContentType("application/json");
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
         UserDataContainer userFromSession = SessionUtils.getUser(request);
-//        float amountToCharge = (Float) request.getAttribute("amount");
-//        LocalDate datePicked = (LocalDate) request.getAttribute("date");
         float amountToCharge = ServletUtils.getFloatParameter(request, "amount");
         Date datePicked = ServletUtils.getDateParameter(request, "date");
         Gson json = new Gson();
