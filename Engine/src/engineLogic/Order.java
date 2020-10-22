@@ -2,19 +2,16 @@ package engineLogic;
 
 import java.awt.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Order
 {
     private static int idNumber = 1;
 
     private int id;
-    private Customer customer;
+    private String regionName;
     private Point orderDestination;
-    private LocalDate date;
+    private Date date;
     private Map<Store, Collection<OrderProduct>> products;
     private Map<Store, Collection<Discount>> discounts;
     private boolean isDynamic;
@@ -24,13 +21,14 @@ public class Order
 
 
     /** Create new Order**/
-    public Order(LocalDate date, Customer customer, Map<Store, Collection<OrderProduct>> products,
+    public Order(Date date,Point orderDestination, String regionName, Map<Store, Collection<OrderProduct>> products,
                  Map<Store, Collection<Discount>> discounts, boolean isDynamic, float costOfAllProducts,
                  float deliveryCost, float totalCost)
     {
         this.id = idNumber++;
         this.date = date;
-        this.customer = customer;
+        this.orderDestination = orderDestination;
+        this.regionName = regionName;
         this.products = products;
         this.discounts = discounts;
         this.isDynamic = isDynamic;
@@ -40,13 +38,14 @@ public class Order
     }
 
     /** Create Sub Order**/
-    public Order(int id,LocalDate date, Customer customer, Map<Store, Collection<OrderProduct>> products,
+    public Order(int id,Date date,Point orderDestination, String regionName, Map<Store, Collection<OrderProduct>> products,
                  Map<Store, Collection<Discount>> discounts,boolean isDynamic, float costOfAllProducts,
                  float deliveryCost, float totalCost)
     {
         this.id = id;
         this.date = date;
-        this.customer = customer;
+        this.orderDestination = orderDestination;
+        this.regionName = regionName;
         this.products = products;
         this.discounts = discounts;
         this.isDynamic = isDynamic;
@@ -59,11 +58,15 @@ public class Order
         return id;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public String getRegionName() {
+        return regionName;
     }
 
-    public LocalDate getDate() {
+    public Point getOrderDestination() {
+        return orderDestination;
+    }
+
+    public Date getDate() {
         return date;
     }
 

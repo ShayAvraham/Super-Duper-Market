@@ -14,14 +14,14 @@ import java.util.Map;
 public final class OrderDataContainerBuilder
 {
     private static Map<Integer,ProductDataContainer> productsData;
-    private static Map<Integer,StoreDataContainer> storesData;
+    private static Map<Integer, StoreDataContainer> storesData;
 
     private OrderDataContainerBuilder()
     {
 
     }
 
-    public static OrderDataContainer createOrderData(Order order,Map<Integer,StoreDataContainer> stores,
+    public static OrderDataContainer createOrderData(Order order,Map<Integer, StoreDataContainer> stores,
                                               Map<Integer,ProductDataContainer> products)
     {
         storesData = stores;
@@ -29,7 +29,8 @@ public final class OrderDataContainerBuilder
         return new OrderDataContainer(
                 order.getId(),
                 order.getDate(),
-                UserDataContainerBuilder.createUserData(order.getCustomer()),
+                order.getOrderDestination(),
+                order.getRegionName(),
                 createOrderProductsData(order),
                 createOrderDiscountsData(order),
                 order.isDynamic(),
@@ -41,9 +42,9 @@ public final class OrderDataContainerBuilder
 
 
 
-    private static Map<StoreDataContainer, Collection<ProductDataContainer>> createOrderProductsData(Order order)
+    private static Map<Integer, Collection<ProductDataContainer>> createOrderProductsData(Order order)
     {
-        Map<StoreDataContainer, Collection<ProductDataContainer>> orderProducts = new HashMap<>();
+        Map<Integer, Collection<ProductDataContainer>> orderProducts = new HashMap<>();
         for(Store store : order.getProducts().keySet())
         {
             Collection<ProductDataContainer> products = new ArrayList<>();
@@ -51,14 +52,14 @@ public final class OrderDataContainerBuilder
             {
                 products.add(new ProductDataContainer(productsData.get(product.getId()),product.getAmount()));
             }
-            orderProducts.put(storesData.get(store.getId()),products);
+            orderProducts.put(store.getId(),products);
         }
         return  orderProducts;
     }
 
-    private static Map<StoreDataContainer, Collection<DiscountDataContainer>> createOrderDiscountsData(Order order)
+    private static Map<Integer, Collection<DiscountDataContainer>> createOrderDiscountsData(Order order)
     {
-        Map<StoreDataContainer, Collection<DiscountDataContainer>> orderDiscounts = new HashMap<>();
+        Map<Integer, Collection<DiscountDataContainer>> orderDiscounts = new HashMap<>();
         if(!order.getDiscounts().isEmpty())
         {
             for (Store store : order.getDiscounts().keySet())
@@ -68,7 +69,7 @@ public final class OrderDataContainerBuilder
                 {
                     discountsData.add(DiscountDataContainerBuilder.createDiscountData(productsData,discount));
                 }
-                orderDiscounts.put(storesData.get(store.getId()), discountsData);
+                orderDiscounts.put(store.getId(), discountsData);
             }
         }
         return orderDiscounts;

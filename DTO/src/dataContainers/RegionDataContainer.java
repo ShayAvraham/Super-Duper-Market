@@ -10,10 +10,10 @@ public class RegionDataContainer
     private int numOfOrders;
     private float orderCostAvg;
     private Map<Integer,ProductDataContainer> productsData;
-    private Map<Integer,StoreDataContainer> storesData;
+    private Map<Integer, StoreDataContainer> storesData;
 
     public RegionDataContainer(String name, String ownerName, int numOfStores, int numOfOrders, float orderCostAvg,
-                               Map<Integer,ProductDataContainer> productsData,Map<Integer,StoreDataContainer> storesData)
+                               Map<Integer,ProductDataContainer> productsData, Map<Integer, StoreDataContainer> storesData)
     {
         this.name = name;
         this.ownerName = ownerName;

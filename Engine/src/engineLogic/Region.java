@@ -19,14 +19,16 @@ public class Region
             " this product not defined in the system.";
 
     private String name;
+    private int ownerID;
     private Map<Integer,Product> products;
     private Map<Integer,Store> stores;
     private int numOfOrders;
     private float ordersCost;
 
-    public Region(SuperDuperMarketDescriptor marketDescription,String ownerName) throws InstanceNotFoundException
+    public Region(SuperDuperMarketDescriptor marketDescription, int ownerID, String ownerName) throws InstanceNotFoundException
     {
         this.name = marketDescription.getSDMZone().getName();
+        this.ownerID = ownerID;
         createProductsFromSDMItems(marketDescription.getSDMItems());
         createStoresFromSDMStores(marketDescription.getSDMStores(),ownerName);
         numOfOrders = 0;
@@ -36,6 +38,10 @@ public class Region
     public String getName()
     {
         return name;
+    }
+
+    public Integer getOwnerID() {
+        return ownerID;
     }
 
     public int getNumOfOrders()

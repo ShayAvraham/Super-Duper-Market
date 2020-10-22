@@ -1,3 +1,5 @@
+var loadedProducts
+var selectedStore;
 
 $(function() {
     $("#products-form").submit(function() {
@@ -7,19 +9,14 @@ $(function() {
             switch (orderType)
             {
                 case "Static":
-                    selectedStore = $("#select-store").val().split(" ")[1]
-//                    $("#main-place-order-container").load('customer/placeOrder/showStoresToBuyFrom/showStoresToBuyFrom.html');
-                    loadAvailableDiscounts()
+                    moveToChooseDiscounts()
                     break;
                 case "Dynamic":
-                   loadStoresToBuyFrom()
+                    $("#main-place-order-container").load('customer/placeOrder/showStoresToBuyFrom/showStoresToBuyFrom.html');
                     break;
             }
-
-
         }
-        return  false
-
+        return  false;
     });
 });
 
@@ -35,71 +32,41 @@ function checkIfOneProductSelected()
 
 function saveFormInputs()
 {
-    orderType = $("#order-type").val()
-    xPosition = $("#x-location-text").val()
-    yPosition = $("#y-location-text").val()
-    deliveryDate = $("#date")
-    productsAmounts = getProductsAmounts()
-}
+    orderType = $("#order-type").val();
+    xPosition = $("#x-location-text").val();
+    yPosition = $("#y-location-text").val();
+    deliveryDate = $("#date").val();
 
-function getProductsAmounts()
-{
-    var productsAmounts = {}
     $('input:checkbox:checked', $("#products-table")).each(function() {
-        var productID = $(this).closest('tr').find('td').eq(0).text();
-        productsAmounts[productID] = $(this).closest('tr').find('td input').val();
+        var product = findProduct($(this).closest('tr').find('td').eq(0).text());
+        productsAmounts[product] = $(this).closest('tr').find('td input').val();
     }).get();
-    return productsAmounts
-}
 
-function loadAvailableDiscounts()
-{
-    storesToBuyFrom = {}
-    storesToBuyFrom[selectedStore] = getSelectedProducts()
-    $.ajax({
-        url: "loadAvailableDiscounts",
-        type:"POST",
-        data: "selectedProducts=" + JSON.stringify(selectedProducts) + "&" + "productsAmounts=" + JSON.stringify(productsAmounts),
-        timeout: 2000,
-        dataType: 'json',
-        error: function(errorObject) {
-          $("#error-placeholder").append(errorObject.responseText)
-        },
-        success: function(data)
-        {
-            availableDiscounts = data
-            $("#main-place-order-container").load('customer/placeOrder/chooseDiscounts/chooseDiscounts.html');
-        }
-    });
-}
-
-function getSelectedProducts()
-{
-    var selectedProducts = [];
     $('input:checkbox:checked', $("#products-table")).each(function() {
-        selectedProducts.push($(this).closest('tr').find('td').eq(0).text());
+        selectedProducts.push(findProduct($(this).closest('tr').find('td').eq(0).text()));
     }).get();
-    return selectedProducts
 }
 
-function loadStoresToBuyFrom()
+function findProduct(productID)
 {
-    $.ajax({
-        url: "loadDynamicAllocation",
-        type: "POST",
-        data: "selectedProducts=" + JSON.stringify(getSelectedProducts()),
-      //  timeout: 12000,
-        dataType: 'json',
-        error: function(errorObject) {
-            $("#error-placeholder").append(errorObject.responseText)
-        },
-        success: function(data)
+    for(loadedProduct of loadedProducts)
+    {
+        if(loadedProduct.id == productID)
         {
-            storesToBuyFrom = data
-            $("#main-place-order-container").load('customer/placeOrder/showStoresToBuyFrom/showStoresToBuyFrom.html');
+            return loadedProduct;
         }
-    });
+    }
+    return false;
 }
+
+function moveToChooseDiscounts()
+{
+    var storeToBuyFrom = {store:selectedStore, products:selectedProducts};
+    storesToBuyFrom.push(storeToBuyFrom);
+    $("#main-place-order-container").load('customer/placeOrder/chooseDiscounts/chooseDiscounts.html');
+}
+
+
 
 
 $(function() {
@@ -117,6 +84,7 @@ function loadAllProducts()
         },
         success: function(data)
         {
+            loadedProducts = data;
             $("#products-table tbody").empty();
             $.each(data || [], appendToProductsTable);
         }
@@ -126,6 +94,10 @@ function loadAllProducts()
 
 function appendToProductsTable(index,product)
 {
+    var amountInput = product.purchaseForm === "WEIGHT" ?
+        "<input type=\"number\" class = \"form-control\" id=\"product-amount\" min = '0.1' step= '0.1' value='1'>\n"
+        :
+        "<input type=\"number\" class = \"form-control\" id=\"product-amount\" min = '1' step= '1' value='1'>\n";
     var newRowContent = "<tr>\n" +
         "      <th scope=\"row\">\n" +
         "<input type=\"checkbox\" value=\"\" id=\"select-product\">\n"+
@@ -133,9 +105,7 @@ function appendToProductsTable(index,product)
         "      <td>" + product.id+ "</td>\n" +
         "      <td>" + product.name +"</td>\n" +
         "      <td>" + product.purchaseForm + "</td>\n" +
-        "      <td>\n" +
-        "      <input type=\"number\" class = \"form-control\" id=\"product-amount\" min = 0.1 step='0.1' value='1'>\n" +
-        "</td>" +
+        "      <td>\n" + amountInput + "</td>" +
         "    </tr>"
     $("#products-table tbody").append(newRowContent);
 }
@@ -161,13 +131,17 @@ $(function() {
 
 
 function createStaticOrderRow() {
-
-    $("#static-order-row").append("                <div class = \"col\">\n" +
+    $("#static-order-row").append("<div class = \"col\">\n" +
      "                    <label for=\"select-store\">Store To Buy From</label>\n" +
      "                    <select class=\"form-control select\" id=\"select-store\">\n" +
-                        "<option id='place'>" + "Choose..." +"</option>\n" +
+                            "<option id='place'>" + "Choose..." +"</option>\n" +
      "                    </select>\n" +
-     "                </div>")
+    "                    <label id=\"delivery-cost-label\">Store To Buy From</label>\n" +
+        "                </div>" +
+    "                    <div class = \"col\">\n" +
+        "                    <label for=\"delivery-cost-label\">Delivery Cost</label>\n" +
+    "                        <input type=\"text\" class = \"form-control\" id=\"delivery-cost-text\" readonly>\n" +
+"                        </div>")
 
 
     $("#select-store").on("change", function () {
@@ -178,7 +152,7 @@ function createStaticOrderRow() {
 
 function loadStoreProducts() {
     $.ajax({
-        url: "loadStoreProducts",
+        url: "loadStore",
         timeout: 2000,
         dataType: 'json',
         data: "storeID=" + $( "#select-store" ).val().split(" ")[1],
@@ -186,11 +160,36 @@ function loadStoreProducts() {
             $("#error-placeholder").append(errorObject.responseText)
         },
         success: function (data) {
+            selectedStore = data;
+            loadedProducts = data.products;
+            appendToDeliveryCostText();
             $("#products-table tbody").empty();
-            $.each(data || [], appendToProductsTable);
+            $.each(data.products || [], appendToProductsTable);
         }
     });
 };
+
+function appendToDeliveryCostText()
+{
+    if($("#delivery-cost-text").length>0 && $("#x-location-text").val()>0
+        && $("#y-location-text").val()>0  && typeof selectedStore !== 'undefined')
+    {
+        var distance = Math.sqrt(Math.pow((selectedStore.position.x - $("#x-location-text").val()), 2) +
+            Math.pow((selectedStore.position.y - $("#y-location-text").val()), 2));
+        $("#delivery-cost-text").val((selectedStore.ppk * distance).toFixed(2));
+    }
+    return false;
+}
+
+$("#x-location-text").on("change", function () {
+    appendToDeliveryCostText()
+});
+
+$("#y-location-text").on("change", function () {
+    appendToDeliveryCostText()
+});
+
+
 
 function loadPossibleStore()
 {
@@ -212,6 +211,5 @@ function loadPossibleStore()
 function appendToSelectStore(index,store)
 {
     $("#select-store").append("<option>" + "id: "+ store.id + " | " + store.name +"</option>")
-
 }
 

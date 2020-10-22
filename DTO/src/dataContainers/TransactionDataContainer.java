@@ -1,16 +1,17 @@
 package dataContainers;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class TransactionDataContainer
 {
     private String transactionCategory;
-    private LocalDate date;
+    private Date date;
     private float cost;
     private float balanceBefore;
     private float balanceAfter;
 
-    public TransactionDataContainer(String transactionCategory, LocalDate date,
+    public TransactionDataContainer(String transactionCategory, Date date,
                                     float cost, float balanceBefore, float balanceAfter)
     {
         this.transactionCategory = transactionCategory;
@@ -25,7 +26,7 @@ public class TransactionDataContainer
         return transactionCategory;
     }
 
-    public LocalDate getDate()
+    public Date getDate()
     {
         return date;
     }

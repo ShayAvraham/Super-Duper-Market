@@ -1,14 +1,19 @@
 package managers;
 
+import dataContainers.DiscountDataContainer;
+import dataContainers.OrderDataContainer;
+import dataContainers.ProductDataContainer;
 import dataContainers.UserDataContainer;
 import engineLogic.*;
 import exceptions.DuplicateValuesException;
 import jaxb.generated.SuperDuperMarketDescriptor;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,19 +35,30 @@ public class DataManager
         this.allUsers = new HashMap<>();
     }
 
-    /********************************************** Load XML  ****************************************/
+    /********************************************** Load XML  ****************************************///change
 
     public Region deserializeXMLToRegion(int ownerID,String ownerName,InputStream xmlFileInputStream) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
-        Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(xmlFileInputStream),ownerName);
+        Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(xmlFileInputStream),ownerID,ownerName);
         if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)//change
         {
             throw new DuplicateValuesException("region",newRegion.getName());
         }
         ((Owner)allUsers.get(ownerID)).addRegion(newRegion);
         return newRegion;
+    }
+
+    public Transaction ChargeMoneyInUserAccount(int userId, float amountToCharge, Date transactionDate)
+    {
+        User user = allUsers.get(userId);
+        float balanceBefore = user.getBalance();
+        Transaction transaction = new Transaction(
+                Transaction.TransactionCategory.CHARGING, transactionDate, amountToCharge,
+                balanceBefore, balanceBefore + amountToCharge);
+        user.addTransaction(transaction);
+        return transaction;
     }
 
 //    private InputStream createInputStreamFromPath() throws FileNotFoundException
@@ -63,6 +79,15 @@ public class DataManager
 //            throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
 //        }
 //    }
+
+
+    public Map<String, Region> getAllRegions() {
+        return allRegions;
+    }
+
+    public Map<Integer, User> getAllUsers() {
+        return allUsers;
+    }
 
     /********************************************** Add New User  ***************************************/
 
@@ -111,6 +136,12 @@ public class DataManager
 
 /********************************************** Place Order Logic ****************************************/
 
+public int getRegionOwnerID(String regionName)
+{
+   return allRegions.get(regionName).getOwnerID();
+}
+
+
 /** Dynamic Store Allocation **/
 
 public Store getStoreWithTheCheapestPrice(String regionName, int productId)
@@ -142,5 +173,211 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
        return allRegions.get(regionName).getStores().get(storeID).getDiscountByName(discountName);
     }
 
+                            /**     Add New Order    **/
+    public void addNewOrder(OrderDataContainer newOrderDataContainer,String regionName, Integer userID)
+    {
+        Map <Integer,Order> newSubOrders = new HashMap<>();
+        Order newOrder = createNewOrder(newOrderDataContainer,regionName);
+        newSubOrders = createSubOrders(newOrderDataContainer, newOrder.getId(),regionName);
+        Region region = allRegions.get(regionName);
+        region.addNewOrder(newSubOrders);
+        if(allUsers.get(region.getOwnerID()) instanceof  Owner)
+        {
+            ((Owner) allUsers.get(region.getOwnerID())).getRegions().replace(regionName,region);
+        }
+        if(allUsers.get(userID) instanceof Customer)
+        {
+            ((Customer) allUsers.get(userID)).addOrder(newOrder);
+        }
 
+    }
+    /**     Create New Order    **/
+    private Order createNewOrder(OrderDataContainer newOrderDataContainer,String regionName)
+    {
+        return new Order(newOrderDataContainer.getDate(),
+                newOrderDataContainer.getOrderDestination(),
+                newOrderDataContainer.getRegionName(),
+                createOrderProducts(newOrderDataContainer.getProducts(),regionName),
+                createOrderDiscounts(newOrderDataContainer.getDiscounts(),regionName),
+                newOrderDataContainer.isDynamic(),
+                newOrderDataContainer.getCostOfAllProducts(),
+                newOrderDataContainer.getDeliveryCost(),
+                newOrderDataContainer.getTotalCost());
+    }
+
+    private Map<Store, Collection<OrderProduct>> createOrderProducts(
+            Map<Integer, Collection<ProductDataContainer>> products ,String regionName)
+    {
+        Map<Store, Collection<OrderProduct>> orderStoreAndProducts = new HashMap<>();
+        for(Integer storeID: products.keySet())
+        {
+            Store orderStore = allRegions.get(regionName).getStores().get(storeID);
+            orderStoreAndProducts.put(orderStore,createOrderStoreProducts(regionName,storeID,products.get(storeID)));
+        }
+        return orderStoreAndProducts;
+    }
+
+
+    private Collection<OrderProduct> createOrderStoreProducts(String regionName,Integer storeID,
+                                                              Collection<ProductDataContainer> products)
+    {
+        Collection<OrderProduct> orderStoreProducts = new ArrayList<>();
+        for(ProductDataContainer product : products)
+        {
+            orderStoreProducts.add(new OrderProduct(
+                    allRegions.get(regionName).getStores().get(storeID).getProductById(product.getId()),
+                    new Float(product.getAmount())));
+        }
+        return orderStoreProducts;
+    }
+
+    private Map<Store, Collection<Discount>> createOrderDiscounts(Map<Integer, Collection<DiscountDataContainer>> discounts
+                                                                ,String regionName)
+    {
+        Map<Store, Collection<Discount>> orderStoreAndProducts = new HashMap<>();
+        if(!discounts.isEmpty())
+        {
+            for (Integer storeID : discounts.keySet())
+            {
+                Store orderStore = allRegions.get(regionName).getStores().get(storeID);
+                orderStoreAndProducts.put(orderStore, createOrderStoreDiscounts(storeID, discounts.get(storeID),regionName));
+            }
+        }
+        return orderStoreAndProducts;
+    }
+
+    private Collection<Discount> createOrderStoreDiscounts(Integer storeID, Collection<DiscountDataContainer> discounts
+                                                            ,String regionName)
+    {
+        Collection<Discount> orderStoreDiscounts = new ArrayList<>();
+        for(DiscountDataContainer discount : discounts)
+        {
+            orderStoreDiscounts.add(new Discount(discount.getDiscountName(),
+                    discount.getDiscountType(),
+                    createDiscountProduct(storeID,discount,regionName),
+                    createProductsToOffer(storeID ,discount,regionName)));
+        }
+        return orderStoreDiscounts;
+    }
+
+    private DiscountProduct createDiscountProduct(Integer storeID, DiscountDataContainer discount,String regionName)
+    {
+        return new DiscountProduct( allRegions.get(regionName).getStores().
+                get(storeID).getProductById(discount.getDiscountProduct().getId()),
+                discount.getAmountForDiscount());
+    }
+
+    private Collection<OfferProduct> createProductsToOffer(Integer storeID,DiscountDataContainer discount,
+                                                            String regionName)
+    {
+        Collection<OfferProduct> offerProducts = new ArrayList<>();
+        for (Integer productID : discount.getPriceForOfferProduct().keySet())
+        {
+            offerProducts.add(new OfferProduct(
+                    allRegions.get(regionName).getStores().get(storeID).getProductById(productID),
+                    discount.getPriceForOfferProduct().get(productID),
+                    discount.getAmountForOfferProduct().get(productID)));
+        }
+        return offerProducts;
+    }
+
+    /** Create Sub Orders **/
+    private Map<Integer,Order> createSubOrders(OrderDataContainer newOrderDataContainer,int orderID,String regionName)
+    {
+        Map <Integer,Order> subOrders = new HashMap<>();
+        for(Integer storeID : newOrderDataContainer.getProducts().keySet())
+        {
+            subOrders.put(storeID,createSubOrder(newOrderDataContainer,orderID ,storeID,regionName));
+        }
+        return subOrders;
+    }
+
+    private Order createSubOrder(OrderDataContainer newOrder, int orderID, Integer storeID,String regionName)
+    {
+        Store store = allRegions.get(regionName).getStores().get(storeID);
+        float costOfAllProducts = getStoreCostOfAllProducts(storeID,newOrder.getProducts().get(storeID),
+                newOrder.getDiscounts().get(storeID),regionName);
+        float deliveryCost = getDeliveryCostFromStore(storeID,newOrder.getOrderDestination(),regionName);
+
+        return new Order(orderID,
+                newOrder.getDate(),
+                newOrder.getOrderDestination(),
+                newOrder.getRegionName(),
+                new HashMap<Store,Collection<OrderProduct>>()
+                {{put(store,createOrderStoreProducts(regionName,storeID,newOrder.getProducts().get(storeID)));}},
+                createSubOrderDiscounts(newOrder,storeID,store,regionName),
+                newOrder.isDynamic(),
+                costOfAllProducts,
+                deliveryCost,
+                costOfAllProducts + deliveryCost);
+    }
+
+
+    private float getStoreCostOfAllProducts(Integer storeID,Collection<ProductDataContainer> products,
+                                            Collection<DiscountDataContainer> discounts,
+                                            String regionName)
+    {
+        float storeCostOfAllProducts = 0;
+        storeCostOfAllProducts += getProductsCostFromStore(storeID,products,regionName);
+        if(discounts != null)
+        {
+            storeCostOfAllProducts += getDiscountsCostFromStore(storeID, discounts, regionName);
+        }
+        return storeCostOfAllProducts;
+    }
+
+    private float getProductsCostFromStore(Integer storeID, Collection<ProductDataContainer> products,
+                                          String regionName)
+    {
+        float cost = 0;
+        Store store = allRegions.get(regionName).getStores().get(storeID);
+        for (ProductDataContainer product:products)
+        {
+            cost += store.getProductById(product.getId()).getPrice() * product.getAmount();
+        }
+
+        return  cost;
+    }
+
+        private float getDiscountsCostFromStore(Integer storeID, Collection<DiscountDataContainer> discounts,
+                                                String regionName)
+    {
+        float costOfAllDiscounts = 0;
+        for (DiscountDataContainer discount : discounts)
+        {
+            for(Integer productID : discount.getPriceForOfferProduct().keySet())
+            {
+                costOfAllDiscounts += discount.getPriceForOfferProduct().get(productID) *
+                        discount.getAmountForOfferProduct().get(productID);
+            }
+        }
+        return costOfAllDiscounts;
+    }
+
+    private float getDeliveryCostFromStore(Integer storeID, Point orderDestination , String regionName)
+    {
+        Store store = allRegions.get(regionName).getStores().get(storeID);
+        float deliveryCost  = getDistanceBetweenStoreAndCustomer(store.getPosition(), orderDestination) * store.getPPK();
+        return deliveryCost;
+    }
+
+
+    private float getDistanceBetweenStoreAndCustomer(Point storePosition, Point customerPosition)
+    {
+        return Math.abs((float) storePosition.distance(customerPosition));
+    }
+
+    private HashMap<Store,Collection<Discount>> createSubOrderDiscounts(OrderDataContainer newOrder,
+                                                                        Integer storeID,
+                                                                        Store store,
+                                                                        String regionName)
+    {
+        HashMap<Store,Collection<Discount>> discounts = new HashMap<Store,Collection<Discount>>();
+        if(newOrder.getDiscounts().get(storeID) != null)
+        {
+            discounts.put(store, createOrderStoreDiscounts(storeID, newOrder.getDiscounts().get(storeID),regionName));
+        }
+        return discounts;
+    }
 }
+
