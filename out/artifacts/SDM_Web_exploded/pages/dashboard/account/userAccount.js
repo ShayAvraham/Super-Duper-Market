@@ -28,7 +28,7 @@ $(function() {
         console.log(datePicked);
         $.ajax({
             url: "chargeUserMoney",
-            timeout: 2000,
+            //timeout: 2000,
             dataType: 'json',
             // type: "POST",
             data: "amount=" + amountToRecharge + "&" + "date=" + datePicked,
