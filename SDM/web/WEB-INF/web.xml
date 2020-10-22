@@ -19,20 +19,20 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoreProductsServlet</servlet-class>
     </servlet>
-<!--    change -->
+
     <servlet>
         <servlet-name>LoadStoreServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoreServlet</servlet-class>
     </servlet>
-    <!--    change -->
+
     <servlet>
         <servlet-name>AddNewOrderServlet</servlet-name>
         <servlet-class>servlets.regionStores.AddNewOrderServlet</servlet-class>
     </servlet>
-<!--    <servlet>-->
-<!--        <servlet-name>ChargeMoneyServlet</servlet-name>-->
-<!--        <servlet-class>servlets.ChargeMoneyServlet</servlet-class>-->
-<!--    </servlet>-->
+    <servlet>
+        <servlet-name>ChargeMoneyServlet</servlet-name>
+        <servlet-class>servlets.ChargeMoneyServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadAvailableDiscountsServlet</servlet-class>
@@ -99,15 +99,15 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoadUsersInfoServlet</servlet-name>
-        <url-pattern>/pages/dashboard/users/loadUsersInfo</url-pattern>
+        <url-pattern>/pages/dashboard/loadUsersInfo</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoadRegionsInfoServlet</servlet-name>
-        <url-pattern>/pages/dashboard/stores/loadRegionsInfo</url-pattern>
+        <url-pattern>/pages/dashboard/loadRegionsInfo</url-pattern>
     </servlet-mapping>
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>ChargeMoneyServlet</servlet-name>-->
-<!--        <url-pattern>/pages/dashboard/chargeUserMoney</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet-mapping>
+        <servlet-name>ChargeMoneyServlet</servlet-name>
+        <url-pattern>/pages/dashboard/chargeUserMoney</url-pattern>
+    </servlet-mapping>
 
 </web-app>

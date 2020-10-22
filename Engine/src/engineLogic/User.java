@@ -2,6 +2,7 @@ package engineLogic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public abstract class User
 {
@@ -39,10 +40,13 @@ public abstract class User
         return transactions;
     }
 
-    public void addTransaction(Transaction transaction)
+    public void addTransaction(Transaction.TransactionCategory transactionCategory, Date date, float cost)
     {
+        float balanceAfter = transactionCategory.equals(Transaction.TransactionCategory.TRANSFER)
+                ? balance - cost : balance + cost;
+        Transaction transaction = new Transaction(transactionCategory,
+                date, cost, balance, balanceAfter);
         transactions.add(transaction);
+        balance = balanceAfter;
     }
-
-
 }

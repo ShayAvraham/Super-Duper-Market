@@ -50,15 +50,10 @@ public class DataManager
         return newRegion;
     }
 
-    public Transaction ChargeMoneyInUserAccount(int userId, float amountToCharge, Date transactionDate)
+    public void ChargeMoneyInUserAccount(int userId, float amountToCharge, Date transactionDate)
     {
         User user = allUsers.get(userId);
-        float balanceBefore = user.getBalance();
-        Transaction transaction = new Transaction(
-                Transaction.TransactionCategory.CHARGING, transactionDate, amountToCharge,
-                balanceBefore, balanceBefore + amountToCharge);
-        user.addTransaction(transaction);
-        return transaction;
+        user.addTransaction(Transaction.TransactionCategory.CHARGING, transactionDate, amountToCharge);
     }
 
 //    private InputStream createInputStreamFromPath() throws FileNotFoundException
