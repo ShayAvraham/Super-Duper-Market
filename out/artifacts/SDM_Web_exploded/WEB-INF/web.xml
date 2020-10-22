@@ -53,6 +53,11 @@
         <servlet-name>LoadRegionsInfoServlet</servlet-name>
         <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateSelectedRegionServlet</servlet-name>
+        <servlet-class>servlets.UpdateSelectedRegionServlet</servlet-class>
+    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -109,5 +114,8 @@
         <servlet-name>ChargeMoneyServlet</servlet-name>
         <url-pattern>/pages/dashboard/chargeUserMoney</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>UpdateSelectedRegionServlet</servlet-name>
+        <url-pattern>/pages/dashboard/updateSelectedRegion</url-pattern>
+    </servlet-mapping>
 </web-app>

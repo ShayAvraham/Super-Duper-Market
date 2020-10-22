@@ -2,6 +2,7 @@ package managers;
 
 import builders.DiscountDataContainerBuilder;
 import builders.UserDataContainerBuilder;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import dataContainers.*;
 import builders.RegionDataContainerBuilder;
 import engineLogic.Region;
@@ -92,6 +93,11 @@ public class SystemManager
     public Collection<UserDataContainer> GetAllUsers()
     {
         return usersData.values();
+    }
+
+    public UserDataContainer GetUserByID(int userId)
+    {
+        return usersData.get(userId);
     }
 
 

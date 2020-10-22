@@ -18,23 +18,19 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 
-public class ChargeMoneyServlet extends HttpServlet
+
+public class UpdateSelectedRegionServlet extends HttpServlet
 {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
         response.setContentType("application/json");
-        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
-        UserDataContainer userFromSession = SessionUtils.getUser(request);
-        float amountToCharge = ServletUtils.getFloatParameter(request, "amount");
-        Date datePicked = ServletUtils.getDateParameter(request, "date");
         Gson json = new Gson();
         String jsonResponse;
         try
         {
-            systemManager.ChargeMoneyInUserAccount(userFromSession.getId(), amountToCharge, datePicked);
-            UserDataContainer userDataContainer = systemManager.GetUserByID(userFromSession.getId());
-            request.getSession(false).setAttribute("user", userDataContainer);
+            String selectedRegionName = request.getParameter("selectedRegionName");
+            request.getSession(false).setAttribute("region", selectedRegionName);
             jsonResponse = json.toJson("yes");
             response.setStatus(200);
         }

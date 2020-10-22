@@ -1,3 +1,5 @@
+var refreshRate = 2000; //milli seconds
+
 $(function () {
     $.ajax({
         url: "loggedUser",
@@ -20,25 +22,20 @@ $(function () {
 });
 
 $(function() {
-    console.log("bla");
     $("#user-balance-form").submit(function() {
         var amountToRecharge = $("#money-amount").val();
         var datePicked = $("#date").val();
-        console.log(amountToRecharge);
-        console.log(datePicked);
         $.ajax({
             url: "chargeUserMoney",
-            //timeout: 2000,
             dataType: 'json',
-            // type: "POST",
             data: "amount=" + amountToRecharge + "&" + "date=" + datePicked,
             error: function(data) {
                 $("#error-label").text("Failed to charge the amount of money to your account");
             },
             success: function(data)
             {
-                updateUserCurrentBalance(data.balanceAfter);
-                addNewTransactionToTransactionTable(datePicked, amountToRecharge, data.balanceBefore, data.balanceAfter);
+                // updateUserCurrentBalance(data.balanceAfter);
+                // addNewTransactionToTransactionTable(datePicked, amountToRecharge, data.balanceBefore, data.balanceAfter);
                 $("#money-amount").val("");
                 $("#date").val("");
             }
@@ -65,15 +62,41 @@ function appendToTransactionTable(transaction) {
 }
 
 
-function addNewTransactionToTransactionTable(datePicked, amountToRecharge, balanceBefore, balanceAfter) {
-    var newRowContent = "<tr>\n" +
-        "      <td >" + CHARGING + "</td>\n" +
-        "      <td>" + datePicked + "</td>\n" +
-        "      <td>" + amountToRecharge + "</td>\n" +
-        "      <td>" + balanceBefore + "</td>\n" +
-        "      <td>" + balanceAfter + "</td>\n" +
-        "    </tr>"
-    $("#user-transactions-data").append(newRowContent);
+// function addNewTransactionToTransactionTable(datePicked, amountToRecharge, balanceBefore, balanceAfter) {
+//     var newRowContent = "<tr>\n" +
+//         "      <td >" + CHARGING + "</td>\n" +
+//         "      <td>" + datePicked + "</td>\n" +
+//         "      <td>" + amountToRecharge + "</td>\n" +
+//         "      <td>" + balanceBefore + "</td>\n" +
+//         "      <td>" + balanceAfter + "</td>\n" +
+//         "    </tr>"
+//     $("#user-transactions-data").append(newRowContent);
+// }
+
+
+function refreshTransactionsTable(transactions) {
+    if (transactions.length > 0)
+    {
+        $("#user-transactions-data").empty();
+        transactions.forEach((transaction) => {
+            appendToTransactionTable(transaction);
+        })
+    }
 }
+
+function ajaxTransactionsList() {
+    $.ajax({
+        url: "loggedUser",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            refreshTransactionsTable(data.transactions);
+        }
+    });
+}
+
+$(function() {
+    setInterval(ajaxTransactionsList, refreshRate);
+});
 
 

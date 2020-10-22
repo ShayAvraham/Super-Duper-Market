@@ -18,13 +18,11 @@ public class SessionUtils
         return sessionAttribute != null ? (UserDataContainer) sessionAttribute : null;
     }
 
-    public static String getRegionName(HttpServletRequest request)///change
+    public static String getRegionName(HttpServletRequest request)
     {
-//        HttpSession session = request.getSession(false);
-//        Object sessionAttribute = session != null ? session.getAttribute(REGION) : null;
-      //  return sessionAttribute != null ? (String) sessionAttribute : null;
-
-        return "Galil Maarvi";
+        HttpSession session = request.getSession(false);
+        Object sessionAttribute = session != null ? session.getAttribute(REGION) : null;
+        return sessionAttribute != null ? (String) sessionAttribute : null;
     }
 
     public static void clearSession (HttpServletRequest request) {

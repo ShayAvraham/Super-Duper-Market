@@ -1,3 +1,5 @@
+var refreshRate = 2000; //milli seconds
+
 $(function () {
     $.ajax({
         url: "loggedUser",
@@ -25,7 +27,6 @@ $(function() {
         var datePicked = $("#date").val();
         $.ajax({
             url: "chargeUserMoney",
-            timeout: 2000,
             dataType: 'json',
             data: "amount=" + amountToRecharge + "&" + "date=" + datePicked,
             error: function(data) {
@@ -33,8 +34,8 @@ $(function() {
             },
             success: function(data)
             {
-                updateUserCurrentBalance(data.balanceAfter);
-                addNewTransactionToTransactionTable(datePicked, amountToRecharge, data.balanceBefore, data.balanceAfter);
+                // updateUserCurrentBalance(data.balanceAfter);
+                // addNewTransactionToTransactionTable(datePicked, amountToRecharge, data.balanceBefore, data.balanceAfter);
                 $("#money-amount").val("");
                 $("#date").val("");
             }
@@ -61,15 +62,41 @@ function appendToTransactionTable(transaction) {
 }
 
 
-function addNewTransactionToTransactionTable(datePicked, amountToRecharge, balanceBefore, balanceAfter) {
-    var newRowContent = "<tr>\n" +
-        "      <td >" + CHARGING + "</td>\n" +
-        "      <td>" + datePicked + "</td>\n" +
-        "      <td>" + amountToRecharge + "</td>\n" +
-        "      <td>" + balanceBefore + "</td>\n" +
-        "      <td>" + balanceAfter + "</td>\n" +
-        "    </tr>"
-    $("#user-transactions-data").append(newRowContent);
+// function addNewTransactionToTransactionTable(datePicked, amountToRecharge, balanceBefore, balanceAfter) {
+//     var newRowContent = "<tr>\n" +
+//         "      <td >" + CHARGING + "</td>\n" +
+//         "      <td>" + datePicked + "</td>\n" +
+//         "      <td>" + amountToRecharge + "</td>\n" +
+//         "      <td>" + balanceBefore + "</td>\n" +
+//         "      <td>" + balanceAfter + "</td>\n" +
+//         "    </tr>"
+//     $("#user-transactions-data").append(newRowContent);
+// }
+
+
+function refreshTransactionsTable(transactions) {
+    if (transactions.length > 0)
+    {
+        $("#user-transactions-data").empty();
+        transactions.forEach((transaction) => {
+            appendToTransactionTable(transaction);
+        })
+    }
 }
+
+function ajaxTransactionsList() {
+    $.ajax({
+        url: "loggedUser",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            refreshTransactionsTable(data.transactions);
+        }
+    });
+}
+
+$(function() {
+    setInterval(ajaxTransactionsList, refreshRate);
+});
 
 
