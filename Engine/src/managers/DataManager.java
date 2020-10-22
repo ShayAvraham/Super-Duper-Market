@@ -1,5 +1,6 @@
 package managers;
 
+import dataContainers.TransactionDataContainer;
 import dataContainers.UserDataContainer;
 import engineLogic.*;
 import exceptions.DuplicateValuesException;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.*;
 
 public class DataManager
@@ -37,7 +39,7 @@ public class DataManager
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
         Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(xmlFileInputStream),ownerName);
-        if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)//change
+        if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null) /***** לבדוק אם צריך לשנות **************/
         {
             throw new DuplicateValuesException("region",newRegion.getName());
         }
@@ -143,4 +145,14 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
     }
 
 
+    public Transaction ChargeMoneyInUserAccount(int userId, float amountToCharge, LocalDate transactionDate)
+    {
+        User user = allUsers.get(userId);
+        float balanceBefore = user.getBalance();
+        Transaction transaction = new Transaction(
+                Transaction.TransactionCategory.CHARGING, transactionDate, amountToCharge,
+                balanceBefore, balanceBefore + amountToCharge);
+        user.addTransaction(transaction);
+        return transaction;
+    }
 }

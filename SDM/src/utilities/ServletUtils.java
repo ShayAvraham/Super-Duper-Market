@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import managers.SystemManager;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,6 +28,14 @@ public class ServletUtils {
         String value = request.getParameter(name);
         if (value != null) {
             return Integer.parseInt(value);
+        }
+        throw new NullPointerException();
+    }
+
+    public static float getFloatParameter(HttpServletRequest request, String name) {
+        String value = request.getParameter(name);
+        if (value != null) {
+            return Float.parseFloat(value);
         }
         throw new NullPointerException();
     }
@@ -68,5 +77,15 @@ public class ServletUtils {
             resultCollection.add(Integer.parseInt(elem));
         }
         return resultCollection;
+    }
+
+    public static LocalDate getLocalDateParameter(HttpServletRequest request, String date)
+    {
+        String value = request.getParameter(date);
+        if (value != null)
+        {
+            return LocalDate.parse(value);
+        }
+        throw new NullPointerException();
     }
 }

@@ -46,7 +46,7 @@ public final class UserDataContainerBuilder
         return transactionsData;
     }
 
-    private static TransactionDataContainer createTransactionsData(Transaction transaction)
+    public static TransactionDataContainer createTransactionsData(Transaction transaction)
     {
         return new TransactionDataContainer(transaction.getTransactionCategory().name().toLowerCase(),
                 transaction.getDate(),

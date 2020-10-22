@@ -77,6 +77,11 @@ public class UserDataContainer
         return balance;
     }
 
+    public void addTransactionDataContainer(TransactionDataContainer transactionDataContainer)
+    {
+        transactions.add(transactionDataContainer);
+    }
+
     @Override
     public String toString()
     {

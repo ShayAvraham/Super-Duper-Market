@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Scanner;
 
-@WebServlet("/uploadFile")
+@WebServlet(name = "FileUploadServlet", urlPatterns = {"/pages/dashboard/uploadFile"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
 public class FileUploadServlet extends HttpServlet
 {
@@ -31,7 +31,7 @@ public class FileUploadServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        response.setContentType("text/plain;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         Collection<Part> parts = request.getParts();
         UserDataContainer userFromSession = SessionUtils.getUser(request);
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());

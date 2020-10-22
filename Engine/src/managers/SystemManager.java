@@ -4,16 +4,14 @@ import builders.DiscountDataContainerBuilder;
 import builders.UserDataContainerBuilder;
 import dataContainers.*;
 import builders.RegionDataContainerBuilder;
-import engineLogic.Owner;
-import engineLogic.Region;
-import engineLogic.Store;
-import engineLogic.User;
+import engineLogic.*;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -94,6 +92,18 @@ public class SystemManager
     }
 
     /********************************************** Update Products Logic ****************************************/
+
+
+
+    /********************************************** Charge User Money ****************************************/
+
+    public void ChargeMoneyInUserAccount(int userId, float amountToCharge, LocalDate transactionDate)
+    {
+        Transaction transaction = dataManager.ChargeMoneyInUserAccount(userId, amountToCharge, transactionDate);
+        TransactionDataContainer transactionDataContainer = UserDataContainerBuilder.createTransactionsData(transaction);
+        usersData.get(userId).addTransactionDataContainer(transactionDataContainer);
+    }
+
 //
     /** Remove Product Logic **/
 //    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove) throws ValidationException
