@@ -43,6 +43,14 @@
 					</then-you-get>
 				</SDM-discount>
 				<SDM-discount>
+					<name>Test !</name>
+					<if-you-buy item-id="1" quantity="1"/>
+					<then-you-get operator="ALL-OR-NOTHING">
+						<SDM-offer item-id="1" quantity="1" for-additional="5"/>
+						<SDM-offer item-id="5" quantity="2" for-additional="4"/>
+					</then-you-get>
+				</SDM-discount>
+				<SDM-discount>
 					<name>1 + 1</name>
 					<if-you-buy item-id="2" quantity="1"/>
 					<then-you-get>
