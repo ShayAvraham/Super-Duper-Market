@@ -19,15 +19,19 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoreProductsServlet</servlet-class>
     </servlet>
-<!--    change -->
+
     <servlet>
         <servlet-name>LoadStoreServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoreServlet</servlet-class>
     </servlet>
-    <!--    change -->
+
     <servlet>
         <servlet-name>AddNewOrderServlet</servlet-name>
         <servlet-class>servlets.regionStores.AddNewOrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChargeMoneyServlet</servlet-name>
+        <servlet-class>servlets.ChargeMoneyServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
@@ -48,10 +52,6 @@
     <servlet>
         <servlet-name>LoadRegionsInfoServlet</servlet-name>
         <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ChargeMoneyServlet</servlet-name>
-        <servlet-class>servlets.ChargeMoneyServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -109,4 +109,5 @@
         <servlet-name>ChargeMoneyServlet</servlet-name>
         <url-pattern>/pages/dashboard/chargeUserMoney</url-pattern>
     </servlet-mapping>
+
 </web-app>

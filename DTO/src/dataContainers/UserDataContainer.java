@@ -100,9 +100,4 @@ public class UserDataContainer
         return name +" | " +
                 "id:" + id;
     }
-
-    public void addTransactionDataContainer(TransactionDataContainer transactionDataContainer)
-    {
-        transactions.add(transactionDataContainer);
-    }
 }

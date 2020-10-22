@@ -16,29 +16,36 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 
 public class ChargeMoneyServlet extends HttpServlet
 {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
         UserDataContainer userFromSession = SessionUtils.getUser(request);
 //        float amountToCharge = (Float) request.getAttribute("amount");
 //        LocalDate datePicked = (LocalDate) request.getAttribute("date");
         float amountToCharge = ServletUtils.getFloatParameter(request, "amount");
-        LocalDate datePicked = ServletUtils.getLocalDateParameter(request, "date");
+        Date datePicked = ServletUtils.getDateParameter(request, "date");
+        Gson json = new Gson();
+        String jsonResponse;
         try
         {
             systemManager.ChargeMoneyInUserAccount(userFromSession.getId(), amountToCharge, datePicked);
+            jsonResponse = json.toJson("yes");
             response.setStatus(200);
         }
         catch (Exception e)
         {
             response.setStatus(404);
-            response.getWriter().print(e.getMessage());
+            jsonResponse = json.toJson("No");
         }
+        PrintWriter out = response.getWriter();
+        out.print(jsonResponse);
+        out.flush();
     }
 
     @Override

@@ -97,11 +97,11 @@ public class SystemManager
 
     /**************** Charge User Money **************/
 
-    public void ChargeMoneyInUserAccount(int userId, float amountToCharge, Date transactionDate)
+    public synchronized void ChargeMoneyInUserAccount(int userId, float amountToCharge, Date transactionDate)
     {
-        Transaction transaction = dataManager.ChargeMoneyInUserAccount(userId, amountToCharge, transactionDate);
-        TransactionDataContainer transactionDataContainer = UserDataContainerBuilder.createTransactionsData(transaction);
-        usersData.get(userId).addTransactionDataContainer(transactionDataContainer);
+        dataManager.ChargeMoneyInUserAccount(userId, amountToCharge, transactionDate);
+        UserDataContainer userDataContainer = UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(userId));
+        usersData.replace(userId, userDataContainer);
     }
 
     /********************************************** Update Products Logic ****************************************/
