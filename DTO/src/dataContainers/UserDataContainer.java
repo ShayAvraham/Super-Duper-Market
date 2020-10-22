@@ -45,6 +45,18 @@ public class UserDataContainer
 
     }
 
+
+    public UserDataContainer(int id, String name, String role, int numOfOrders, float orderCostAvg, float deliveryCostAvg, Collection<TransactionDataContainer> transactions, float balance) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
+        this.numOfOrders = numOfOrders;
+        this.orderCostAvg = orderCostAvg;
+        this.deliveryCostAvg = deliveryCostAvg;
+        this.transactions = transactions;
+        this.balance = balance;
+    }
+
     public int getId() {
         return id;
     }
@@ -87,5 +99,10 @@ public class UserDataContainer
     {
         return name +" | " +
                 "id:" + id;
+    }
+
+    public void addTransactionDataContainer(TransactionDataContainer transactionDataContainer)
+    {
+        transactions.add(transactionDataContainer);
     }
 }

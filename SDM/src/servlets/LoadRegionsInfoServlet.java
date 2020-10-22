@@ -1,12 +1,9 @@
 package servlets;
 
 import com.google.gson.Gson;
-import dataContainers.ProductDataContainer;
 import dataContainers.RegionDataContainer;
-import dataContainers.StoreDataContainer;
 import managers.SystemManager;
 import utilities.ServletUtils;
-import utilities.SessionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

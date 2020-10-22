@@ -13,16 +13,15 @@ public class DiscountDataContainer
     private String discountType;
     private ProductDataContainer discountProduct;
     private double amountForDiscount;
-    private Map<ProductDataContainer,Integer> priceForOfferProduct;
-    private Map<ProductDataContainer,Double> amountForOfferProduct;
 
+    private Map<Integer,Integer> priceForOfferProduct;
+    private Map<Integer,Double> amountForOfferProduct;
+    private int selectedOfferID = 0;
 
-    private final BooleanProperty checked = new SimpleBooleanProperty(false);
-    private SimpleObjectProperty<ProductDataContainer> selectedOfferProduct = new SimpleObjectProperty<>();
 
     public DiscountDataContainer(String discountName, String discountType, ProductDataContainer discountProduct,
-                                 double amountForDiscount, Map<ProductDataContainer,Integer> priceForOfferProduct,
-                                 Map<ProductDataContainer,Double> amountForOfferProduct)
+                                 double amountForDiscount, Map<Integer,Integer> priceForOfferProduct,
+                                 Map<Integer,Double> amountForOfferProduct,String ifYouBuyDescription, String thenYouGetDescription)
     {
         this.discountName = discountName;
         this.discountType = discountType;
@@ -30,10 +29,9 @@ public class DiscountDataContainer
         this.amountForDiscount = amountForDiscount;
         this.priceForOfferProduct = priceForOfferProduct;
         this.amountForOfferProduct = amountForOfferProduct;
-        createIfYouBuyDescription();
-        createThenYouGetDescription();
+        this.ifYouBuyDescription = ifYouBuyDescription;
+        this.thenYouGetDescription = thenYouGetDescription;
     }
-
 
     public String getDiscountName() {
         return discountName;
@@ -59,88 +57,16 @@ public class DiscountDataContainer
         return amountForDiscount;
     }
 
-    public Map<ProductDataContainer, Integer> getPriceForOfferProduct() {
+    public Map<Integer, Integer> getPriceForOfferProduct() {
         return priceForOfferProduct;
     }
 
-    public Map<ProductDataContainer, Double> getAmountForOfferProduct() {
+    public Map<Integer, Double> getAmountForOfferProduct() {
         return amountForOfferProduct;
     }
 
-    public boolean isChecked() {
-        return checked.get();
-    }
-
-    public BooleanProperty checkedProperty() {
-        return checked;
-    }
-
-    public ProductDataContainer getSelectedOfferProduct() {
-        return selectedOfferProduct.get();
-    }
-
-    public SimpleObjectProperty<ProductDataContainer> selectedOfferProductProperty() {
-        return selectedOfferProduct;
-    }
-
-    private void createIfYouBuyDescription()
-    {
-        String purchaseFormStr = createPurchaseFormStr(discountProduct,amountForDiscount > 1? true:false);
-        ifYouBuyDescription = String.format("%1$s %2$s of %3$s",amountForDiscount,purchaseFormStr,discountProduct.getName());
-    }
-
-    private String createPurchaseFormStr(ProductDataContainer product,boolean isBiggerThanOne)
-    {
-        String purchaseFormStr = "";
-        switch (product.getPurchaseForm())
-        {
-            case "WEIGHT":
-                purchaseFormStr = "kg";
-                break;
-            case "QUANTITY":
-                purchaseFormStr = "unit";
-                if(isBiggerThanOne)
-                {
-                    purchaseFormStr += "s";
-                }
-                break;
-        }
-        return purchaseFormStr;
-    }
-
-    private void createThenYouGetDescription()
-    {
-        thenYouGetDescription = "";
-        String discountTypeStr = createDiscountTypeStr();
-
-        for(ProductDataContainer offerProduct : priceForOfferProduct.keySet())
-        {
-            String purchaseFormStr = createPurchaseFormStr(offerProduct,amountForOfferProduct.get(offerProduct)>1?true:false);
-            if(!offerProduct.equals(priceForOfferProduct.keySet().stream().findFirst().get()))
-            {
-                thenYouGetDescription += discountTypeStr;
-            }
-            thenYouGetDescription += String.format(" %1$s %2$s of %3$s for %4$s",
-                    amountForOfferProduct.get(offerProduct),
-                    purchaseFormStr,
-                    offerProduct.getName(),
-                    priceForOfferProduct.get(offerProduct));
-        }
-    }
-
-    private String createDiscountTypeStr()
-    {
-        String discountTypeStr = "";
-        switch (discountType)
-        {
-            case "ONE_OF":
-                discountTypeStr = " or";
-                break;
-            case "ALL_OR_NOTHING":
-                discountTypeStr = " and";
-                break;
-        }
-        return discountTypeStr;
+    public int getSelectedOfferID() {
+        return selectedOfferID;
     }
 
     @Override

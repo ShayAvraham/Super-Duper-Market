@@ -11,12 +11,12 @@ public class Transaction
     }
 
     private TransactionCategory transactionCategory;
-    private LocalDate date;
+    private Date date;
     private float cost;
     private float balanceBefore;
     private float balanceAfter;
 
-    public Transaction(TransactionCategory transactionCategory, LocalDate date, float cost,
+    public Transaction(TransactionCategory transactionCategory, Date date, float cost,
                        float balanceBefore, float balanceAfter)
     {
         this.transactionCategory = transactionCategory;
@@ -31,7 +31,7 @@ public class Transaction
         return transactionCategory;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 

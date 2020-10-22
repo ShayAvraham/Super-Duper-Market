@@ -10,7 +10,7 @@ public final class RegionDataContainerBuilder
 {
 
     private static Map<Integer,ProductDataContainer> productsData;
-    private static Map<Integer,StoreDataContainer> storesData;
+    private static Map<Integer, StoreDataContainer> storesData;
 
     private static DecimalFormat DECIMAL_FORMAT;
 
@@ -60,9 +60,9 @@ public final class RegionDataContainerBuilder
     }
 
     /** Create Stores Data Containers **/
-    private static Map<Integer,StoreDataContainer> createStoresData(Region region)
+    private static Map<Integer, StoreDataContainer> createStoresData(Region region)
     {
-        Map<Integer,StoreDataContainer> storesData = new HashMap<>();
+        Map<Integer, StoreDataContainer> storesData = new HashMap<>();
         for (Store store:region.getStores().values())
         {
             storesData.put(store.getId(),createStoreData(store,region));
@@ -101,9 +101,9 @@ public final class RegionDataContainerBuilder
         return allProductsData;
     }
 
-    private static Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct,Region region)
+    private static Map<Integer, Integer> getProductPricePerStore(StoreProduct selectedProduct, Region region)
     {
-        Map<Integer,Integer> productPricePerStore = new HashMap<>();
+        Map<Integer, Integer> productPricePerStore = new HashMap<>();
         for (Store store: region.getStores().values())
         {
             for (StoreProduct storeProduct: store.getStoreProducts())
@@ -148,40 +148,40 @@ public final class RegionDataContainerBuilder
         {
             for (Discount discount : store.getStoreDiscounts())
             {
-                allDiscountData.add(createDiscountData(discount));
+                allDiscountData.add(DiscountDataContainerBuilder.createDiscountData(productsData,discount));
             }
         }
 
         return allDiscountData;
     }
 
-    private static DiscountDataContainer createDiscountData(Discount discount)
-    {
-        return new DiscountDataContainer(discount.getName(),
-                discount.getDiscountType().name(),
-                productsData.get(discount.getDiscountProduct().getId()),
-                discount.getDiscountProduct().getAmountForDiscount(),
-                createPriceForOfferProduct(discount.getProductsToOffer()),
-                createAmountForOfferProduct(discount.getProductsToOffer()));
-    }
+//    private static DiscountDataContainer createDiscountData(Discount discount)
+//    {
+//        return new DiscountDataContainer(discount.getName(),
+//                discount.getDiscountType().name(),
+//                productsData.get(discount.getDiscountProduct().getId()),
+//                discount.getDiscountProduct().getAmountForDiscount(),
+//                createPriceForOfferProduct(discount.getProductsToOffer()),
+//                createAmountForOfferProduct(discount.getProductsToOffer()));
+//    }
 
-    private static Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
-    {
-        Map <ProductDataContainer,Integer> priceForOfferProduct = new HashMap<>();
-        for (OfferProduct offerProduct:productsToOffer)
-        {
-            priceForOfferProduct.put(productsData.get(offerProduct.getId()),offerProduct.getOfferPrice());
-        }
-        return priceForOfferProduct;
-    }
-
-    private static Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
-    {
-        Map <ProductDataContainer,Double> amountForOfferProduct = new HashMap<>();
-        for (OfferProduct offerProduct:productsToOffer)
-        {
-            amountForOfferProduct.put(productsData.get(offerProduct.getId()),offerProduct.getOfferAmount());
-        }
-        return amountForOfferProduct;
-    }
+//    private static Map<ProductDataContainer,Integer> createPriceForOfferProduct(Collection<OfferProduct> productsToOffer)
+//    {
+//        Map <ProductDataContainer,Integer> priceForOfferProduct = new HashMap<>();
+//        for (OfferProduct offerProduct:productsToOffer)
+//        {
+//            priceForOfferProduct.put(productsData.get(offerProduct.getId()),offerProduct.getOfferPrice());
+//        }
+//        return priceForOfferProduct;
+//    }
+//
+//    private static Map<ProductDataContainer,Double> createAmountForOfferProduct(Collection<OfferProduct> productsToOffer)
+//    {
+//        Map <ProductDataContainer,Double> amountForOfferProduct = new HashMap<>();
+//        for (OfferProduct offerProduct:productsToOffer)
+//        {
+//            amountForOfferProduct.put(productsData.get(offerProduct.getId()),offerProduct.getOfferAmount());
+//        }
+//        return amountForOfferProduct;
+//    }
 }

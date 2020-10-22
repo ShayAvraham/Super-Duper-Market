@@ -3,16 +3,17 @@ package dataContainers;
 import java.awt.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 public class OrderDataContainer
 {
     private int id;
-    private UserDataContainer customer;
-    private Point OrderDestination;
-    private LocalDate date;
-    private Map<StoreDataContainer, Collection<ProductDataContainer>> products;
-    private Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts;
+    private String regionName;
+    private Point orderDestination;
+    private Date date;
+    private Map<Integer, Collection<ProductDataContainer>> products;
+    private Map<Integer, Collection<DiscountDataContainer>> discounts;
     private boolean isDynamic;
     private float costOfAllProducts;
     private float deliveryCost;
@@ -21,12 +22,13 @@ public class OrderDataContainer
 
     /** Create new Order **/
 
-    public OrderDataContainer(LocalDate date, UserDataContainer customer , Map<StoreDataContainer,
-            Collection<ProductDataContainer>> products, Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,
+    public OrderDataContainer(Date date, Point orderDestination, String regionName , Map<Integer,
+            Collection<ProductDataContainer>> products, Map<Integer, Collection<DiscountDataContainer>> discounts,
                               boolean isDynamic, float costOfAllProducts, float deliveryCost, float totalCost)
     {
         this.date = date;
-        this.customer = customer;
+        this.orderDestination = orderDestination;
+        this.regionName = regionName;
         this.products = products;
         this.discounts = discounts;
         this.isDynamic = isDynamic;
@@ -38,14 +40,15 @@ public class OrderDataContainer
 
     /** Create Order From Data **/
 
-    public OrderDataContainer(int id, LocalDate date, UserDataContainer customer,
-                              Map<StoreDataContainer, Collection<ProductDataContainer>> products,
-                              Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,boolean isDynamic,
+    public OrderDataContainer(int id, Date date, Point orderDestination, String regionName,
+                              Map<Integer, Collection<ProductDataContainer>> products,
+                              Map<Integer, Collection<DiscountDataContainer>> discounts, boolean isDynamic,
                               float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes)
     {
         this.id = id;
         this.date = date;
-        this.customer = customer;
+        this.orderDestination = orderDestination;
+        this.regionName = regionName;
         this.products = products;
         this.discounts = discounts;
         this.isDynamic = isDynamic;
@@ -59,40 +62,58 @@ public class OrderDataContainer
 
     /** New **/
 
-    public OrderDataContainer(int id, LocalDate date,
-                              Map<StoreDataContainer, Collection<ProductDataContainer>> products,
-                              Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,boolean isDynamic,
-                              float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes)
-    {
-        this.id = id;
-        this.date = date;
-        this.products = products;
-        this.discounts = discounts;
-        this.isDynamic = isDynamic;
-        this.costOfAllProducts = costOfAllProducts;
-        this.deliveryCost = deliveryCost;
-        this.totalCost = totalCost;
-        this.amountOfProductsTypes = amountOfProductsTypes;
-
-    }
+//    public OrderDataContainer(int id, LocalDate date,
+//                              Map<StoreDataContainer, Collection<ProductDataContainer>> products,
+//                              Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts,boolean isDynamic,
+//                              float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes)
+//    {
+//        this.id = id;
+//        this.date = date;
+//        this.products = products;
+//        this.discounts = discounts;
+//        this.isDynamic = isDynamic;
+//        this.costOfAllProducts = costOfAllProducts;
+//        this.deliveryCost = deliveryCost;
+//        this.totalCost = totalCost;
+//        this.amountOfProductsTypes = amountOfProductsTypes;
+//
+//    }
+//
+//    public OrderDataContainer(int id, UserDataContainer customer, Point orderDestination, LocalDate date, Map<StoreDataContainer, Collection<ProductDataContainer>> products, Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts, boolean isDynamic, float costOfAllProducts, float deliveryCost, float totalCost, int amountOfProductsTypes) {
+//        this.id = id;
+//        this.customer = customer;
+//        OrderDestination = orderDestination;
+//        this.date = date;
+//        this.products = products;
+//        this.discounts = discounts;
+//        this.isDynamic = isDynamic;
+//        this.costOfAllProducts = costOfAllProducts;
+//        this.deliveryCost = deliveryCost;
+//        this.totalCost = totalCost;
+//        this.amountOfProductsTypes = amountOfProductsTypes;
+//    }
 
     public int getId() {
         return id;
     }
 
-    public UserDataContainer getCustomer() {
-        return customer;
+    public String getRegionName() {
+        return regionName;
     }
 
-    public LocalDate getDate() {
+    public Point getOrderDestination() {
+        return orderDestination;
+    }
+
+    public Date getDate() {
         return date;
     }
 
-    public Map<StoreDataContainer, Collection<ProductDataContainer>> getProducts() {
+    public Map<Integer, Collection<ProductDataContainer>> getProducts() {
         return products;
     }
 
-    public Map<StoreDataContainer, Collection<DiscountDataContainer>> getDiscounts() {
+    public Map<Integer, Collection<DiscountDataContainer>> getDiscounts() {
         return discounts;
     }
 

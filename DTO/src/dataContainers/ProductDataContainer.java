@@ -16,10 +16,11 @@ public class ProductDataContainer
     private float numOfProductWasOrdered;
     private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
+    private float amount = 0;
 
-    private final BooleanProperty checked = new SimpleBooleanProperty(false);
-    private final SimpleDoubleProperty amount = new SimpleDoubleProperty(1);
-    private final SimpleIntegerProperty price = new SimpleIntegerProperty(1);
+//    private final BooleanProperty checked = new SimpleBooleanProperty(false);
+//    private final SimpleDoubleProperty amount = new SimpleDoubleProperty(1);
+//    private final SimpleIntegerProperty price = new SimpleIntegerProperty(1);
 
     public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
@@ -51,7 +52,22 @@ public class ProductDataContainer
         this.numOfProductWasOrdered = product.getNumOfProductWasOrdered();
         this.pricePerStore = product.getPricePerStore();
         this.soldAmountPerStore = product.getSoldAmountPerStore();
-        this.amountProperty().setValue(amount);
+        this.amount = amount;
+    }
+
+    /**** json constructor ******/
+    public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct,
+                                float averagePrice, float numOfProductWasOrdered, Map<Integer, Integer> pricePerStore,
+                                Map<Integer, Float> soldAmountPerStore, float amount) {
+        this.id = id;
+        this.name = name;
+        this.purchaseForm = purchaseForm;
+        this.numberOfStoresSellProduct = numberOfStoresSellProduct;
+        this.averagePrice = averagePrice;
+        this.numOfProductWasOrdered = numOfProductWasOrdered;
+        this.pricePerStore = pricePerStore;
+        this.soldAmountPerStore = soldAmountPerStore;
+        this.amount = amount;
     }
 
     public int getId() {
@@ -86,31 +102,35 @@ public class ProductDataContainer
         return soldAmountPerStore;
     }
 
-    public boolean isChecked()
-    {
-        return checked.get();
-    }
-
-    public BooleanProperty checkedProperty()
-    {
-        return checked;
-    }
-
-    public double getAmount() {
-        return amount.get();
-    }
-
-    public SimpleDoubleProperty amountProperty() {
+    public float getAmount() {
         return amount;
     }
 
-    public int getPrice() {
-        return price.get();
-    }
-
-    public SimpleIntegerProperty priceProperty() {
-        return price;
-    }
+    //    public boolean isChecked()
+//    {
+//        return checked.get();
+//    }
+//
+//    public BooleanProperty checkedProperty()
+//    {
+//        return checked;
+//    }
+//
+//    public double getAmount() {
+//        return amount.get();
+//    }
+//
+//    public SimpleDoubleProperty amountProperty() {
+//        return amount;
+//    }
+//
+//    public int getPrice() {
+//        return price.get();
+//    }
+//
+//    public SimpleIntegerProperty priceProperty() {
+//        return price;
+//    }
 
     @Override
     public boolean equals(Object o)
@@ -130,7 +150,10 @@ public class ProductDataContainer
     @Override
     public String toString()
     {
-        return name +" | " +
-                "id: " + id;
+        return "id: " + id + " | " + name ;
     }
+
+
+
 }
+

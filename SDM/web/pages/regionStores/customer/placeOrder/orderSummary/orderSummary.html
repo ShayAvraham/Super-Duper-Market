@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="customer/placeOrder/orderSummary/orderSummary.js"></script>
+    <link rel="stylesheet" href="customer/placeOrder/orderSummary/orderSummary.css" />
+
+    <title>Title</title>
+</head>
+<body>
+    <form id ="order-summary-form">
+        <div class="form-row">
+            <div class = "col">
+                <label for="products-cost-text">Products Cost </label>
+                <input type="text" class = "form-control" id="products-cost-text" readonly>
+            </div>
+            <div class = "col">
+                <label for="delivery-cost-text">Delivery Cost </label>
+                <input type="text" class = "form-control" id="delivery-cost-text" readonly>
+            </div>
+            <div class = "col">
+                <label for="order-total-cost-text">Order Total Cost</label>
+                <input type="text" class = "form-control" id="order-total-cost-text" readonly>
+            </div>
+        </div>
+        <div class="form-row" id=stores-summary-table-row>
+            <div class = "col">
+                <table class="table responsive-lg table-hover" id ="stores-summary-table">
+                    <thead>
+                    <tr>
+                        <th scope="col">I.D</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">PPK</th>
+                        <th scope="col">Distance</th>
+                        <th scope="col">Delivery Cost</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-row" id=products-summary-table-row> </div>
+        <div class="form-row" id=submit-row>
+            <button class="btn btn-primary" type="submit" id="submit-btn">Submit Order</button>
+        </div>
+    </form>
+</body>
+</html>

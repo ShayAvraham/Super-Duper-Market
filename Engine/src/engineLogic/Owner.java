@@ -11,6 +11,10 @@ public class Owner extends User
         regions = new HashMap<>();
     }
 
+    public Map<String, Region> getRegions() {
+        return regions;
+    }
+
     public void addRegion(Region region)
     {
         regions.put(region.getName(),region);

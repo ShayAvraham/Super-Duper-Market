@@ -4,18 +4,17 @@ import builders.DiscountDataContainerBuilder;
 import builders.UserDataContainerBuilder;
 import dataContainers.*;
 import builders.RegionDataContainerBuilder;
-import engineLogic.*;
+import engineLogic.Region;
+import engineLogic.Transaction;
+import engineLogic.User;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBException;
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SystemManager
@@ -25,7 +24,7 @@ public class SystemManager
 
 
     private DataManager dataManager;
-    private Map<Integer, UserDataContainer> usersData;
+    private Map <Integer, UserDataContainer> usersData;
     private Map <String, RegionDataContainer> regionsData;
 
  //   private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
@@ -72,11 +71,15 @@ public class SystemManager
         return regionsData.get(region).getStoresData().values();
     }
 
-    public Collection<ProductDataContainer> GetStoreProducts(String regionName, int storeId)//change
+    public Collection<ProductDataContainer> GetStoreProducts(String regionName, int storeId)
     {
         return regionsData.get(regionName).getStoresData().get(storeId).getProducts();
     }
 
+    public StoreDataContainer GetStore(String regionName, int storeId)//change
+    {
+        return regionsData.get(regionName).getStoresData().get(storeId);
+    }
     /**************** Load All Regions data **************/
 
     public Collection<RegionDataContainer> GetAllRegions()
@@ -91,19 +94,17 @@ public class SystemManager
         return usersData.values();
     }
 
-    /********************************************** Update Products Logic ****************************************/
 
+    /**************** Charge User Money **************/
 
-
-    /********************************************** Charge User Money ****************************************/
-
-    public void ChargeMoneyInUserAccount(int userId, float amountToCharge, LocalDate transactionDate)
+    public void ChargeMoneyInUserAccount(int userId, float amountToCharge, Date transactionDate)
     {
         Transaction transaction = dataManager.ChargeMoneyInUserAccount(userId, amountToCharge, transactionDate);
         TransactionDataContainer transactionDataContainer = UserDataContainerBuilder.createTransactionsData(transaction);
         usersData.get(userId).addTransactionDataContainer(transactionDataContainer);
     }
 
+    /********************************************** Update Products Logic ****************************************/
 //
     /** Remove Product Logic **/
 //    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove) throws ValidationException
@@ -163,16 +164,16 @@ public class SystemManager
     /********************************************** Place Order Logic ****************************************/
 
     /** Dynamic Store Allocation **/
-    public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(String regionName,Collection<Integer> productsToPurchase)
+    public Map<StoreDataContainer, Collection<ProductDataContainer>> dynamicStoreAllocation(String regionName, Collection<ProductDataContainer> productsToPurchase)
     {
         Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom = new HashMap();
-        for (Integer productToPurchaseID : productsToPurchase)
+        for (ProductDataContainer productToPurchase : productsToPurchase)
         {
             StoreDataContainer store = regionsData.get(regionName).getStoresData().
-                    get(dataManager.getStoreWithTheCheapestPrice(regionName,productToPurchaseID).getId());
+                    get(dataManager.getStoreWithTheCheapestPrice(regionName,productToPurchase.getId()).getId());
 
             ArrayList<ProductDataContainer> products = new ArrayList<>();
-            ProductDataContainer product = store.getProductDataContainerById(productToPurchaseID);
+            ProductDataContainer product = store.getProductDataContainerById(productToPurchase.getId());
             products.add(product);
             if(storeToPurchaseFrom.putIfAbsent(store, products) != null)
             {
@@ -185,11 +186,12 @@ public class SystemManager
     /** Available Discounts **/
 
     public Map<StoreDataContainer,Collection<DiscountDataContainer>> getAvailableDiscounts(String regionName,
-                           Map<Integer, Collection<Integer>> storeToPurchaseFrom, Map<Integer, Float> productsAmounts)
+                                                                                Map<Integer, Collection<ProductDataContainer>> storeToPurchaseFrom,
+                                                                                Map<Integer, Float> productsAmounts)
     {
 
         Map<StoreDataContainer,Collection<DiscountDataContainer>> availableDiscounts = new HashMap<>();
-        for (int storeID : storeToPurchaseFrom.keySet())
+        for (Integer storeID : storeToPurchaseFrom.keySet())
         {
             StoreDataContainer store = regionsData.get(regionName).getStoresData().get(storeID);
             Collection <DiscountDataContainer> availableStoreDiscounts = getAvailableDiscountsInStore(
@@ -203,17 +205,18 @@ public class SystemManager
     }
 
     private Collection<DiscountDataContainer> getAvailableDiscountsInStore(String regionName, StoreDataContainer store,
-                                                       Collection<Integer> products, Map<Integer, Float> productsAmounts)
+                                                           Collection<ProductDataContainer> products,
+                                                           Map<Integer, Float> productsAmounts)
     {
         Collection<DiscountDataContainer> availableStoreDiscounts = new ArrayList<>();
         for(DiscountDataContainer discount : store.getDiscounts())
         {
-            for (int productID : products)
+            for (ProductDataContainer product : products)
             {
-                ProductDataContainer product = store.getProductDataContainerById(productID);
+//                ProductDataContainer product = store.getProductDataContainerById(productID);
                 if (discount.getDiscountProduct().equals(product))
                 {
-                    for(double i = productsAmounts.get(productID); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
+                    for(double i = productsAmounts.get(product.getId()); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
                     {
                         availableStoreDiscounts.add(DiscountDataContainerBuilder.createDiscountData(
                                 regionsData.get(regionName).getProductsData(),
@@ -230,6 +233,101 @@ public class SystemManager
         }
         return availableStoreDiscounts;
     }
+
+    /**     Add New Order    **/
+    public synchronized void AddNewOrder(Map<Integer, Collection<ProductDataContainer>> storesToBuyFrom,
+                            Map<Integer, Collection<DiscountDataContainer>> selectedDiscounts,
+                            Map<Integer, Float> productsAmounts, Date deliveryDate,
+                            Integer xPosition, Integer yPosition, String orderType, Float productsCost,
+                            Float deliveryCost, Float totalOrderCost, String regionName, int userID)
+    {
+        OrderDataContainer newOrderData = new OrderDataContainer(
+                deliveryDate,
+                new Point(xPosition,yPosition),
+                regionName,
+                createOrderDataProducts(storesToBuyFrom,productsAmounts),
+                createOrderDataDiscounts(selectedDiscounts),
+                orderType.toLowerCase().equals("static")? false: true,
+                productsCost,
+                deliveryCost,
+                totalOrderCost);
+
+        dataManager.addNewOrder(newOrderData,regionName,userID);
+        usersData.replace(userID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(userID)));
+        int ownerID = dataManager.getRegionOwnerID(regionName);
+        usersData.replace(ownerID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(ownerID)));
+        Region region = dataManager.getAllRegions().get(regionName);
+        regionsData.replace(regionName,RegionDataContainerBuilder.createRegionData(
+                usersData.get(ownerID).getName(),region));
+
+    }
+
+    private Map<Integer, Collection<ProductDataContainer>> createOrderDataProducts(
+            Map<Integer, Collection<ProductDataContainer>> storesToBuyFrom, Map<Integer, Float> productsAmounts)
+    {
+        Map<Integer, Collection<ProductDataContainer>> storesToBuyFromWithAmounts = new HashMap<>();
+        for(int storeID: storesToBuyFrom.keySet())
+        {
+            Collection productsWithAmounts = new ArrayList();
+            for(ProductDataContainer product : storesToBuyFrom.get(storeID))
+            {
+                productsWithAmounts.add(new ProductDataContainer(product,productsAmounts.get(product.getId())));
+            }
+            storesToBuyFromWithAmounts.put(storeID,productsWithAmounts);
+        }
+        return storesToBuyFromWithAmounts;
+    }
+
+
+    private Map<Integer, Collection<DiscountDataContainer>> createOrderDataDiscounts
+            (Map<Integer, Collection<DiscountDataContainer>> selectedDiscounts)
+    {
+        Map<Integer, Collection<DiscountDataContainer>> discounts = new HashMap<>();
+        if(!selectedDiscounts.isEmpty())
+        {
+            for (Integer storeID : selectedDiscounts.keySet())
+            {
+                discounts.put(storeID,createOrderDataStoreDiscounts(storeID,selectedDiscounts.get(storeID)));
+            }
+        }
+        return discounts;
+    }
+
+
+    private Collection<DiscountDataContainer> createOrderDataStoreDiscounts
+            (Integer storeID, Collection<DiscountDataContainer> discounts)
+    {
+        Collection<DiscountDataContainer> storeDiscounts = new ArrayList<>();
+        for (DiscountDataContainer discount : discounts)
+        {
+            if (discount.getDiscountType().equals("ONE_OF"))
+            {
+                storeDiscounts.add(createOrderDataStoreOneOfDiscount(discount));
+            }
+            else
+            {
+                storeDiscounts.add(discount);
+            }
+        }
+        return storeDiscounts;
+    }
+
+    private DiscountDataContainer createOrderDataStoreOneOfDiscount(DiscountDataContainer discount)
+    {
+        return new DiscountDataContainer(
+                discount.getDiscountName(),
+                discount.getDiscountType(),
+                discount.getDiscountProduct(),
+                discount.getAmountForDiscount(),
+                new HashMap<Integer, Integer>(){{put(discount.getSelectedOfferID(),
+                        discount.getPriceForOfferProduct().get(discount.getSelectedOfferID()));}},
+                new HashMap<Integer,Double>(){{put(discount.getSelectedOfferID(),
+                        discount.getAmountForOfferProduct().get(discount.getSelectedOfferID()));}},
+                discount.getIfYouBuyDescription(),
+                discount.getThenYouGetDescription());
+    }
+
+
 //
 //    public void validateSelectedDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
 //    {
@@ -269,104 +367,7 @@ public class SystemManager
 //
     /** Create  New Order  **/
 //
-//    public Map<StoreDataContainer, Collection<DiscountDataContainer>> CreateOrderDataDiscounts(Map<StoreDataContainer, Collection<DiscountDataContainer>> selectedDiscounts)
-//    {
-//        Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts = new HashMap<>();
-//        if(!selectedDiscounts.isEmpty())
-//        {
-//            for (StoreDataContainer store : selectedDiscounts.keySet())
-//            {
-//                discounts.put(store,createOrderDataStoreDiscounts(store,selectedDiscounts.get(store)));
-//            }
-//        }
-//        return discounts;
-//    }
-//
-//    private Collection<DiscountDataContainer> createOrderDataStoreDiscounts(StoreDataContainer store, Collection<DiscountDataContainer> discounts)
-//    {
-//        Collection<DiscountDataContainer> storeDiscounts = new ArrayList<>();
-//        for (DiscountDataContainer discount : discounts)
-//        {
-//            if (discount.getDiscountType().equals("ONE_OF"))
-//            {
-//                storeDiscounts.add(createOrderDataStoreOneOfDiscount(discount));
-//            }
-//            else
-//            {
-//                storeDiscounts.add(discount);
-//            }
-//        }
-//        return storeDiscounts;
-//    }
-//
-//    private DiscountDataContainer createOrderDataStoreOneOfDiscount(DiscountDataContainer discount)
-//    {
-//        return new DiscountDataContainer(
-//                discount.getDiscountName(),
-//                discount.getDiscountType(),
-//                discount.getDiscountProduct(),
-//                discount.getAmountForDiscount(),
-//                new HashMap<ProductDataContainer,Integer>(){{put(discount.selectedOfferProductProperty().get(),
-//                        discount.getPriceForOfferProduct().get(discount.selectedOfferProductProperty().get()));}},
-//                new HashMap<ProductDataContainer,Double>(){{put(discount.selectedOfferProductProperty().get(),
-//                        discount.getAmountForOfferProduct().get(discount.selectedOfferProductProperty().get()));}});
-//    }
-//
-//
-//    public float getOrderCostOfAllProducts(Map <StoreDataContainer,Collection<ProductDataContainer>> products,
-//                                           Map <StoreDataContainer,Collection<DiscountDataContainer>> discounts)
-//    {
-//        float orderCostOfAllProducts = 0;
-//        for(StoreDataContainer store: products.keySet())
-//        {
-//            orderCostOfAllProducts += getStoreCostOfAllProducts(store,products.get(store),discounts.get(store));
-//        }
-//
-//        return orderCostOfAllProducts;
-//    }
-//
-//    private float getStoreCostOfAllProducts(StoreDataContainer store,Collection<ProductDataContainer> products,
-//                                            Collection<DiscountDataContainer> discounts)
-//    {
-//        float storeCostOfAllProducts = 0;
-//        storeCostOfAllProducts += getProductsCostFromStore(store,products);
-//        if(discounts != null)
-//        {
-//            storeCostOfAllProducts += getDiscountsCostFromStore(store, discounts);
-//        }
-//        return storeCostOfAllProducts;
-//    }
-//
-//    private float getDiscountsCostFromStore(StoreDataContainer store, Collection<DiscountDataContainer> discounts)
-//    {
-//        float costOfAllDiscounts = 0;
-//        for (DiscountDataContainer discount : discounts)
-//        {
-//            for(ProductDataContainer product : discount.getPriceForOfferProduct().keySet())
-//            {
-//                costOfAllDiscounts += discount.getPriceForOfferProduct().get(product) *
-//                        discount.getAmountForOfferProduct().get(product);
-//            }
-//        }
-//        return costOfAllDiscounts;
-//    }
-//
-//    public float getOrderDeliveryCost(Collection<StoreDataContainer> stores, UserDataContainer customer)
-//    {
-//        float deliveryCost = 0;
-//        for(StoreDataContainer store : stores)
-//        {
-//            deliveryCost += getDeliveryCostFromStore(store,customer);
-//        }
-//        return deliveryCost;
-//    }
-//
-//    public float getDeliveryCostFromStore(StoreDataContainer store, UserDataContainer customer)
-//    {
-//        float deliveryCost  = getDistanceBetweenStoreAndCustomer(store, customer) * store.getPpk();
-//        return Float.valueOf(DECIMAL_FORMAT.format(deliveryCost));
-//    }
-//
+
 //
     /**     Add New Order    **/
 //    public void addNewOrder(OrderDataContainer newOrderDataContainer)
@@ -381,85 +382,6 @@ public class SystemManager
 //    }
 //
 //
-//    private Order createNewOrder(OrderDataContainer newOrderDataContainer)
-//    {
-//        return new Order(newOrderDataContainer.getDate(),
-//                region.getCustomers().get(newOrderDataContainer.getCustomer().getId()),
-//                createOrderProducts(newOrderDataContainer.getProducts()),
-//                createOrderDiscounts(newOrderDataContainer.getDiscounts()),
-//                newOrderDataContainer.isDynamic(),
-//                newOrderDataContainer.getCostOfAllProducts(),
-//                newOrderDataContainer.getDeliveryCost(),
-//                newOrderDataContainer.getTotalCost());
-//    }
-//
-//    private Map<Store, Collection<OrderProduct>> createOrderProducts(Map<StoreDataContainer, Collection<ProductDataContainer>> products)
-//    {
-//        Map<Store, Collection<OrderProduct>> orderStoreAndProducts = new HashMap<>();
-//        for(StoreDataContainer store: products.keySet())
-//        {
-//            Store orderStore = region.getStores().get(store.getId());
-//            orderStoreAndProducts.put(orderStore,createOrderStoreProducts(store,products.get(store)));
-//        }
-//        return orderStoreAndProducts;
-//    }
-//
-//    private Collection<OrderProduct> createOrderStoreProducts(StoreDataContainer store, Collection<ProductDataContainer> products)
-//    {
-//        Collection<OrderProduct> orderStoreProducts = new ArrayList<>();
-//        for(ProductDataContainer product : products)
-//        {
-//            orderStoreProducts.add(new OrderProduct(
-//                    region.getStores().get(store.getId()).getProductById(product.getId()),
-//                    new Float(product.getAmount())));
-//        }
-//        return orderStoreProducts;
-//    }
-//
-//    private Map<Store, Collection<Discount>> createOrderDiscounts(Map<StoreDataContainer, Collection<DiscountDataContainer>> discounts)
-//    {
-//        Map<Store, Collection<Discount>> orderStoreAndProducts = new HashMap<>();
-//        if(!discounts.isEmpty())
-//        {
-//            for (StoreDataContainer store : discounts.keySet())
-//            {
-//                Store orderStore = region.getStores().get(store.getId());
-//                orderStoreAndProducts.put(orderStore, createOrderStoreDiscounts(store, discounts.get(store)));
-//            }
-//        }
-//        return orderStoreAndProducts;
-//    }
-//
-//    private Collection<Discount> createOrderStoreDiscounts(StoreDataContainer store, Collection<DiscountDataContainer> discounts)
-//    {
-//        Collection<Discount> orderStoreDiscounts = new ArrayList<>();
-//        for(DiscountDataContainer discount : discounts)
-//        {
-//            orderStoreDiscounts.add(new Discount(discount.getDiscountName(),
-//                    discount.getDiscountType(),
-//                    createDiscountProduct(store,discount),
-//                    createProductsToOffer(store ,discount)));
-//        }
-//        return orderStoreDiscounts;
-//    }
-//
-//    private DiscountProduct createDiscountProduct(StoreDataContainer store, DiscountDataContainer discount)
-//    {
-//        return new DiscountProduct( region.getStores().get(store.getId()).getProductById(discount.getDiscountProduct().getId()),
-//                discount.getAmountForDiscount());
-//    }
-//
-//    private Collection<OfferProduct> createProductsToOffer(StoreDataContainer store,DiscountDataContainer discount)
-//    {
-//        Collection<OfferProduct> offerProducts = new ArrayList<>();
-//        for (ProductDataContainer product : discount.getPriceForOfferProduct().keySet())
-//        {
-//            offerProducts.add(new OfferProduct(region.getStores().get(store.getId()).getProductById(product.getId()),
-//                    discount.getPriceForOfferProduct().get(product),
-//                    discount.getAmountForOfferProduct().get(product)));
-//        }
-//        return offerProducts;
-//    }
 //
 //    private Map<Integer,Order> createSubOrders(OrderDataContainer newOrderDataContainer,int orderID)
 //    {

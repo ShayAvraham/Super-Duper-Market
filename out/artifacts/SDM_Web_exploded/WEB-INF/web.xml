@@ -19,6 +19,16 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadStoreProductsServlet</servlet-class>
     </servlet>
+<!--    change -->
+    <servlet>
+        <servlet-name>LoadStoreServlet</servlet-name>
+        <servlet-class>servlets.regionStores.LoadStoreServlet</servlet-class>
+    </servlet>
+    <!--    change -->
+    <servlet>
+        <servlet-name>AddNewOrderServlet</servlet-name>
+        <servlet-class>servlets.regionStores.AddNewOrderServlet</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
         <servlet-class>servlets.regionStores.LoadAvailableDiscountsServlet</servlet-class>
@@ -60,7 +70,16 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadStoreProducts</url-pattern>
     </servlet-mapping>
-
+<!--    change -->
+    <servlet-mapping>
+        <servlet-name>LoadStoreServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadStore</url-pattern>
+    </servlet-mapping>
+    <!--    change -->
+    <servlet-mapping>
+        <servlet-name>AddNewOrderServlet</servlet-name>
+        <url-pattern>/pages/regionStores/addNewOrder</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadAvailableDiscounts</url-pattern>
