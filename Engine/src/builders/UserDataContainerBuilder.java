@@ -1,6 +1,6 @@
 package builders;
 
-import dataContainers.FeedbackDataContainer;
+import dataContainers.NoticeDataContainer;
 import dataContainers.TransactionDataContainer;
 import dataContainers.UserDataContainer;
 import engineLogic.*;
@@ -52,26 +52,27 @@ public final class UserDataContainerBuilder
                 transaction.getBalanceAfter());
     }
 
-    private static Collection<FeedbackDataContainer> createUserFeedbacksData(User user)
+    private static Collection<NoticeDataContainer> createUserFeedbacksData(User user)
     {
-        Collection<FeedbackDataContainer> feedbackData = new ArrayList<>();
+        Collection<NoticeDataContainer> feedbackData = new ArrayList<>();
         if(user instanceof Owner)
         {
-            for (Feedback feedback: ((Owner) user).getFeedbacks())
-            {
-                feedbackData.add(createFeedbacksData(feedback));
-            }
+//            for (Feedback feedback: ((Owner) user).getNotices())
+//            {
+//                feedbackData.add(createFeedbacksData(feedback));
+//            }
         }
         return feedbackData;
     }
 
-    private static FeedbackDataContainer createFeedbacksData(Feedback feedback)
+    private static NoticeDataContainer createFeedbacksData(Feedback feedback)
     {
-        return new FeedbackDataContainer(feedback.getRegionName(),
-                feedback.getStoreID(),
-                feedback.getCustomerName(),
-                feedback.getRank(),
-                feedback.getDescription(),
-                feedback.getDate());
+//        return new NoticeDataContainer(feedback.getRegionName(),
+//                feedback.getStoreID(),
+//                feedback.getCustomerName(),
+//                feedback.getRank(),
+//                feedback.getDescription(),
+//                feedback.getDate());
+        return null;
     }
 }

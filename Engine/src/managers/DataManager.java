@@ -402,7 +402,7 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
     public User addNewFeedback(String regionName, Integer storeID, String customerName,
                                Integer rank, String description, Date date)
     {
-        Feedback newFeedback = new Feedback(regionName,storeID,customerName,rank,
+        Notice newFeedback = new Feedback(regionName,storeID,customerName,rank,
                                             description,date);
         String storeOwnerName = allRegions.get(regionName).getStores().get(storeID).getOwnerName();
         User storeOwner = getUserByName(storeOwnerName);

@@ -1,7 +1,6 @@
 $(function () {
     $.ajax({
         url: "loadUsersInfo",
-        timeout: 2000,
         dataType: 'json',
         error: function(errorObject) {
             $("#error-label").text(errorObject.responseText)
@@ -25,3 +24,27 @@ function appendToUsersTable(index, user)
     $("#all-users-data").append(newRowContent);
 }
 
+
+function refreshUsersTable(users) {
+    if (users.length > 0)
+    {
+        $("#all-users-data").empty();
+        users.forEach((user) => {
+            appendToUsersTable(user);
+        })
+    }
+}
+
+function ajaxUsersList() {
+    $.ajax({
+        url: "loadUsersInfo",
+        dataType: "json",
+        success: function (data) {
+            refreshUsersTable(data);
+        }
+    });
+}
+
+$(function() {
+    setInterval(ajaxUsersList, refreshRate);
+});

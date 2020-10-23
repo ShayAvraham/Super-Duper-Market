@@ -4,6 +4,7 @@ import builders.DiscountDataContainerBuilder;
 import builders.OrderDataContainerBuilder;
 import builders.RegionDataContainerBuilder;
 import builders.UserDataContainerBuilder;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import dataContainers.*;
 import engineLogic.Customer;
 import engineLogic.Order;
@@ -96,6 +97,11 @@ public class SystemManager
         return usersData.values();
     }
 
+    public UserDataContainer GetUserByID(int userId)
+    {
+        return usersData.get(userId);
+    }
+
 
     /**************** Charge User Money **************/
 
@@ -104,11 +110,6 @@ public class SystemManager
         dataManager.ChargeMoneyInUserAccount(userId, amountToCharge, transactionDate);
         UserDataContainer userDataContainer = UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(userId));
         usersData.replace(userId, userDataContainer);
-    }
-
-    public UserDataContainer GetUserByID(int userId)
-    {
-        return usersData.get(userId);
     }
 
     /********************************************** Update Products Logic ****************************************/

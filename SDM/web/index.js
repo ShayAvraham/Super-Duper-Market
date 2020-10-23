@@ -1,5 +1,4 @@
-$(function() { // onload...do
-    //add a function to the submit event
+$(function() {
     $("#loginForm").submit(function() {
         const userName = $("#username").val();
         if (userName) {
@@ -23,7 +22,6 @@ $(function() { // onload...do
         else {
             $("#error-placeholder").text("user name can not be empty");
         }
-        // by default - we'll always return false so it doesn't redirect the user.
         return false;
     });
 });

@@ -9,7 +9,7 @@ public class UserDataContainer
     private String name;
     private String role;
     private Collection<TransactionDataContainer> transactions;
-    private Collection<FeedbackDataContainer> feedbacks;
+    private Collection<NoticeDataContainer> notices;
     private float balance;
 
 
@@ -20,20 +20,20 @@ public class UserDataContainer
         this.name = name;
         this.role = role;
         this.transactions = new ArrayList<>();
-        this.feedbacks = new ArrayList<>();
+        this.notices = new ArrayList<>();
         this.balance = 0;
     }
 
     /** from exist user **/
     public UserDataContainer(int id, String name,String role,float balance,
                              Collection<TransactionDataContainer> transactions,
-                             Collection<FeedbackDataContainer> feedbacks)
+                             Collection<NoticeDataContainer> notices)
     {
         this.id = id;
         this.name = name;
         this.role = role;
         this.transactions = transactions;
-        this.feedbacks = feedbacks;
+        this.notices = notices;
         this.balance = balance;
     }
 
@@ -57,6 +57,9 @@ public class UserDataContainer
         return balance;
     }
 
+    public Collection<NoticeDataContainer> getNotices() {
+        return notices;
+    }
 
     @Override
     public String toString()

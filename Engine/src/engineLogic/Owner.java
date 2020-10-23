@@ -5,12 +5,12 @@ import java.util.*;
 public class Owner extends User
 {
     private Map<String,Region> regions;
-    private Collection<Feedback> feedbacks;
+    private Collection<Notice> notices;
     public Owner (String name,float balance, Collection<Transaction>transactions)
     {
         super(name,balance,transactions);
         regions = new HashMap<>();
-        feedbacks = new ArrayList<>();
+        notices = new ArrayList<>();
     }
 
     public Map<String, Region> getRegions() {
@@ -22,13 +22,13 @@ public class Owner extends User
         regions.put(region.getName(),region);
     }
 
-    public Collection<Feedback> getFeedbacks() {
-        return feedbacks;
+    public Collection<Notice> getNotices() {
+        return notices;
     }
 
-    public void addFeedback(Feedback newFeedback)
+    public void addFeedback(Notice newFeedback)
     {
-        feedbacks.add(newFeedback);
+        notices.add(newFeedback);
     }
 
 }

@@ -63,11 +63,10 @@
         <servlet-name>LoadUserOrdersServlet</servlet-name>
         <servlet-class>servlets.regionStores.showOrdersHistory.LoadUserOrdersServlet</servlet-class>
     </servlet>
-
-<!--    <servlet>-->
-<!--        <servlet-name>UpdateSelectedRegionServlet</servlet-name>-->
-<!--        <servlet-class>servlets.UpdateSelectedRegionServlet</servlet-class>-->
-<!--    </servlet>-->
+    <servlet>
+        <servlet-name>UpdateSelectedRegionServlet</servlet-name>
+        <servlet-class>servlets.UpdateSelectedRegionServlet</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -133,9 +132,8 @@
         <servlet-name>LoadUserOrdersServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadUserOrders</url-pattern>
     </servlet-mapping>
-
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>UpdateSelectedRegionServlet</servlet-name>-->
-<!--        <url-pattern>/pages/dashboard/updateSelectedRegion</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet-mapping>
+        <servlet-name>UpdateSelectedRegionServlet</servlet-name>
+        <url-pattern>/pages/dashboard/updateSelectedRegion</url-pattern>
+    </servlet-mapping>
 </web-app>
