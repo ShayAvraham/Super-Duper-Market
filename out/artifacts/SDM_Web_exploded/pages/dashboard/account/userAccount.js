@@ -20,17 +20,13 @@ $(function () {
 });
 
 $(function() {
-    console.log("bla");
     $("#user-balance-form").submit(function() {
         var amountToRecharge = $("#money-amount").val();
         var datePicked = $("#date").val();
-        console.log(amountToRecharge);
-        console.log(datePicked);
         $.ajax({
             url: "chargeUserMoney",
-            //timeout: 2000,
+            timeout: 2000,
             dataType: 'json',
-            // type: "POST",
             data: "amount=" + amountToRecharge + "&" + "date=" + datePicked,
             error: function(data) {
                 $("#error-label").text("Failed to charge the amount of money to your account");

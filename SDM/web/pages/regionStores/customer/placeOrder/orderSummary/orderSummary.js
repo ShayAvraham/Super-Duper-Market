@@ -6,8 +6,6 @@ var productsCost = 0;
 var totalOrderCost = 0;
 
 $(function() {
-
-    console.log("check first");
     appendToOrderCostSummary();
     $.each(storesToBuyFrom || [], appendToStoreSummaryTable);
 });
@@ -133,13 +131,6 @@ function appendProductsToProductsSummaryTable(index, storeToBuyFrom)
 
 function appendProductToProductsSummaryTable(product)
 {
-    // var price = $.map(product.pricePerStore,function (value,key) {
-    //     if(key == selectedStoreID)
-    //     {
-    //         return value;
-    //     }
-    // })
-
     var price = getProductPrice(product.pricePerStore,selectedStoreID);
     var amount = getProductAmount(product);
 
@@ -200,22 +191,8 @@ function getProductPrice(pricePerStore,storeID)
 
 function appendDiscountToProductsSummaryTable(discount,offerID)
 {
-    // selectedOfferID = discount.selectedOfferID;
     var product = getOfferProduct(offerID,selectedStoreID);
     var price = getOfferProductPrice(product,discount.priceForOfferProduct);
-    // var price = $.map(discount.priceForOfferProduct,function (value,key) {
-    //     if(key == product.id)
-    //     {
-    //         return value;
-    //     }
-    // });
-    //
-    // var amount = $.map(discount.amountForOfferProduct,function (value,key) {
-    //     if(key == product.id)
-    //     {
-    //         return value;
-    //     }
-    // });
     var amount = getOfferProductAmount(product,discount.amountForOfferProduct)
 
     var newRowContent = "<tr>\n" +
@@ -274,7 +251,6 @@ function getOfferProductAmount(offerProduct,amountForOfferProduct)
 $(function() {
     $("#order-summary-form").submit(function()
     {
-        // alert("bla");
         $.ajax({
             url: "addNewOrder",
             type: "POST",

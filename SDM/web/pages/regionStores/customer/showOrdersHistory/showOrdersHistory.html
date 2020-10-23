@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../common/jquery-3.5.1.min.js"></script>
+    <script src="customer/showOrdersHistory/showOrdersHistory.js"></script>
+    <link rel="stylesheet" href="customer/showOrdersHistory/showOrdersHistory.css" />
+</head>
+<body>
+    <div class="container" id="tablesContainer">
+        <table class="table table-hover" id ="orders-table">
+            <thead>
+                <tr>
+                    <th scope="col">I.D</th>
+                    <th scope="col">Date For Delivery</th>
+                    <th scope="col">Destination Location</th>
+                    <th scope="col">Number Of Stores Ordered From</th>
+                    <th scope="col">Total Amount of Products</th>
+                    <th scope="col">Products Cost</th>
+                    <th scope="col">Delivery Cost</th>
+                    <th scope="col">Total Order Cost</th>
+                </tr>
+            </thead>
+            <tbody/>
+        </table>
+    </div>
+    <div id="error-placeholder" class="alert-danger" role="alert"></div>
+</body>
+</html>

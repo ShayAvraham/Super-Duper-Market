@@ -1,11 +1,13 @@
 package managers;
 
 import builders.DiscountDataContainerBuilder;
+import builders.OrderDataContainerBuilder;
+import builders.RegionDataContainerBuilder;
 import builders.UserDataContainerBuilder;
 import dataContainers.*;
-import builders.RegionDataContainerBuilder;
+import engineLogic.Customer;
+import engineLogic.Order;
 import engineLogic.Region;
-import engineLogic.Transaction;
 import engineLogic.User;
 
 import javax.management.InstanceNotFoundException;
@@ -102,6 +104,11 @@ public class SystemManager
         dataManager.ChargeMoneyInUserAccount(userId, amountToCharge, transactionDate);
         UserDataContainer userDataContainer = UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(userId));
         usersData.replace(userId, userDataContainer);
+    }
+
+    public UserDataContainer GetUserByID(int userId)
+    {
+        return usersData.get(userId);
     }
 
     /********************************************** Update Products Logic ****************************************/
@@ -213,7 +220,6 @@ public class SystemManager
         {
             for (ProductDataContainer product : products)
             {
-//                ProductDataContainer product = store.getProductDataContainerById(productID);
                 if (discount.getDiscountProduct().equals(product))
                 {
                     for(double i = productsAmounts.get(product.getId()); i >= discount.getAmountForDiscount(); i-=discount.getAmountForDiscount())
@@ -252,14 +258,22 @@ public class SystemManager
                 deliveryCost,
                 totalOrderCost);
 
-        dataManager.addNewOrder(newOrderData,regionName,userID);
-        usersData.replace(userID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(userID)));
-        int ownerID = dataManager.getRegionOwnerID(regionName);
-        usersData.replace(ownerID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(ownerID)));
+        Collection <User> usersCollection = dataManager.addNewOrder(newOrderData,regionName,userID);
+        updateDataContainers(regionName,userID,usersCollection);
+    }
+
+    private void updateDataContainers(String regionName,Integer customerID, Collection<User> usersCollection)
+    {
+        int regionOwnerID = dataManager.getRegionOwnerID(regionName);
         Region region = dataManager.getAllRegions().get(regionName);
         regionsData.replace(regionName,RegionDataContainerBuilder.createRegionData(
-                usersData.get(ownerID).getName(),region));
-
+                usersData.get(regionOwnerID).getName(),region));
+        usersData.replace(customerID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(customerID)));
+        usersData.replace(regionOwnerID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(regionOwnerID)));
+        for (User user : usersCollection )
+        {
+            usersData.replace(user.getId(),UserDataContainerBuilder.createUserData(user));
+        }
     }
 
     private Map<Integer, Collection<ProductDataContainer>> createOrderDataProducts(
@@ -326,103 +340,37 @@ public class SystemManager
                 discount.getIfYouBuyDescription(),
                 discount.getThenYouGetDescription());
     }
+    /**     Add New Feedback    **/
+    public synchronized void addNewFeedback(String regionName, Integer storeID, String customerName,
+                               Integer rank, String description, Date date)
+    {
+        User storeOwner = dataManager.addNewFeedback(regionName, storeID, customerName, rank, description, date);
+        UserDataContainer newStoreOwner = UserDataContainerBuilder.createUserData(storeOwner);
+        usersData.replace(newStoreOwner.getId(),newStoreOwner);
 
+    }
 
-//
-//    public void validateSelectedDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
-//    {
-//        validatedOneOfDiscounts(selectedDiscounts);
-//        validatedNumOfDiscounts(selectedDiscounts,selectedProducts);
-//    }
-//
-//    private void validatedOneOfDiscounts(Collection<DiscountDataContainer> selectedDiscounts)
-//    {
-//        for (DiscountDataContainer discount:selectedDiscounts)
-//        {
-//            if(discount.getDiscountType().equals("ONE_OF") && discount.selectedOfferProductProperty().isNull().get())
-//            {
-//                throw new IllegalArgumentException(String.format("You must select a product if you want to get %1$s discount",discount.getDiscountName()));
-//            }
-//        }
-//    }
-//
-//    private void validatedNumOfDiscounts(Collection<DiscountDataContainer> selectedDiscounts,Collection<ProductDataContainer> selectedProducts)
-//    {
-//        for(ProductDataContainer product: selectedProducts)
-//        {
-//            double sum = 0;
-//            for (DiscountDataContainer discount : selectedDiscounts)
-//            {
-//                if(product.equals(discount.getDiscountProduct()))
-//                {
-//                    sum += discount.getAmountForDiscount();
-//                }
-//            }
-//            if(sum>product.amountProperty().doubleValue())
-//            {
-//                throw new IllegalArgumentException(String.format("You chosen to many discounts for the product %1$s, please reselect the discounts",product.getName()));
-//            }
-//        }
-//    }
-//
-    /** Create  New Order  **/
-//
+    /********************************************** Show Orders History Logic ****************************************/
 
-//
-    /**     Add New Order    **/
-//    public void addNewOrder(OrderDataContainer newOrderDataContainer)
-//    {
-//        Map <Integer,Order> newSubOrders = new HashMap<>();
-//        Order newOrder = createNewOrder(newOrderDataContainer);
-//        newSubOrders = createSubOrders(newOrderDataContainer, newOrder.getId());
-//
-//        region.addNewOrder(newOrder,newSubOrders);
-//        storeToPurchaseFrom = null;
-//        updateDataContainers();
-//    }
-//
-//
-//
-//    private Map<Integer,Order> createSubOrders(OrderDataContainer newOrderDataContainer,int orderID)
-//    {
-//        Map <Integer,Order> subOrders = new HashMap<>();
-//        for(StoreDataContainer store : newOrderDataContainer.getProducts().keySet())
-//        {
-//            subOrders.put(store.getId(),createSubOrder(newOrderDataContainer,orderID ,store));
-//        }
-//        return subOrders;
-//    }
-//
-//    private Order createSubOrder(OrderDataContainer newOrder, int orderID, StoreDataContainer storeData)
-//    {
-//        Store store = region.getStores().get(storeData.getId());
-//        float costOfAllProducts = getStoreCostOfAllProducts(storeData,newOrder.getProducts().get(storeData),
-//                newOrder.getDiscounts().get(storeData));
-//        float deliveryCost = getDeliveryCostFromStore(storeData,newOrder.getCustomer());
-//
-//        return new Order(orderID,
-//                newOrder.getDate(),
-//                region.getCustomers().get(newOrder.getCustomer().getId()),
-//                new HashMap<Store,Collection<OrderProduct>>()
-//                {{put(store,createOrderStoreProducts(storeData,newOrder.getProducts().get(storeData)));}},
-//                createSubOrderDiscounts(newOrder,storeData,store),
-//                newOrder.isDynamic(),
-//                costOfAllProducts,
-//                deliveryCost,
-//                costOfAllProducts + deliveryCost);
-//    }
-//
-//    private HashMap<Store,Collection<Discount>> createSubOrderDiscounts(OrderDataContainer newOrder,StoreDataContainer storeData,
-//                                                                        Store store)
-//    {
-//        HashMap<Store,Collection<Discount>> discounts = new HashMap<Store,Collection<Discount>>();
-//        if(newOrder.getDiscounts().get(storeData) != null)
-//        {
-//            discounts.put(store, createOrderStoreDiscounts(storeData, newOrder.getDiscounts().get(storeData)));
-//        }
-//        return discounts;
-//    }
-//
+    public Collection<OrderDataContainer> gerCustomerOrders(int customerID, String regionName)
+    {
+        Collection<OrderDataContainer> orders = new ArrayList<>();
+        User customer = dataManager.getAllUsers().get(customerID);
+        if(customer instanceof Customer)
+        {
+            for (Order order: ((Customer) customer).getOrders())
+            {
+                if(order.getRegionName().equals(regionName))
+                {
+                    orders.add(OrderDataContainerBuilder.createOrderData(order,
+                            regionsData.get(order.getRegionName()).getStoresData(),
+                            regionsData.get(order.getRegionName()).getProductsData()));
+                }
+            }
+        }
+        return orders;
+    }
+
     /********************************************** Order Details Logic ****************************************/
 //
 //    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)

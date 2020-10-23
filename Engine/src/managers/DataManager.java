@@ -7,15 +7,12 @@ import dataContainers.UserDataContainer;
 import engineLogic.*;
 import exceptions.DuplicateValuesException;
 import jaxb.generated.SuperDuperMarketDescriptor;
-import org.omg.PortableInterceptor.INACTIVE;
 
 import javax.management.InstanceNotFoundException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
@@ -35,14 +32,14 @@ public class DataManager
         this.allUsers = new HashMap<>();
     }
 
-    /********************************************** Load XML  ****************************************///change
+    /********************************************** Load XML  ****************************************/
 
     public Region deserializeXMLToRegion(int ownerID,String ownerName,InputStream xmlFileInputStream) throws JAXBException, FileNotFoundException, InstanceNotFoundException
     {
         JAXBContext jc = JAXBContext.newInstance(JAXB_PACKAGE_NAME);
         Unmarshaller u = jc.createUnmarshaller();
         Region newRegion = new Region((SuperDuperMarketDescriptor) u.unmarshal(xmlFileInputStream),ownerID,ownerName);
-        if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)//change
+        if(allRegions.putIfAbsent(newRegion.getName(),newRegion)!=null)
         {
             throw new DuplicateValuesException("region",newRegion.getName());
         }
@@ -169,23 +166,48 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
     }
 
                             /**     Add New Order    **/
-    public void addNewOrder(OrderDataContainer newOrderDataContainer,String regionName, Integer userID)
+    public Collection<User> addNewOrder(OrderDataContainer newOrderDataContainer,String regionName, Integer customerID)
     {
-        Map <Integer,Order> newSubOrders = new HashMap<>();
         Order newOrder = createNewOrder(newOrderDataContainer,regionName);
-        newSubOrders = createSubOrders(newOrderDataContainer, newOrder.getId(),regionName);
+        Map <Integer,Order> newSubOrders = createSubOrders(newOrderDataContainer, newOrder.getId(),regionName);
+        Collection<User> storeOwners = exchangeMoneyBetweenCustomerAndStoresOwners(newSubOrders,customerID,regionName);
         Region region = allRegions.get(regionName);
         region.addNewOrder(newSubOrders);
-        if(allUsers.get(region.getOwnerID()) instanceof  Owner)
+
+        int regionOwnerID = region.getOwnerID();
+        if(allUsers.get(regionOwnerID) instanceof  Owner)
         {
             ((Owner) allUsers.get(region.getOwnerID())).getRegions().replace(regionName,region);
         }
-        if(allUsers.get(userID) instanceof Customer)
+        if(allUsers.get(customerID) instanceof Customer)
         {
-            ((Customer) allUsers.get(userID)).addOrder(newOrder);
+            ((Customer) allUsers.get(customerID)).addOrder(newOrder);
         }
-
+        return storeOwners;
     }
+
+    private Collection<User> exchangeMoneyBetweenCustomerAndStoresOwners(Map<Integer,Order> subOrders, int customerID,String regionName)
+    {
+        Collection<User> storeOwners = new ArrayList<>();
+        for (Integer storeID: subOrders.keySet())
+        {
+            String storeOwnerName = allRegions.get(regionName).getStores().get(storeID).getOwnerName();
+            User storeOwner = getUserByName(storeOwnerName);
+            storeOwners.add(storeOwner);
+            User customer = allUsers.get(customerID);
+            exchangeMoneyBetweenCustomerAndStoreOwner(storeOwner,customer,subOrders.get(storeID));
+        }
+        return storeOwners;
+    }
+
+    private void exchangeMoneyBetweenCustomerAndStoreOwner(User storeOwner, User customer, Order order)
+    {
+        storeOwner.addTransaction(Transaction.TransactionCategory.RECEIVE,order.getDate(),order.getTotalCost());
+        customer.addTransaction(Transaction.TransactionCategory.TRANSFER,order.getDate(),order.getTotalCost());
+    }
+
+
+
     /**     Create New Order    **/
     private Order createNewOrder(OrderDataContainer newOrderDataContainer,String regionName)
     {
@@ -374,5 +396,32 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
         }
         return discounts;
     }
-}
 
+    /**     Add New Feedback    **/
+
+    public User addNewFeedback(String regionName, Integer storeID, String customerName,
+                               Integer rank, String description, Date date)
+    {
+        Feedback newFeedback = new Feedback(regionName,storeID,customerName,rank,
+                                            description,date);
+        String storeOwnerName = allRegions.get(regionName).getStores().get(storeID).getOwnerName();
+        User storeOwner = getUserByName(storeOwnerName);
+        if(storeOwner instanceof Owner)
+        {
+            ((Owner) storeOwner).addFeedback(newFeedback);
+        }
+        return storeOwner;
+    }
+
+    private User getUserByName(String userName)
+    {
+        for (User user: allUsers.values())
+        {
+            if(user.getName() == userName)
+            {
+                return user;
+            }
+        }
+        return null;
+    }
+}
