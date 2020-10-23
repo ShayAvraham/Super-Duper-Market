@@ -112,11 +112,6 @@ public class SystemManager
         usersData.replace(userId, userDataContainer);
     }
 
-    public UserDataContainer GetUserByID(int userId)
-    {
-        return usersData.get(userId);
-    }
-
     /********************************************** Update Products Logic ****************************************/
 //
     /** Remove Product Logic **/

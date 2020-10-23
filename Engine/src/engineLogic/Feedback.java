@@ -2,11 +2,10 @@ package engineLogic;
 
 import java.util.Date;
 
-public class Feedback
+public class Feedback implements Notice
 {
     private String regionName;
     private int storeID;
-    //    private int orderID;
     private String customerName;
     private int rank;
     private String description;

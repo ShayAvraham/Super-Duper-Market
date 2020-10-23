@@ -89,7 +89,6 @@ function ajaxTransactionsList() {
         url: "loggedUser",
         dataType: "json",
         success: function (data) {
-            console.log(data);
             refreshTransactionsTable(data.transactions);
         }
     });
