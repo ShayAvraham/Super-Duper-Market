@@ -53,9 +53,15 @@
         <servlet-name>LoadRegionsInfoServlet</servlet-name>
         <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>
     </servlet>
+<!--    change-->
     <servlet>
-        <servlet-name>UpdateSelectedRegionServlet</servlet-name>
-        <servlet-class>servlets.UpdateSelectedRegionServlet</servlet-class>
+        <servlet-name>AddNewFeedbackServlet</servlet-name>
+        <servlet-class>servlets.regionStores.AddNewFeedbackServlet</servlet-class>
+    </servlet>
+<!--    change-->
+    <servlet>
+        <servlet-name>LoadUserOrdersServlet</servlet-name>
+        <servlet-class>servlets.regionStores.showOrdersHistory.LoadUserOrdersServlet</servlet-class>
     </servlet>
 
 
@@ -75,12 +81,10 @@
         <servlet-name>LoadStoreProductsServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadStoreProducts</url-pattern>
     </servlet-mapping>
-<!--    change -->
     <servlet-mapping>
         <servlet-name>LoadStoreServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadStore</url-pattern>
     </servlet-mapping>
-    <!--    change -->
     <servlet-mapping>
         <servlet-name>AddNewOrderServlet</servlet-name>
         <url-pattern>/pages/regionStores/addNewOrder</url-pattern>
@@ -114,8 +118,15 @@
         <servlet-name>ChargeMoneyServlet</servlet-name>
         <url-pattern>/pages/dashboard/chargeUserMoney</url-pattern>
     </servlet-mapping>
+<!--    change -->
     <servlet-mapping>
-        <servlet-name>UpdateSelectedRegionServlet</servlet-name>
-        <url-pattern>/pages/dashboard/updateSelectedRegion</url-pattern>
+        <servlet-name>AddNewFeedbackServlet</servlet-name>
+        <url-pattern>/pages/regionStores/addNewFeedback</url-pattern>
     </servlet-mapping>
+    <!--    change -->
+    <servlet-mapping>
+        <servlet-name>LoadUserOrdersServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadUserOrders</url-pattern>
+    </servlet-mapping>
+
 </web-app>

@@ -1,4 +1,5 @@
 $(function() {
+    console.log("111");
     $("#load-xml-form").submit(function() {
         let file = this[0].files[0];
         let formData = new FormData();

@@ -16,8 +16,12 @@ $(function() {
         },
         success: function(data)
         {
-            console.log("discountPage");
-            loadedDiscounts = data
+            loadedDiscounts = data;
+            if(data.length === 0)
+            {
+                $("#main-place-order-container").empty();
+                $("#main-place-order-container").load('customer/placeOrder/orderSummary/orderSummary.html');
+            }
             $.each(data || [], appendToDiscountsTable);
         }
     });
@@ -79,7 +83,6 @@ function createSelectOfferTD(store,discount)
 
 function createOfferOptions(store,priceForOfferProduct)
 {
-    console.log("shit");
     var offers = $.map(priceForOfferProduct,function (value,key) {
         return key;
     })
@@ -114,7 +117,6 @@ $(function() {
     {
         selectedDiscounts = [];
         $('input:checkbox:checked', $("#discounts-table")).each(function () {
-            console.log("uf");
             storeName = $(this).closest('tr').find('td').eq(0).text()
             if(selectedOfferID = $(this).closest('tr').find('td select').length)
             {

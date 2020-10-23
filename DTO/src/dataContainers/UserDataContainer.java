@@ -1,7 +1,5 @@
 package dataContainers;
 
-import javax.swing.text.Position;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -10,10 +8,8 @@ public class UserDataContainer
     private int id;
     private String name;
     private String role;
-    private int numOfOrders;
-    private float orderCostAvg;
-    private float deliveryCostAvg;
     private Collection<TransactionDataContainer> transactions;
+    private Collection<FeedbackDataContainer> feedbacks;
     private float balance;
 
 
@@ -23,37 +19,21 @@ public class UserDataContainer
         this.id = 0;
         this.name = name;
         this.role = role;
-        this.numOfOrders = 0;
-        this.orderCostAvg = 0;
-        this.deliveryCostAvg = 0;
         this.transactions = new ArrayList<>();
+        this.feedbacks = new ArrayList<>();
         this.balance = 0;
     }
 
     /** from exist user **/
-    public UserDataContainer(int id, String name,String role,int numOfOrders, float orderCostAvg,
-                             float deliveryCostAvg,float balance,Collection<TransactionDataContainer> transactions)
+    public UserDataContainer(int id, String name,String role,float balance,
+                             Collection<TransactionDataContainer> transactions,
+                             Collection<FeedbackDataContainer> feedbacks)
     {
         this.id = id;
         this.name = name;
         this.role = role;
-        this.numOfOrders = numOfOrders;
-        this.orderCostAvg = orderCostAvg;
-        this.deliveryCostAvg = deliveryCostAvg;
         this.transactions = transactions;
-        this.balance = balance;
-
-    }
-
-
-    public UserDataContainer(int id, String name, String role, int numOfOrders, float orderCostAvg, float deliveryCostAvg, Collection<TransactionDataContainer> transactions, float balance) {
-        this.id = id;
-        this.name = name;
-        this.role = role;
-        this.numOfOrders = numOfOrders;
-        this.orderCostAvg = orderCostAvg;
-        this.deliveryCostAvg = deliveryCostAvg;
-        this.transactions = transactions;
+        this.feedbacks = feedbacks;
         this.balance = balance;
     }
 
@@ -63,18 +43,6 @@ public class UserDataContainer
 
     public String getName() {
         return name;
-    }
-
-    public int getNumOfOrders() {
-        return numOfOrders;
-    }
-
-    public float getOrderCostAvg() {
-        return orderCostAvg;
-    }
-
-    public float getDeliveryCostAvg() {
-        return deliveryCostAvg;
     }
 
     public String getRole() {
@@ -89,10 +57,6 @@ public class UserDataContainer
         return balance;
     }
 
-    public void addTransactionDataContainer(TransactionDataContainer transactionDataContainer)
-    {
-        transactions.add(transactionDataContainer);
-    }
 
     @Override
     public String toString()

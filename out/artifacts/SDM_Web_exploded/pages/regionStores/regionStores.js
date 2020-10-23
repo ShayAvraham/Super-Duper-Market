@@ -1,8 +1,10 @@
 $(function() {
     $("#show-products-btn").on("click", function () {
+        $("#loader").empty();
         $("#loader").load('common/showProducts/showProducts.html');
     });
     $("#show-stores-btn").on("click", function () {
+        $("#loader").empty();
         $("#loader").load('common/showStores/showStores.html');
     });
 });
@@ -61,7 +63,7 @@ function addCustomerButtonsEvents ()
         $("#loader").load('customer/placeOrder/placeOrder.html');
     });
     $("#orders-history-btn").on("click", function () {
-        $("#loader").load('customer/ordersHistory/ordersHistory.html');
+        $("#loader").load('customer/showOrdersHistory/showOrdersHistory.html');
     });
 }
 

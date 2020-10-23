@@ -8,16 +8,53 @@
 
 </head>
 <body>
-    <form id="feedback-form" >
-        <div class="form-row">
-            <div class = "col">
-                <label for="x-location-text">X Location </label>
-                <input type="text" class = "form-control" id="x-location-text">
+    <div class="form-row" id="message-row">
+        <div class="alert alert-success" role="alert" id="message-div">
+            <label id="feedback-success-label">Your order added successfully,thank you for buying.</label>
+<!--            Your order added successfully,thank you for buying.-->
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col">
+            <label id="wish-to-add-feedback-label">Do you wish to add a feedback?</label>
+        </div>
+    </div>
+    <form id ="feedback-form">
+            <div class="form-row">
+                <div class="col">
+                    <label for="store-select">Store</label>
+                    <select class="form-control select" id="store-select" required>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="form-row" id=submit-row>
-            <button class="btn btn-primary" type="submit" id="submit-btn">Submit</button>
-        </div>
-    </form>
+            <div class="form-row">
+                <div class="col">
+                    <label for="rank-select">rank</label>
+                    <select class="form-control select" id="rank-select" required>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <label for="description-text">Your Feedback</label>
+                    <textarea class="form-control" rows="5" id="description-text" placeholder="Write here..."></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <button class="btn btn-primary" type="submit" id="submit-feedback-btn">Submit</button>
+                </div>
+            </div>
+        </form>
+        <form id ="continue-form">
+            <div class="form-row">
+                <button class="btn btn-primary" type="submit" id="continue-btn">Continue</button>
+            </div>
+        </form>
 </body>
 </html>

@@ -21,7 +21,7 @@ public final class OrderDataContainerBuilder
 
     }
 
-    public static OrderDataContainer createOrderData(Order order,Map<Integer, StoreDataContainer> stores,
+    public synchronized static OrderDataContainer createOrderData(Order order,Map<Integer, StoreDataContainer> stores,
                                               Map<Integer,ProductDataContainer> products)
     {
         storesData = stores;

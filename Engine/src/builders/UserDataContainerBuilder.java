@@ -1,10 +1,9 @@
 package builders;
 
+import dataContainers.FeedbackDataContainer;
 import dataContainers.TransactionDataContainer;
 import dataContainers.UserDataContainer;
-import engineLogic.Customer;
-import engineLogic.Transaction;
-import engineLogic.User;
+import engineLogic.*;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,11 +28,9 @@ public final class UserDataContainerBuilder
                 user.getId(),
                 user.getName(),
                 user instanceof Customer ? "customer":"owner",
-                user instanceof Customer ? ((Customer) user).getOrders().size():0,
-                user instanceof Customer? Float.valueOf(DECIMAL_FORMAT.format(((Customer) user).getCustomerOrderCostAvg())):0,
-                user instanceof Customer? Float.valueOf(DECIMAL_FORMAT.format(((Customer) user).getCustomerDeliveryCostAvg())):0,
                 user.getBalance(),
-                createUserTransactionsData(user.getTransactions()));
+                createUserTransactionsData(user.getTransactions()),
+                createUserFeedbacksData(user));
     }
 
     private static Collection<TransactionDataContainer> createUserTransactionsData(Collection<Transaction> transactions)
@@ -46,12 +43,35 @@ public final class UserDataContainerBuilder
         return transactionsData;
     }
 
-    public static TransactionDataContainer createTransactionsData(Transaction transaction)
+    private static TransactionDataContainer createTransactionsData(Transaction transaction)
     {
         return new TransactionDataContainer(transaction.getTransactionCategory().name().toLowerCase(),
                 transaction.getDate(),
                 transaction.getCost(),
                 transaction.getBalanceBefore(),
                 transaction.getBalanceAfter());
+    }
+
+    private static Collection<FeedbackDataContainer> createUserFeedbacksData(User user)
+    {
+        Collection<FeedbackDataContainer> feedbackData = new ArrayList<>();
+        if(user instanceof Owner)
+        {
+            for (Feedback feedback: ((Owner) user).getFeedbacks())
+            {
+                feedbackData.add(createFeedbacksData(feedback));
+            }
+        }
+        return feedbackData;
+    }
+
+    private static FeedbackDataContainer createFeedbacksData(Feedback feedback)
+    {
+        return new FeedbackDataContainer(feedback.getRegionName(),
+                feedback.getStoreID(),
+                feedback.getCustomerName(),
+                feedback.getRank(),
+                feedback.getDescription(),
+                feedback.getDate());
     }
 }
