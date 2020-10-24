@@ -1,3 +1,5 @@
+var refreshRate = 2000;
+
 $(function () {
     $.ajax({
         url: "loadUsersInfo",
@@ -7,28 +9,28 @@ $(function () {
         },
         success: function(data)
         {
-            $("#all-users-data").empty();
-            $.each(data || [], appendToUsersTable);
+            refreshUsersTable(data);
+            setInterval(ajaxUsersList, refreshRate);
         }
     });
     return false;
 });
 
 
-function appendToUsersTable(index, user)
+function appendToUsersTable(user)
 {
     var newRowContent = "<tr>\n" +
-        "      <th scope=\"row\">" + user.id + "</th>\n" +
-        "      <td >" + user.name + "</td>\n" +
+        "      <td>" + user.id + "</td>\n" +
+        "      <td>" + user.name + "</td>\n" +
         "    </tr>"
     $("#all-users-data").append(newRowContent);
 }
 
 
 function refreshUsersTable(users) {
+    $("#all-users-data").empty();
     if (users.length > 0)
     {
-        $("#all-users-data").empty();
         users.forEach((user) => {
             appendToUsersTable(user);
         })
@@ -45,6 +47,6 @@ function ajaxUsersList() {
     });
 }
 
-$(function() {
-    setInterval(ajaxUsersList, refreshRate);
-});
+// $(function() {
+//     setInterval(ajaxUsersList, refreshRate);
+// });

@@ -1,6 +1,5 @@
 $(function()
 {
-    console.log("shit2")
     loadProducts();
 });
 
