@@ -30,7 +30,7 @@ public final class UserDataContainerBuilder
                 user instanceof Customer ? "customer":"owner",
                 user.getBalance(),
                 createUserTransactionsData(user.getTransactions()),
-                createUserFeedbacksData(user));
+                createUserNoticesData(user));
     }
 
     private static Collection<TransactionDataContainer> createUserTransactionsData(Collection<Transaction> transactions)
@@ -52,27 +52,49 @@ public final class UserDataContainerBuilder
                 transaction.getBalanceAfter());
     }
 
-    private static Collection<NoticeDataContainer> createUserFeedbacksData(User user)
+    private static Collection<NoticeDataContainer> createUserNoticesData(User user)
     {
-        Collection<NoticeDataContainer> feedbackData = new ArrayList<>();
+        Collection<NoticeDataContainer> noticeData = new ArrayList<>();
         if(user instanceof Owner)
         {
-//            for (Feedback feedback: ((Owner) user).getNotices())
-//            {
-//                feedbackData.add(createFeedbacksData(feedback));
-//            }
+            for (Notice notice: ((Owner) user).getNotices())
+            {
+                noticeData.add(createNoticeData(notice));
+            }
         }
-        return feedbackData;
+        return noticeData;
     }
 
-    private static NoticeDataContainer createFeedbacksData(Feedback feedback)
+    private static NoticeDataContainer createNoticeData(Notice notice)
     {
-//        return new NoticeDataContainer(feedback.getRegionName(),
-//                feedback.getStoreID(),
-//                feedback.getCustomerName(),
-//                feedback.getRank(),
-//                feedback.getDescription(),
-//                feedback.getDate());
-        return null;
+        if(notice instanceof Feedback)
+        {
+            return creatNoticeDataFromFeedback((Feedback) notice);
+        }
+        else
+        {
+           return creatNoticeDataFromFeedback((OrderNotice) notice);
+        }
+    }
+
+    private static NoticeDataContainer creatNoticeDataFromFeedback(Feedback feedback)
+    {
+        String description = "Feedback \n" +
+                             "--------\n" +
+                            "Customer Name: " +feedback.getCustomerName() + "\n" +
+                            "Rank: " + feedback.getRank() + "\n";
+        return new NoticeDataContainer(description);
+    }
+
+    private static NoticeDataContainer creatNoticeDataFromFeedback(OrderNotice orderNotice)
+    {
+        String description = "Order \n" +
+                             "----------\n" +
+                    "Order I.D: " + orderNotice.getOrderId() +"\n" +
+                    "Customer name: " + orderNotice.getCustomerName() + "\n" +
+                    "Number of products types: " + orderNotice.getNumOfProductsType() + "\n" +
+                    "Products cost: " + orderNotice.getProductsCost() + "\n" +
+                    "Delivery cost: " + orderNotice.getDeliveryCost() + "\n";
+        return new NoticeDataContainer(description);
     }
 }

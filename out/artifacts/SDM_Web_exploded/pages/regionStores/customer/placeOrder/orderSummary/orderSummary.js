@@ -169,7 +169,7 @@ function appendDiscountsToProductsSummaryTable(index,selectedDiscount)
 function getProductAmount(product)
 {
     var amount = $.map(productsAmounts,function (value,key) {
-        if(key == product)
+        if(key == product.id)
         {
             return value;
         }
@@ -297,7 +297,7 @@ function convertToIntegerToFloatMap(productsAmounts)
     for(key of selectedProducts)
     {
         var jsonKey = parseInt(key.id);
-        var jsonValues = parseFloat(productsAmounts[key]);
+        var jsonValues = parseFloat(productsAmounts[key.id]);
         jsonMap[jsonKey]=jsonValues;
     }
     return jsonMap;
@@ -320,3 +320,10 @@ function convertToIntegerToDiscountsCollectionMap(selectedDiscounts)
     }
     return jsonMap;
 }
+
+$(function() {
+    $("#cancel-btn").on("click", function () {
+        window.location.replace("");
+        return false;
+    });
+});

@@ -1,7 +1,8 @@
-package servlets.regionStores;
+package servlets.regionStores.placeOrder;
 
 import com.google.gson.Gson;
-import dataContainers.UserDataContainer;
+import dataContainers.ProductDataContainer;
+import dataContainers.StoreDataContainer;
 import managers.SystemManager;
 import utilities.ServletUtils;
 import utilities.SessionUtils;
@@ -12,28 +13,54 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
-public class AddNewFeedbackServlet extends HttpServlet
+public class LoadDynamicAllocationServlet extends HttpServlet
 {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
         response.setContentType("application/json");
         String regionName = SessionUtils.getRegionName(request);
-        UserDataContainer user = SessionUtils.getUser(request);
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
-        Integer storeID = ServletUtils.getIntParameter(request,"storeID");
-        Date date = ServletUtils.getDateParameter(request,"date");
-        Integer rank = ServletUtils.getIntParameter(request,"rank");
-        String description = request.getParameter("description");
-        systemManager.addNewFeedback(regionName,storeID,user.getName(),rank,description,date);
+        Collection<ProductDataContainer> selectedProducts = ServletUtils.getProductsCollectionParameter(request, "selectedProducts");
+
+        Map<StoreDataContainer, Collection<ProductDataContainer>> storesToBuyFrom =
+                systemManager.dynamicStoreAllocation(regionName,selectedProducts);
+
         Gson json = new Gson();
-        String jsonResponse = json.toJson("yes");
+        Collection<StoresToBuyFrom> output = new ArrayList<>();
+        for (StoreDataContainer store: storesToBuyFrom.keySet())
+        {
+            output.add(new StoresToBuyFrom(store, storesToBuyFrom.get(store)));
+        }
+        String jsonResponse = json.toJson(output);
         response.setStatus(200);
         PrintWriter out = response.getWriter();
         out.print(jsonResponse);
         out.flush();
+    }
+
+    public class StoresToBuyFrom {
+
+        private Collection<ProductDataContainer> products;
+        private StoreDataContainer store;
+
+
+        public StoresToBuyFrom(StoreDataContainer store, Collection<ProductDataContainer> products) {
+            this.products = products;
+            this.store = store;
+        }
+
+        public Collection<ProductDataContainer> getProducts() {
+            return products;
+        }
+
+        public StoreDataContainer getStore() {
+            return store;
+        }
     }
 
     @Override

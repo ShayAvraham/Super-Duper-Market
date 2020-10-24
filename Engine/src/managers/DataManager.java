@@ -24,7 +24,6 @@ public class DataManager
 
     private final String JAXB_PACKAGE_NAME = "jaxb.generated";
     private final String FILE_NOT_EXIST_ERROR_MSG = "No xml file was found in this path: ";
-//    private String xmlFilePath;
 
     public DataManager()
     {
@@ -170,7 +169,7 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
     {
         Order newOrder = createNewOrder(newOrderDataContainer,regionName);
         Map <Integer,Order> newSubOrders = createSubOrders(newOrderDataContainer, newOrder.getId(),regionName);
-        Collection<User> storeOwners = exchangeMoneyBetweenCustomerAndStoresOwners(newSubOrders,customerID,regionName);
+        Collection<User> storeOwners = updateStoreOwners(newSubOrders,customerID,regionName);
         Region region = allRegions.get(regionName);
         region.addNewOrder(newSubOrders);
 
@@ -186,19 +185,35 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
         return storeOwners;
     }
 
-    private Collection<User> exchangeMoneyBetweenCustomerAndStoresOwners(Map<Integer,Order> subOrders, int customerID,String regionName)
+    private Collection<User> updateStoreOwners(Map<Integer,Order> subOrders, int customerID,String regionName)
     {
         Collection<User> storeOwners = new ArrayList<>();
         for (Integer storeID: subOrders.keySet())
         {
             String storeOwnerName = allRegions.get(regionName).getStores().get(storeID).getOwnerName();
             User storeOwner = getUserByName(storeOwnerName);
-            storeOwners.add(storeOwner);
             User customer = allUsers.get(customerID);
             exchangeMoneyBetweenCustomerAndStoreOwner(storeOwner,customer,subOrders.get(storeID));
+            addNewSubOrderNoticeToStoreOwner(storeOwner,subOrders.get(storeID),customer);
+            storeOwners.add(storeOwner);
         }
         return storeOwners;
     }
+
+//    private Collection<User> exchangeMoneyBetweenCustomerAndStoresOwners(Map<Integer,Order> subOrders, int customerID,String regionName)
+//    {
+//        Collection<User> storeOwners = new ArrayList<>();
+//        for (Integer storeID: subOrders.keySet())
+//        {
+//            String storeOwnerName = allRegions.get(regionName).getStores().get(storeID).getOwnerName();
+//            User storeOwner = getUserByName(storeOwnerName);
+//            storeOwners.add(storeOwner);
+//            User customer = allUsers.get(customerID);
+//            exchangeMoneyBetweenCustomerAndStoreOwner(storeOwner,customer,subOrders.get(storeID));
+//
+//        }
+//        return storeOwners;
+//    }
 
     private void exchangeMoneyBetweenCustomerAndStoreOwner(User storeOwner, User customer, Order order)
     {
@@ -206,6 +221,23 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
         customer.addTransaction(Transaction.TransactionCategory.TRANSFER,order.getDate(),order.getTotalCost());
     }
 
+
+    private void addNewSubOrderNoticeToStoreOwner(User storeOwner, Order order, User customer)
+    {
+        if(storeOwner instanceof Owner)
+        {
+            ((Owner) storeOwner).addNotice(createOrderNoticeOrder(order,customer));
+        }
+    }
+
+    private OrderNotice createOrderNoticeOrder(Order order, User customer)
+    {
+        return new OrderNotice(order.getId(),
+                customer.getName(),
+                order.getProductTypesAmountInOrder(),
+                order.getCostOfAllProducts(),
+                order.getDeliveryCost());
+    }
 
 
     /**     Create New Order    **/
@@ -408,7 +440,7 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
         User storeOwner = getUserByName(storeOwnerName);
         if(storeOwner instanceof Owner)
         {
-            ((Owner) storeOwner).addFeedback(newFeedback);
+            ((Owner) storeOwner).addNotice(newFeedback);
         }
         return storeOwner;
     }

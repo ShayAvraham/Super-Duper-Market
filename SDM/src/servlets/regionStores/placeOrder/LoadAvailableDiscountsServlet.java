@@ -1,4 +1,4 @@
-package servlets.regionStores;
+package servlets.regionStores.placeOrder;
 
 import com.google.gson.Gson;
 import dataContainers.DiscountDataContainer;

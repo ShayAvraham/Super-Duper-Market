@@ -27,7 +27,7 @@
 
     <servlet>
         <servlet-name>AddNewOrderServlet</servlet-name>
-        <servlet-class>servlets.regionStores.AddNewOrderServlet</servlet-class>
+        <servlet-class>servlets.regionStores.placeOrder.AddNewOrderServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ChargeMoneyServlet</servlet-name>
@@ -35,11 +35,11 @@
     </servlet>
     <servlet>
         <servlet-name>LoadAvailableDiscountsServlet</servlet-name>
-        <servlet-class>servlets.regionStores.LoadAvailableDiscountsServlet</servlet-class>
+        <servlet-class>servlets.regionStores.placeOrder.LoadAvailableDiscountsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoadDynamicAllocationServlet</servlet-name>
-        <servlet-class>servlets.regionStores.LoadDynamicAllocationServlet</servlet-class>
+        <servlet-class>servlets.regionStores.placeOrder.LoadDynamicAllocationServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoggedUserServlet</servlet-name>
@@ -53,12 +53,10 @@
         <servlet-name>LoadRegionsInfoServlet</servlet-name>
         <servlet-class>servlets.LoadRegionsInfoServlet</servlet-class>
     </servlet>
-<!--    change-->
     <servlet>
         <servlet-name>AddNewFeedbackServlet</servlet-name>
-        <servlet-class>servlets.regionStores.AddNewFeedbackServlet</servlet-class>
+        <servlet-class>servlets.regionStores.placeOrder.AddNewFeedbackServlet</servlet-class>
     </servlet>
-<!--    change-->
     <servlet>
         <servlet-name>LoadUserOrdersServlet</servlet-name>
         <servlet-class>servlets.regionStores.showOrdersHistory.LoadUserOrdersServlet</servlet-class>
@@ -66,6 +64,11 @@
     <servlet>
         <servlet-name>UpdateSelectedRegionServlet</servlet-name>
         <servlet-class>servlets.UpdateSelectedRegionServlet</servlet-class>
+    </servlet>
+    <!--    change -->
+    <servlet>
+        <servlet-name>ValidatePositionServlet</servlet-name>
+        <servlet-class>servlets.regionStores.ValidatePositionServlet</servlet-class>
     </servlet>
 
 
@@ -122,12 +125,10 @@
         <servlet-name>ChargeMoneyServlet</servlet-name>
         <url-pattern>/pages/dashboard/chargeUserMoney</url-pattern>
     </servlet-mapping>
-<!--    change -->
     <servlet-mapping>
         <servlet-name>AddNewFeedbackServlet</servlet-name>
         <url-pattern>/pages/regionStores/addNewFeedback</url-pattern>
     </servlet-mapping>
-    <!--    change -->
     <servlet-mapping>
         <servlet-name>LoadUserOrdersServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadUserOrders</url-pattern>
@@ -135,5 +136,10 @@
     <servlet-mapping>
         <servlet-name>UpdateSelectedRegionServlet</servlet-name>
         <url-pattern>/pages/dashboard/updateSelectedRegion</url-pattern>
+    </servlet-mapping>
+<!--    change -->
+    <servlet-mapping>
+        <servlet-name>ValidatePositionServlet</servlet-name>
+        <url-pattern>/pages/regionStores/validatePosition</url-pattern>
     </servlet-mapping>
 </web-app>
