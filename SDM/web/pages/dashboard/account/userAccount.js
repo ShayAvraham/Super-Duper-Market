@@ -9,14 +9,8 @@ $(function () {
             $("#error-label").text(errorObject.responseText);
         },
         success: function (data) {
-            updateUserCurrentBalance(data.balance);
-            $("#user-transactions-data").empty();
-            if (data.transactions.length > 0)
-            {
-                data.transactions.forEach((transaction) => {
-                    appendToTransactionTable(transaction);
-                })
-            }
+            refreshTransactionsTable(data);
+            setInterval(ajaxTransactionsList, refreshRate);
         }
     });
 });
@@ -74,11 +68,12 @@ function appendToTransactionTable(transaction) {
 // }
 
 
-function refreshTransactionsTable(transactions) {
-    if (transactions.length > 0)
+function refreshTransactionsTable(user) {
+    updateUserCurrentBalance(user.balance);
+    if (user.transactions.length > 0)
     {
         $("#user-transactions-data").empty();
-        transactions.forEach((transaction) => {
+        user.transactions.forEach((transaction) => {
             appendToTransactionTable(transaction);
         })
     }
@@ -89,13 +84,13 @@ function ajaxTransactionsList() {
         url: "loggedUser",
         dataType: "json",
         success: function (data) {
-            refreshTransactionsTable(data.transactions);
+            refreshTransactionsTable(data);
         }
     });
 }
 
-$(function() {
-    setInterval(ajaxTransactionsList, refreshRate);
-});
+// $(function() {
+//     setInterval(ajaxTransactionsList, refreshRate);
+// });
 
 

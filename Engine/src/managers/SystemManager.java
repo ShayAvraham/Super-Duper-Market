@@ -309,6 +309,14 @@ public class SystemManager
     }
 
 
+    public Map<Integer, UserDataContainer> getUsersData() {
+        return usersData;
+    }
+
+    public Map<String, RegionDataContainer> getRegionsData() {
+        return regionsData;
+    }
+
     private Collection<DiscountDataContainer> createOrderDataStoreDiscounts
             (Integer storeID, Collection<DiscountDataContainer> discounts)
     {
@@ -348,7 +356,6 @@ public class SystemManager
         User storeOwner = dataManager.addNewFeedback(regionName, storeID, customerName, rank, description, date);
         UserDataContainer newStoreOwner = UserDataContainerBuilder.createUserData(storeOwner);
         usersData.replace(newStoreOwner.getId(),newStoreOwner);
-
     }
 
     /********************************************** Show Orders History Logic ****************************************/

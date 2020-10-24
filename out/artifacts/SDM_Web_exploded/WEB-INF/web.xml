@@ -67,6 +67,10 @@
         <servlet-name>UpdateSelectedRegionServlet</servlet-name>
         <servlet-class>servlets.UpdateSelectedRegionServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadNotificationsServlet</servlet-name>
+        <servlet-class>servlets.LoadNotificationsServlet</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -135,5 +139,9 @@
     <servlet-mapping>
         <servlet-name>UpdateSelectedRegionServlet</servlet-name>
         <url-pattern>/pages/dashboard/updateSelectedRegion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadNotificationsServlet</servlet-name>
+        <url-pattern>/pages/dashboard/loadNotifications</url-pattern>
     </servlet-mapping>
 </web-app>

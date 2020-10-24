@@ -1,3 +1,5 @@
+var refreshRate = 2000;
+
 $(function () {
     $.ajax({
         url: "loadRegionsInfo",
@@ -6,12 +8,8 @@ $(function () {
             $("#error-label").text(errorObject.responseText)
         },
         success: function (data) {
-            $("#all-regions-data").empty();
-            if (data.length > 0) {
-                data.forEach((region) => {
-                    appendToRegionsTable(region);
-                })
-            }
+            refreshRegionsTable(data);
+            setInterval(ajaxRegionsList, refreshRate);
         }
     });
     return false;
@@ -32,12 +30,16 @@ function appendToRegionsTable(region) {
 
 
 function refreshRegionsTable(regions) {
+    $("#all-regions-data").empty();
     if (regions.length > 0)
     {
-        $("#all-regions-data").empty();
         regions.forEach((region) => {
             appendToRegionsTable(region);
         })
+    }
+    else
+    {
+        $("#all-regions-data").append("<tr>No regions in the system</tr>"); // השורה לא עובדת - לתקן!
     }
 }
 
@@ -51,9 +53,9 @@ function ajaxRegionsList() {
     });
 }
 
-$(function() {
-    setInterval(ajaxRegionsList, refreshRate);
-});
+// $(function() {
+//     setInterval(ajaxRegionsList, refreshRate);
+// });
 
 
 function ajaxUpdateRegionInSession(selectedRegionName) {
@@ -72,7 +74,6 @@ function ajaxUpdateRegionInSession(selectedRegionName) {
 $(function() {
     $('#regions-table').on("click", 'tbody tr', function(e)
     {
-        console.log("click");
         $(this).addClass('highlight').siblings().removeClass('highlight');
         var selectedRegionName = $(this).closest("tr").find('td').eq(1).text();
         ajaxUpdateRegionInSession(selectedRegionName);

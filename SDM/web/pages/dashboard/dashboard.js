@@ -40,7 +40,13 @@ function createOwnerButtons() {
         "                            <span data-feather=\"file\"></span>\n" +
         "                            Load XML\n" +
         "                        </a>\n" +
-        "                    </li>"
+        "                    </li>" +
+        "<li class=\"nav-item\">\n" +
+        "    <a id=\"notifications-btn\" class=\"nav-link\">\n" +
+        "        <span data-feather=\"users\"></span>\n" +
+        "        Notifications\n" +
+        "    </a>\n" +
+        "</li>"
 
     $("#nav-bar-buttons").prepend(newLiContent);
 }
@@ -49,6 +55,10 @@ function addOwnerButtonsEvents() {
     $("#load-xml-btn").on("click", function () {
         $("#loader").empty();
         $("#loader").load('loadXml/loadXml.html');
+    });
+    $("#notifications-btn").on("click", function () {
+        $("#loader").empty();
+        $("#loader").load('notifications/notifications.html');
     });
 }
 
