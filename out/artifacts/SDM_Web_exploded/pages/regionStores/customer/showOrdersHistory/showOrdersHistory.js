@@ -3,7 +3,13 @@ var loadedStores;
 var loadedProducts
 
 $(function() {
-    console.log("orders history page");
+    loadUserOrders();
+    loadStores();
+    loadProducts();
+});
+
+function loadUserOrders()
+{
     $.ajax({
         url: "loadUserOrders",
         timeout: 2000,
@@ -13,14 +19,31 @@ $(function() {
         },
         success: function(data)
         {
-            loadedOrders = data
-            $.each(data || [], appendToOrdersTable);
+           if(data.length === 0)
+           {
+                appendNoOrdersExist();
+            }
+           else
+           {
+               loadedOrders = data;
+               $("#orders-table tbody").empty();
+               $.each(data || [], appendToOrdersTable);
+           }
         }
     });
     return false;
-});
+}
 
-$(function() {
+function appendNoOrdersExist()
+{
+    $("#tablesContainer").empty();
+    $("#tablesContainer").append("<div class=\"alert alert-info\" role=\"alert\">\n" +
+        "No orders no display because you yet make one" +
+        "</div>")
+}
+
+function loadStores()
+{
     $.ajax({
         url: "loadStores",
         timeout: 2000,
@@ -34,9 +57,10 @@ $(function() {
         }
     });
     return false;
-});
+}
 
-$(function() {
+function loadProducts()
+{
     $.ajax({
         url: "loadProducts",
         timeout: 2000,
@@ -49,20 +73,26 @@ $(function() {
         }
     });
     return false;
-});
+}
 
 function appendToOrdersTable(index,order)
 {
-    var location = "(" + order.orderDestination.x.toString() +"," + order.orderDestination.y.toString() +")"
+
+    var location = "(" + order.orderDestination.x.toString() +"," + order.orderDestination.y.toString() +")";
+    var dateArray = order.date.split(" ");
+    var date = dateArray[0] + " " + dateArray[1] + " " + dateArray[2] + " "; 
+    var numberOfStoresOrderedFrom = 0;
+    $.map(order.products,function (value,key) {numberOfStoresOrderedFrom++});
+
     var newRowContent = "<tr>\n" +
         "      <th scope=\"row\">" + order.id + "</th>\n" +
-        "      <td >" + order.date+ "</td>\n" +
+        "      <td >" + date + "</td>\n" +
         "      <td>" + location + "</td>\n" +
-        "      <td>" + order.products.length +"</td>\n" +
+        "      <td>" + numberOfStoresOrderedFrom +"</td>\n" +
         "      <td>" + order.amountOfProductsTypes + "</td>\n" +
-        "      <td>" + order.costOfAllProducts + "</td>\n" +
-        "      <td>" + order.deliveryCost + "</td>\n" +
-        "      <td>" + order.amountOfProductsTypes + "</td>\n" +
+        "      <td>" + order.costOfAllProducts.toFixed(2) + "</td>\n" +
+        "      <td>" + order.deliveryCost.toFixed(2) + "</td>\n" +
+        "      <td>" + order.totalCost.toFixed(2) + "</td>\n" +
         "    </tr>"
     $("#orders-table tbody").append(newRowContent);
 }
@@ -77,15 +107,14 @@ $(function() {
         {
             createOrderDetailsTable();
         }
-        loadOrderDetails(selectedOrderID)
+       loadOrderDetails(selectedOrderID);
     });
 });
 
 
 function createOrderDetailsTable()
 {
-    // $("#orders-details-table").empty();
-    $("<h2>Order Details </h2>").appendTo($("#tablesContainer"))
+    $("<h2>Order Details </h2>").appendTo($("#tablesContainer"));
     $("    <table class=\"table\" id =\"orders-details-table\">\n" +
         "        <thead>\n" +
         "        <tr>\n" +
@@ -100,26 +129,29 @@ function createOrderDetailsTable()
         "        </tr>\n" +
         "        </thead>\n" +
         "        <tbody/> "+
-        "    </table>").appendTo($("#tablesContainer"))
+        "    </table>").appendTo($("#tablesContainer"));
 }
 
 
 
 function loadOrderDetails(selectedOrderID)
 {
-    $("#orders-details-table").empty()
+    $("#orders-details-table tbody").empty()
     for(order of loadedOrders)
     {
         if(order.id == selectedOrderID)
         {
-            $.map(order.products,function (product,storeID) {
-                appendProductsToOrdersDetailsTable(product,storeID)
+            $.map(order.products,function (products,storeID) {
+                for(product of products) {
+                    appendProductsToOrdersDetailsTable(product, storeID)
+                }
             });
-            $.map(order.discounts,function (discount,storeID) {
-                $.map(discount.priceForOfferProduct ,function (offerProductPrice,offerProductID)
-                {
-                    appendDiscountsToOrdersDetailsTable(discount,offerProductID,storeID);
-                });
+            $.map(order.discounts,function (discounts,storeID) {
+                for(discount of discounts) {
+                    $.map(discount.priceForOfferProduct, function (offerProductPrice, offerProductID) {
+                        appendDiscountsToOrdersDetailsTable(discount, offerProductID, storeID);
+                    });
+                }
             });
             return false;
         }
@@ -128,8 +160,9 @@ function loadOrderDetails(selectedOrderID)
 
 function appendProductsToOrdersDetailsTable(product,storeID)
 {
-    var price = product.pricePerStore[storeID];
-    var store = "id: " + storeID + " | " + getStore(storeID).name;
+    var store = getStore(storeID);
+    var price = getProductPrice(product.id,store);
+    var store = "id: " + storeID + " | " + store.name;
 
     var newRowContent = "<tr>\n" +
         "      <th scope=\"row\">" + product.id + "</th>\n" +
@@ -140,9 +173,10 @@ function appendProductsToOrdersDetailsTable(product,storeID)
         "      <td>" + price + "</td>\n" +
         "      <td>" + (product.amount * price).toFixed(2) + "</td>\n" +
         "      <td>" + "No" + "</td>\n" +
-        "    </tr>"
+        "    </tr>";
 
     $("#orders-details-table tbody").append(newRowContent);
+    return false;
 }
 
 function appendDiscountsToOrdersDetailsTable(discount,offerProductID,storeID)
@@ -150,7 +184,7 @@ function appendDiscountsToOrdersDetailsTable(discount,offerProductID,storeID)
     var amount = discount.amountForOfferProduct[offerProductID];
     var price = discount.priceForOfferProduct[offerProductID];
     var store = "id: " + storeID + " | " + getStore(storeID).name;
-    var product = getProduct(offerProductID);
+    var product = getProduct(offerProductID,loadedProducts);
 
     var newRowContent = "<tr>\n" +
         "      <th scope=\"row\">" + offerProductID+ "</th>\n" +
@@ -178,9 +212,9 @@ function getStore(storeID)
     return false;
 }
 
-function getProduct(productID)
+function getProduct(productID,products)
 {
-    for (product of loadedStores)
+    for (product of products)
     {
         if(product.id == productID)
         {
@@ -189,3 +223,17 @@ function getProduct(productID)
     }
     return false;
 }
+
+function getProductPrice(productID,store)
+{
+    var pricePerStore = getProduct(productID,store.products).pricePerStore;
+    var price = $.map(pricePerStore,function (value,key)
+    {
+        if(key == store.id)
+        {
+            return value;
+        }
+    });
+    return price[0];
+}
+

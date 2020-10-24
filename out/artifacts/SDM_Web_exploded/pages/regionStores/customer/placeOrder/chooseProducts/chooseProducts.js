@@ -1,20 +1,36 @@
-var loadedProducts
+var loadedProducts;
 var selectedStore;
+var selectedStoreOptionStr;
 
 $(function() {
+    console.log("shit");
     $("#products-form").submit(function() {
         if(checkIfOneProductSelected())
         {
-            saveFormInputs()
-            switch (orderType)
-            {
-                case "Static":
-                    moveToChooseDiscounts()
-                    break;
-                case "Dynamic":
-                    $("#main-place-order-container").load('customer/placeOrder/showStoresToBuyFrom/showStoresToBuyFrom.html');
-                    break;
-            }
+            $.ajax({
+                url: "validatePosition",
+                data: "xDestinationPosition=" + $("#x-location-text").val()
+                    + "&" + "yDestinationPosition=" + $("#y-location-text").val(),
+                timeout: 2000,
+                dataType: 'json',
+                error: function(errorObject) {
+                    $("#error-placeholder").append(errorObject.responseText);
+                },
+                success: function(data)
+                {
+                    if(data == "false")
+                    {
+                        $("#table-error-placeholder").empty();
+                        $("#table-error-placeholder").append("the location you enter is invalid," +
+                            " there already a store on that location.");
+
+                    }
+                    else
+                    {
+                        changePage();
+                    }
+                }
+            });
         }
         return  false;
     });
@@ -24,10 +40,27 @@ function checkIfOneProductSelected()
 {
     if ($('input:checkbox:checked', $("#products-table")).length === 0)
     {
-        $("#table-error-placeholder").append("please choose a least one products")
-        return false
+        $("#table-error-placeholder").empty();
+        $("#table-error-placeholder").append("please choose a least one products");
+        return false;
     }
-    return true
+    return true;
+}
+
+function changePage()
+{
+    saveFormInputs()
+    switch (orderType)
+    {
+        case "Static":
+            clearAllIntervals();
+            moveToChooseDiscounts()
+            break;
+        case "Dynamic":
+            $("#main-place-order-container").load('customer/placeOrder/showStoresToBuyFrom/showStoresToBuyFrom.html');
+            break;
+    }
+    return false;
 }
 
 function saveFormInputs()
@@ -38,8 +71,8 @@ function saveFormInputs()
     deliveryDate = $("#date").val();
 
     $('input:checkbox:checked', $("#products-table")).each(function() {
-        var product = findProduct($(this).closest('tr').find('td').eq(0).text());
-        productsAmounts[product] = $(this).closest('tr').find('td input').val();
+        var productID = $(this).closest('tr').find('td').eq(0).text();
+        productsAmounts[productID] = $(this).closest('tr').find('td input').val();
     }).get();
 
     $('input:checkbox:checked', $("#products-table")).each(function() {
@@ -118,13 +151,15 @@ $(function() {
         $("#static-order-row").empty()
         if($("#order-type").val()==="Static")
         {
-            createStaticOrderRow()
-            loadPossibleStore()
+            createStaticOrderRow();
+            loadPossibleStore();
+            allIntervals.push(setInterval(loadPossibleStore, 2000));
             $("#products-table tbody").empty();
         }
         else if($("#order-type").val()==="Dynamic")
         {
-            loadAllProducts()
+            clearAllIntervals();
+            loadAllProducts();
         }
     });
 });
@@ -145,6 +180,7 @@ function createStaticOrderRow() {
 
 
     $("#select-store").on("change", function () {
+        selectedStoreOptionStr =  $( "#select-store" ).val();
         $("#select-store option[id='place']").remove();
         loadStoreProducts()
     });
@@ -193,7 +229,6 @@ $("#y-location-text").on("change", function () {
 
 function loadPossibleStore()
 {
-
     $.ajax({
         url: "loadStores",
         timeout: 2000,
@@ -203,7 +238,9 @@ function loadPossibleStore()
         },
         success: function(data)
         {
+            $("#select-store option[id!='place']").remove();
             $.each(data || [], appendToSelectStore);
+            $("#select-store").val(selectedStoreOptionStr);
         }
     });
 }

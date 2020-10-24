@@ -4,7 +4,6 @@ import builders.DiscountDataContainerBuilder;
 import builders.OrderDataContainerBuilder;
 import builders.RegionDataContainerBuilder;
 import builders.UserDataContainerBuilder;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import dataContainers.*;
 import engineLogic.Customer;
 import engineLogic.Order;
@@ -377,6 +376,22 @@ public class SystemManager
             }
         }
         return orders;
+    }
+
+    public boolean ValidatePosition(Integer xPosition, Integer yPosition)
+    {
+        Point positionToValidate = new Point(xPosition,yPosition);
+        for(RegionDataContainer region: regionsData.values())
+        {
+            for (StoreDataContainer store: region.getStoresData().values())
+            {
+                if(store.getPosition().equals(positionToValidate))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /********************************************** Order Details Logic ****************************************/

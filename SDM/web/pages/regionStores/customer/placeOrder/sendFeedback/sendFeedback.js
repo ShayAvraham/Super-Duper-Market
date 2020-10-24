@@ -39,21 +39,22 @@ $(function() {
 function updateFeedbackForm()
 {
     $("#store-select option:selected").remove();
-    $("#rank-select").val(1);
+    $("#rank-select").val(5);
     $("#description-text").val("");
     if(!$('#store-select').val())
     {
         $("#rank-select").val("");
         $("*", "#feedback-form").prop('disabled', true);
+        $("#continue-btn", "#feedback-form").prop('disabled', false);
     }
 
 
 }
 
 $(function() {
-    $("#continue-form").submit(function()
-    {
+    $("#continue-btn").on("click", function () {
         window.location.replace("");
         return false;
     });
 });
+

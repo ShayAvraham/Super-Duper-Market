@@ -26,9 +26,9 @@ public class Owner extends User
         return notices;
     }
 
-    public void addFeedback(Notice newFeedback)
+    public void addNotice(Notice newNotice)
     {
-        notices.add(newFeedback);
+        notices.add(newNotice);
     }
 
 }

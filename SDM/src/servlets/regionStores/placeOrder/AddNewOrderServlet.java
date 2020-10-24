@@ -1,4 +1,4 @@
-package servlets.regionStores;
+package servlets.regionStores.placeOrder;
 
 import com.google.gson.Gson;
 import dataContainers.DiscountDataContainer;
@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;

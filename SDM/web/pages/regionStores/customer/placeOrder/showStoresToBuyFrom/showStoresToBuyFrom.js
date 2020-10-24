@@ -62,7 +62,7 @@ function getProductCost(product,store)
         }
     })
     // return parseInt(price)*productsAmounts[product.id]
-    return parseInt(price)*productsAmounts[product]
+    return parseInt(price)*productsAmounts[product.id]
 }
 
 

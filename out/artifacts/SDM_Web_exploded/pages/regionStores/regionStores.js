@@ -1,9 +1,26 @@
+var allIntervals = [];
+
+
+function clearAllIntervals()
+{
+    if(allIntervals.length != 0)
+    {
+        for (interval of allIntervals)
+        {
+            clearInterval(interval);
+        }
+    }
+}
+
+
 $(function() {
     $("#show-products-btn").on("click", function () {
+        clearAllIntervals();
         $("#loader").empty();
         $("#loader").load('common/showProducts/showProducts.html');
     });
     $("#show-stores-btn").on("click", function () {
+        clearAllIntervals()
         $("#loader").empty();
         $("#loader").load('common/showStores/showStores.html');
     });
@@ -60,9 +77,11 @@ function createCustomerButtons()
 function addCustomerButtonsEvents ()
 {
     $("#place-order-btn").on("click", function () {
+        clearAllIntervals();
         $("#loader").load('customer/placeOrder/placeOrder.html');
     });
     $("#orders-history-btn").on("click", function () {
+        clearAllIntervals();
         $("#loader").load('customer/showOrdersHistory/showOrdersHistory.html');
     });
 }
@@ -95,12 +114,15 @@ function createOwnerButtons()
 function addOwnerButtonsEvents ()
 {
     $("#store-orders-btn").on("click", function () {
+        clearAllIntervals();
         $("#loader").load('owner/storeOrders/storeOrders.html');
     });
     $("#show-feedbacks-btn").on("click", function () {
+        clearAllIntervals();
         $("#loader").load('owner/showFeedbacks/showFeedbacks.html');
     });
     $("#add-new-store-btn").on("click", function () {
+        clearAllIntervals();
         $("#loader").load('owner/addNewStore/addNewStore.html');
     });
 }

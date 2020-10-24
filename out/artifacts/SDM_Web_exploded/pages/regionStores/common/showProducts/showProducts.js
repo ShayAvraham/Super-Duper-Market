@@ -1,3 +1,15 @@
+$(function()
+{
+    console.log("shit2")
+    loadProducts();
+});
+
+
+$(function() {
+    allIntervals.push(setInterval(loadProducts, 2000));
+});
+
+
 /*
  data will arrive in the next form:
  {
@@ -14,21 +26,39 @@
  }
  */
 
-$(function() {
-        $.ajax({
-            url: "loadProducts",
-            timeout: 2000,
-            dataType: 'json',
-            error: function(errorObject) {
-                $("#error-placeholder").append(errorObject.responseText)
-            },
-            success: function(data) {
-                $.each(data || [], appendToProductsTable);
+function loadProducts()
+{
+    $.ajax({
+        url: "loadProducts",
+        timeout: 2000,
+        dataType: 'json',
+        error: function(errorObject) {
+            $("#error-placeholder").append(errorObject.responseText)
+        },
+        success: function(data) {
+            $("#productsTable tbody").empty();
+            $.each(data || [], appendToProductsTable);
 
-            }
-        });
-        return false;
-});
+        }
+    });
+    return false;
+}
+
+// $(function() {
+//         $.ajax({
+//             url: "loadProducts",
+//             timeout: 2000,
+//             dataType: 'json',
+//             error: function(errorObject) {
+//                 $("#error-placeholder").append(errorObject.responseText)
+//             },
+//             success: function(data) {
+//                 $.each(data || [], appendToProductsTable);
+//
+//             }
+//         });
+//         return false;
+// });
 
 function appendToProductsTable(index,product)
 {
@@ -37,7 +67,7 @@ function appendToProductsTable(index,product)
         "      <td>" + product.name+ "</td>\n" +
         "      <td>" + product.purchaseForm +"</td>\n" +
         "      <td>" + product.numberOfStoresSellProduct + "</td>\n" +
-        "      <td>" + product.averagePrice + "</td>\n" +
+        "      <td>" + product.averagePrice.toFixed(2) + "</td>\n" +
         "      <td>" + product.numOfProductWasOrdered + "</td>\n" +
         "    </tr>"
 

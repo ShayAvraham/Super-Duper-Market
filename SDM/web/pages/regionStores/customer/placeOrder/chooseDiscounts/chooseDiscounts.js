@@ -1,7 +1,4 @@
 var loadedDiscounts;
-var storeName;
-var selectedOfferID;
-var discountName;
 
 $(function() {
     $.ajax({
@@ -46,7 +43,7 @@ function convertToIntegerToFloatMap(productsAmounts)
     for(key of selectedProducts)
     {
         var jsonKey = parseInt(key.id);
-        var jsonValues = parseFloat(productsAmounts[key]);
+        var jsonValues = parseFloat(productsAmounts[key.id]);
         jsonMap[jsonKey]=jsonValues;
     }
     return jsonMap;
@@ -117,13 +114,17 @@ $(function() {
     {
         selectedDiscounts = [];
         $('input:checkbox:checked', $("#discounts-table")).each(function () {
-            storeName = $(this).closest('tr').find('td').eq(0).text()
-            if(selectedOfferID = $(this).closest('tr').find('td select').length)
+            var storeName = $(this).closest('tr').find('td').eq(0).text();
+            var selectedOfferID;
+            if($(this).closest('tr').find('td select').length)
             {
                 selectedOfferID = $(this).closest('tr').find('td select').val().split(" ")[1];
             }
-            discountName = $(this).closest('tr').find('td').eq(1).text();
-            $.each(loadedDiscounts || [], createSelectedDiscounts);
+            var discountName = $(this).closest('tr').find('td').eq(1).text();
+            addToSelectedDiscounts(storeName,discountName,selectedOfferID)
+
+
+            // $.each(loadedDiscounts || [], createSelectedDiscounts);
         }).get();
         if(selectedDiscountsValidated())
         {
@@ -139,26 +140,28 @@ $(function() {
     });
 });
 
-function createSelectedDiscounts(index ,loadedDiscount)
+function addToSelectedDiscounts(storeName ,discountName, selectedOfferID )
 {
-    if(loadedDiscount.store.name == storeName)
+    for(loadedDiscount of loadedDiscounts)
     {
-        var store = loadedDiscount.store;
-        loadedDiscount.discounts.forEach(discount =>
-       {
-           if(discount.discountName == discountName)
-           {
-               if(discount.discountType == "ONE_OF")
-               {
-                   discount.selectedOfferID = selectedOfferID;
-               }
-               var selectedDiscount = {storeID:store.id, discount:discount};
-               selectedDiscounts.push(selectedDiscount);
-           }
-           return false;
-       });
+        if(loadedDiscount.store.name == storeName)
+        {
+            var store = loadedDiscount.store;
+            for(discount of loadedDiscount.discounts)
+            {
+                if (discount.discountName == discountName)
+                {
+                    if(discount.discountType == "ONE_OF")
+                    {
+                        discount.selectedOfferID = selectedOfferID;
+                    }
+                    var selectedDiscount = {storeID:store.id, discount:discount};
+                    selectedDiscounts.push(selectedDiscount);
+                    return false;
+                }
+            }
+        }
     }
-    return false;
 }
 
 function selectedDiscountsValidated()
@@ -172,7 +175,7 @@ function selectedDiscountsValidated()
             {
                 sum += selectedDiscount.discount.amountForDiscount;
             }
-            if(sum>productsAmounts[product])
+            if(sum>productsAmounts[product.id])
             {
                 return false;
             }

@@ -1,3 +1,12 @@
+$(function() {
+    loadStores();
+});
+
+$(function() {
+    allIntervals.push(setInterval(loadStores, 2000));
+});
+
+
 /*
  data will arrive in the next form:
  {
@@ -18,7 +27,8 @@
  }
  */
 
-$(function() {
+function loadStores()
+{
         $.ajax({
             url: "loadStores",
             timeout: 2000,
@@ -28,11 +38,12 @@ $(function() {
             },
             success: function(data)
             {
+                $("#storesTable tbody").empty();
                 $.each(data || [], appendToStoreTable);
             }
         });
         return false;
-});
+}
 
 function appendToStoreTable(index,store)
 {
@@ -44,8 +55,8 @@ function appendToStoreTable(index,store)
         "      <td>" + location +"</td>\n" +
         "      <td>" + store.ppk + "</td>\n" +
         "      <td>" + store.orders.length + "</td>\n" +
-        "      <td>" + store.totalIncomeFromProducts + "</td>\n" +
-        "      <td>" + store.totalIncomeFromDeliveries + "</td>\n" +
+        "      <td>" + store.totalIncomeFromProducts.toFixed(2) + "</td>\n" +
+        "      <td>" + store.totalIncomeFromDeliveries.toFixed(2) + "</td>\n" +
         "    </tr>"
     $("#storesTable tbody").append(newRowContent);
 }
