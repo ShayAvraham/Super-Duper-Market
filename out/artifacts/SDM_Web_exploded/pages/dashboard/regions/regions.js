@@ -1,5 +1,11 @@
 var refreshRate = 2000;
 
+
+$(function() {
+    allIntervals.push(setInterval(ajaxRegionsList, refreshRate));
+});
+
+
 $(function () {
     $.ajax({
         url: "loadRegionsInfo",
@@ -23,7 +29,7 @@ function appendToRegionsTable(region) {
         "      <td>" + Object.keys(region.productsData).length + "</td>\n" +
         "      <td>" + region.numOfStores + "</td>\n" +
         "      <td>" + region.numOfOrders + "</td>\n" +
-        "      <td>" + region.orderCostAvg + "</td>\n" +
+        "      <td>" + region.orderCostAvg.toFixed(2) + "</td>\n" +
         "    </tr>"
     $("#all-regions-data").append(newRowContent);
 }
@@ -52,10 +58,6 @@ function ajaxRegionsList() {
         }
     });
 }
-
-// $(function() {
-//     setInterval(ajaxRegionsList, refreshRate);
-// });
 
 
 function ajaxUpdateRegionInSession(selectedRegionName) {

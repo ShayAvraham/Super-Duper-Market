@@ -1,5 +1,10 @@
 var refreshRate = 2000;
 
+
+$(function() {
+    allIntervals.push(setInterval(ajaxUsersList, refreshRate));
+});
+
 $(function () {
     $.ajax({
         url: "loadUsersInfo",
@@ -46,7 +51,3 @@ function ajaxUsersList() {
         }
     });
 }
-
-// $(function() {
-//     setInterval(ajaxUsersList, refreshRate);
-// });

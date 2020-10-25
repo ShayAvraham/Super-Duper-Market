@@ -1,5 +1,11 @@
 var refreshRate = 2000;
 
+
+$(function() {
+    allIntervals.push(setInterval(ajaxRegionsList, refreshRate));
+});
+
+
 $(function () {
     $.ajax({
         url: "loadRegionsInfo",
@@ -52,10 +58,6 @@ function ajaxRegionsList() {
         }
     });
 }
-
-// $(function() {
-//     setInterval(ajaxRegionsList, refreshRate);
-// });
 
 
 function ajaxUpdateRegionInSession(selectedRegionName) {

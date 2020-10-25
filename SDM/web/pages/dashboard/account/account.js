@@ -1,4 +1,10 @@
-var refreshRate = 2000; //milli seconds
+var refreshRate = 2000;
+
+
+$(function() {
+    allIntervals.push(setInterval(ajaxTransactionsList, refreshRate));
+});
+
 
 $(function () {
     $.ajax({
@@ -28,8 +34,6 @@ $(function() {
             },
             success: function(data)
             {
-                // updateUserCurrentBalance(data.balanceAfter);
-                // addNewTransactionToTransactionTable(datePicked, amountToRecharge, data.balanceBefore, data.balanceAfter);
                 $("#money-amount").val("");
                 $("#date").val("");
             }
@@ -49,23 +53,11 @@ function appendToTransactionTable(transaction) {
         "      <td >" + transaction.transactionCategory + "</td>\n" +
         "      <td>" + transaction.date + "</td>\n" +
         "      <td>" + transaction.cost + "</td>\n" +
-        "      <td>" + transaction.balanceBefore + "</td>\n" +
-        "      <td>" + transaction.balanceAfter + "</td>\n" +
+        "      <td>" + transaction.balanceBefore.toFixed(2) + "</td>\n" +
+        "      <td>" + transaction.balanceAfter.toFixed(2) + "</td>\n" +
         "    </tr>"
     $("#user-transactions-data").append(newRowContent);
 }
-
-
-// function addNewTransactionToTransactionTable(datePicked, amountToRecharge, balanceBefore, balanceAfter) {
-//     var newRowContent = "<tr>\n" +
-//         "      <td >" + CHARGING + "</td>\n" +
-//         "      <td>" + datePicked + "</td>\n" +
-//         "      <td>" + amountToRecharge + "</td>\n" +
-//         "      <td>" + balanceBefore + "</td>\n" +
-//         "      <td>" + balanceAfter + "</td>\n" +
-//         "    </tr>"
-//     $("#user-transactions-data").append(newRowContent);
-// }
 
 
 function refreshTransactionsTable(user) {
@@ -79,6 +71,7 @@ function refreshTransactionsTable(user) {
     }
 }
 
+
 function ajaxTransactionsList() {
     $.ajax({
         url: "loggedUser",
@@ -89,8 +82,5 @@ function ajaxTransactionsList() {
     });
 }
 
-// $(function() {
-//     setInterval(ajaxTransactionsList, refreshRate);
-// });
 
 

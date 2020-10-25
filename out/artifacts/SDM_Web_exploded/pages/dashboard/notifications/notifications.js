@@ -1,4 +1,6 @@
-var refreshRate = 2000;
+var refreshNotificationsRate = 1000;
+var notificationsLength = 0;
+
 
 function appendToNotificationsTable(notification) {
     var newRowContent = "<tr>\n" +
@@ -8,36 +10,34 @@ function appendToNotificationsTable(notification) {
 }
 
 
-function refreshNotificationsTable(notifications) {
-    $("#all-notifications-data").empty();
-    if (notifications.length > 0)
+function refreshNotificationsTable() {
+    if (ownerNotifications.length > notificationsLength)
     {
-        console.log("test");
-        notifications.forEach((notification) => {
+        notificationsLength = ownerNotifications.length;
+        $("#all-notifications-data").empty();
+        ownerNotifications.forEach((notification) => {
             appendToNotificationsTable(notification);
         })
     }
-    else
+    else if (ownerNotifications.length === 0)
     {
+        $("#all-notifications-data").empty();
         $("#all-notifications-data").append("<tr>\n" +
             "      <td >" + "Your notifications box is empty" + "</td>\n" +
             "    </tr>");
     }
 }
 
-function ajaxNotificationsList() {
-    $.ajax({
-        url: "loadNotifications",
-        dataType: "json",
-        success: function (data) {
-            refreshNotificationsTable(data);
-        }
+$(function() {
+    cleanNotificationCounterOnClickNotificationsTable();
+    setInterval(refreshNotificationsTable, refreshNotificationsRate);
+});
+
+
+function cleanNotificationCounterOnClickNotificationsTable() {
+    $('#notifications-table').on("click", 'tbody tr', function(e)
+    {
+        $(this).addClass('highlight').siblings().removeClass('highlight');
+        // $("#notifications-counter").text("");
     });
 }
-
-$(function() {
-    $("#all-notifications-data").append("<tr>\n" +
-        "      <td >" + "Your notifications box is empty" + "</td>\n" +
-        "    </tr>");
-    setInterval(ajaxNotificationsList, refreshRate);
-});
