@@ -79,22 +79,35 @@ public final class UserDataContainerBuilder
 
     private static NoticeDataContainer creatNoticeDataFromFeedback(Feedback feedback)
     {
-        String description = "Feedback \n" +
+        String strMessage = "Feedback \n" +
                              "--------\n" +
                             "Customer Name: " +feedback.getCustomerName() + "\n" +
                             "Rank: " + feedback.getRank() + "\n";
-        return new NoticeDataContainer(description);
+
+        return new NoticeDataContainer(feedback.getRegionName(),
+                feedback.getStoreID(),
+                feedback.getCustomerName(),
+                feedback.getRank(),
+                feedback.getDescription(),
+                feedback.getDate(),
+                strMessage);
     }
 
     private static NoticeDataContainer creatNoticeDataFromFeedback(OrderNotice orderNotice)
     {
-        String description = "Order \n" +
+        String strMessage = "Order \n" +
                              "----------\n" +
                     "Order I.D: " + orderNotice.getOrderId() +"\n" +
                     "Customer name: " + orderNotice.getCustomerName() + "\n" +
                     "Number of products types: " + orderNotice.getNumOfProductsType() + "\n" +
                     "Products cost: " + orderNotice.getProductsCost() + "\n" +
                     "Delivery cost: " + orderNotice.getDeliveryCost() + "\n";
-        return new NoticeDataContainer(description);
+
+        return new NoticeDataContainer(orderNotice.getOrderId(),
+                orderNotice.getNumOfProductsType(),
+                orderNotice.getProductsCost(),
+                orderNotice.getDeliveryCost(),
+                orderNotice.getCustomerName(),
+                strMessage);
     }
 }

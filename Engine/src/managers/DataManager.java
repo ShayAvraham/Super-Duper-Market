@@ -245,6 +245,7 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
     {
         return new Order(newOrderDataContainer.getDate(),
                 newOrderDataContainer.getOrderDestination(),
+                newOrderDataContainer.getCustomerName(),
                 newOrderDataContainer.getRegionName(),
                 createOrderProducts(newOrderDataContainer.getProducts(),regionName),
                 createOrderDiscounts(newOrderDataContainer.getDiscounts(),regionName),
@@ -351,6 +352,7 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
         return new Order(orderID,
                 newOrder.getDate(),
                 newOrder.getOrderDestination(),
+                newOrder.getCustomerName(),
                 newOrder.getRegionName(),
                 new HashMap<Store,Collection<OrderProduct>>()
                 {{put(store,createOrderStoreProducts(regionName,storeID,newOrder.getProducts().get(storeID)));}},

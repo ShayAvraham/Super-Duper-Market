@@ -15,28 +15,14 @@ import javax.xml.bind.JAXBException;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 import java.util.*;
 
 
 public class SystemManager
 {
-    private final String UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE = "Unable to remove this product because its sold only in this store.";
-    private final String UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE = "Unable to remove this product because the store sold only this product.";
-
-
     private DataManager dataManager;
     private Map <Integer, UserDataContainer> usersData;
     private Map <String, RegionDataContainer> regionsData;
-
- //   private Map <StoreDataContainer,Collection<ProductDataContainer>> storeToPurchaseFrom;
-
-    private static DecimalFormat DECIMAL_FORMAT;
-
-    static
-    {
-        DECIMAL_FORMAT = new DecimalFormat("#.##");
-    }
 
     public SystemManager()
     {
@@ -78,7 +64,7 @@ public class SystemManager
         return regionsData.get(regionName).getStoresData().get(storeId).getProducts();
     }
 
-    public StoreDataContainer GetStore(String regionName, int storeId)//change
+    public StoreDataContainer GetStore(String regionName, int storeId)
     {
         return regionsData.get(regionName).getStoresData().get(storeId);
     }
@@ -88,6 +74,15 @@ public class SystemManager
     {
         return regionsData.values();
     }
+
+    public Map<Integer, UserDataContainer> getUsersData() {
+        return usersData;
+    }
+
+    public Map<String, RegionDataContainer> getRegionsData() {
+        return regionsData;
+    }
+
 
     /**************** Load All Users data **************/
 
@@ -245,11 +240,12 @@ public class SystemManager
                             Map<Integer, Collection<DiscountDataContainer>> selectedDiscounts,
                             Map<Integer, Float> productsAmounts, Date deliveryDate,
                             Integer xPosition, Integer yPosition, String orderType, Float productsCost,
-                            Float deliveryCost, Float totalOrderCost, String regionName, int userID)
+                            Float deliveryCost, Float totalOrderCost, String regionName, int customerID)
     {
         OrderDataContainer newOrderData = new OrderDataContainer(
                 deliveryDate,
                 new Point(xPosition,yPosition),
+                usersData.get(customerID).getName(),
                 regionName,
                 createOrderDataProducts(storesToBuyFrom,productsAmounts),
                 createOrderDataDiscounts(selectedDiscounts),
@@ -258,11 +254,11 @@ public class SystemManager
                 deliveryCost,
                 totalOrderCost);
 
-        Collection <User> usersCollection = dataManager.addNewOrder(newOrderData,regionName,userID);
-        updateDataContainers(regionName,userID,usersCollection);
+        Collection <User> usersCollection = dataManager.addNewOrder(newOrderData,regionName,customerID);
+        updateDataContainers(regionName,customerID,usersCollection);
     }
 
-    private void updateDataContainers(String regionName,Integer customerID, Collection<User> usersCollection)
+    private synchronized void updateDataContainers(String regionName,Integer customerID, Collection<User> usersCollection)
     {
         int regionOwnerID = dataManager.getRegionOwnerID(regionName);
         Region region = dataManager.getAllRegions().get(regionName);
@@ -305,15 +301,6 @@ public class SystemManager
             }
         }
         return discounts;
-    }
-
-
-    public Map<Integer, UserDataContainer> getUsersData() {
-        return usersData;
-    }
-
-    public Map<String, RegionDataContainer> getRegionsData() {
-        return regionsData;
     }
 
     private Collection<DiscountDataContainer> createOrderDataStoreDiscounts
@@ -392,6 +379,35 @@ public class SystemManager
             }
         }
         return true;
+    }
+    /********************************************** Show Store Orders ****************************************/
+
+    public Collection<StoreDataContainer> GetOwnerStores(int ownerID, String regionName)
+    {
+        Collection<StoreDataContainer> ownerStores = new ArrayList<>();
+        for (StoreDataContainer store : regionsData.get(regionName).getStoresData().values())
+        {
+            if(store.getOwnerName().equals(usersData.get(ownerID).getName()))
+            {
+                ownerStores.add(store);
+            }
+        }
+        return ownerStores;
+    }
+
+    /********************************************** Show User Feedbacks ****************************************/
+
+    public Collection<NoticeDataContainer> getUserRegionFeedbacks(String regionName, int userID)
+    {
+        Collection<NoticeDataContainer> userRegionFeedbacks = new ArrayList<>();
+        for (NoticeDataContainer notice: usersData.get(userID).getNotices())
+        {
+            if(notice.getType().equals("feedback") && notice.getRegionName().equals(regionName))
+            {
+                userRegionFeedbacks.add(notice);
+            }
+        }
+        return userRegionFeedbacks;
     }
 
     /********************************************** Order Details Logic ****************************************/

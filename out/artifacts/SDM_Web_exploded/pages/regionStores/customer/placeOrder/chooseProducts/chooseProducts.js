@@ -3,7 +3,6 @@ var selectedStore;
 var selectedStoreOptionStr;
 
 $(function() {
-    console.log("shit");
     $("#products-form").submit(function() {
         if(checkIfOneProductSelected())
         {

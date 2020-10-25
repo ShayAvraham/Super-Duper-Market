@@ -122,9 +122,6 @@ $(function() {
             }
             var discountName = $(this).closest('tr').find('td').eq(1).text();
             addToSelectedDiscounts(storeName,discountName,selectedOfferID)
-
-
-            // $.each(loadedDiscounts || [], createSelectedDiscounts);
         }).get();
         if(selectedDiscountsValidated())
         {

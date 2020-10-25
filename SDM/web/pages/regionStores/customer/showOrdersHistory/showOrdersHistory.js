@@ -38,7 +38,7 @@ function appendNoOrdersExist()
 {
     $("#tablesContainer").empty();
     $("#tablesContainer").append("<div class=\"alert alert-info\" role=\"alert\">\n" +
-        "No orders no display because you yet make one" +
+        "No orders to display because you yet make one" +
         "</div>")
 }
 

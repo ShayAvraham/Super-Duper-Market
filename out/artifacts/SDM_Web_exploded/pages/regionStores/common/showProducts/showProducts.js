@@ -43,21 +43,6 @@ function loadProducts()
     return false;
 }
 
-// $(function() {
-//         $.ajax({
-//             url: "loadProducts",
-//             timeout: 2000,
-//             dataType: 'json',
-//             error: function(errorObject) {
-//                 $("#error-placeholder").append(errorObject.responseText)
-//             },
-//             success: function(data) {
-//                 $.each(data || [], appendToProductsTable);
-//
-//             }
-//         });
-//         return false;
-// });
 
 function appendToProductsTable(index,product)
 {
