@@ -1,6 +1,4 @@
 $(function() {
-
-    console.log("feedback page");
     $.each(storesToBuyFrom || [], appendToStoreSelect);
 });
 

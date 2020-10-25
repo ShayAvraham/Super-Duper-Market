@@ -1,7 +1,6 @@
 package engineLogic;
 
 import java.awt.*;
-import java.time.LocalDate;
 import java.util.*;
 
 public class Order
@@ -11,6 +10,7 @@ public class Order
     private int id;
     private String regionName;
     private Point orderDestination;
+    private String customerName;
     private Date date;
     private Map<Store, Collection<OrderProduct>> products;
     private Map<Store, Collection<Discount>> discounts;
@@ -21,13 +21,14 @@ public class Order
 
 
     /** Create new Order**/
-    public Order(Date date,Point orderDestination, String regionName, Map<Store, Collection<OrderProduct>> products,
+    public Order(Date date,Point orderDestination,String customerName, String regionName, Map<Store, Collection<OrderProduct>> products,
                  Map<Store, Collection<Discount>> discounts, boolean isDynamic, float costOfAllProducts,
                  float deliveryCost, float totalCost)
     {
         this.id = idNumber++;
         this.date = date;
         this.orderDestination = orderDestination;
+        this.customerName = customerName;
         this.regionName = regionName;
         this.products = products;
         this.discounts = discounts;
@@ -38,13 +39,14 @@ public class Order
     }
 
     /** Create Sub Order**/
-    public Order(int id,Date date,Point orderDestination, String regionName, Map<Store, Collection<OrderProduct>> products,
+    public Order(int id,Date date,Point orderDestination,String customerName, String regionName, Map<Store, Collection<OrderProduct>> products,
                  Map<Store, Collection<Discount>> discounts,boolean isDynamic, float costOfAllProducts,
                  float deliveryCost, float totalCost)
     {
         this.id = id;
         this.date = date;
         this.orderDestination = orderDestination;
+        this.customerName = customerName;
         this.regionName = regionName;
         this.products = products;
         this.discounts = discounts;
@@ -64,6 +66,10 @@ public class Order
 
     public Point getOrderDestination() {
         return orderDestination;
+    }
+
+    public String getCustomerName() {
+        return customerName;
     }
 
     public Date getDate() {

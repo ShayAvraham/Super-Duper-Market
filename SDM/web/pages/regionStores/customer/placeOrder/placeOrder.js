@@ -1,4 +1,3 @@
-/****************************************/
 var orderType;
 var xPosition;
 var yPosition;

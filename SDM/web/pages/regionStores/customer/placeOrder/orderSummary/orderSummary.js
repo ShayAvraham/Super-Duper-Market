@@ -1,6 +1,4 @@
 var selectedStoreID;
-var selectedOfferID;
-
 var deliveryCost = 0;
 var productsCost = 0;
 var totalOrderCost = 0;
@@ -44,9 +42,6 @@ function calculateDiscountsCost()
         if(selectedDiscount.discount.discountType == "ONE_OF")
         {
             calculateOfferCost(selectedDiscount.discount.selectedOfferID,selectedDiscount)
-            // var offerProduct = getOfferProduct(selectedDiscount.discount.selectedOfferID, selectedDiscount.storeID);
-            // productsCost += parseFloat(getOfferProductAmount(offerProduct, selectedDiscount.discount.amountForOfferProduct))
-            //     * parseFloat(getOfferProductPrice(offerProduct, selectedDiscount.discount.priceForOfferProduct));
         }
         else
         {

@@ -30,6 +30,7 @@ public final class OrderDataContainerBuilder
                 order.getId(),
                 order.getDate(),
                 order.getOrderDestination(),
+                order.getCustomerName(),
                 order.getRegionName(),
                 createOrderProductsData(order),
                 createOrderDiscountsData(order),

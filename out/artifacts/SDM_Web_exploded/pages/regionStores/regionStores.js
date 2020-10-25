@@ -24,6 +24,10 @@ $(function() {
         $("#loader").empty();
         $("#loader").load('common/showStores/showStores.html');
     });
+    $("#back-btn").on("click", function () {
+        clearAllIntervals()
+        window.location.replace("../dashboard/dashboard.html");
+    });
 });
 
 $(function() {
@@ -70,8 +74,7 @@ function createCustomerButtons()
         "                            Orders History\n" +
         "                        </a>\n" +
         "                    </li>"
-
-    $("#button-columns").append(newLiContent);
+    $(newLiContent).insertBefore($("#back-li"));
 }
 
 function addCustomerButtonsEvents ()
@@ -107,7 +110,7 @@ function createOwnerButtons()
         "                        </a>\n" +
         "                    </li>"
 
-    $("#button-columns").append(newLiContent);
+    $(newLiContent).insertBefore($("#back-li"));
 }
 
 
@@ -115,7 +118,7 @@ function addOwnerButtonsEvents ()
 {
     $("#store-orders-btn").on("click", function () {
         clearAllIntervals();
-        $("#loader").load('owner/storeOrders/storeOrders.html');
+        $("#loader").load('owner/showStoreOrders/showStoreOrders.html');
     });
     $("#show-feedbacks-btn").on("click", function () {
         clearAllIntervals();

@@ -73,6 +73,14 @@
         <servlet-name>LoadNotificationsServlet</servlet-name>
         <servlet-class>servlets.LoadNotificationsServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadUserStoresServlet</servlet-name>
+        <servlet-class>servlets.regionStores.showStoreOrders.LoadUserStoresServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadUserRegionFeedbacksServlet</servlet-name>
+        <servlet-class>servlets.regionStores.showFeedbacks.LoadUserRegionFeedbacks</servlet-class>
+    </servlet>
 
 
     <servlet-mapping>
@@ -147,5 +155,13 @@
     <servlet-mapping>
         <servlet-name>LoadNotificationsServlet</servlet-name>
         <url-pattern>/pages/dashboard/loadNotifications</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadUserStoresServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadUserStores</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadUserRegionFeedbacksServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadUserRegionFeedbacks</url-pattern>
     </servlet-mapping>
 </web-app>
