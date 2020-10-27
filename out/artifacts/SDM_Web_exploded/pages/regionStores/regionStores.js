@@ -94,7 +94,7 @@ function createOwnerButtons()
     var newLiContent = "                   <li class=\"nav-item\">\n" +
         "                        <a id=\"store-orders-btn\" class=\"nav-link\">\n" +
         "                            <span data-feather=\"users\"></span>\n" +
-        "                            Store Orders History\n" +
+        "                            Show Store Orders History\n" +
         "                        </a>\n" +
         "                    </li>" +
         "                   <li class=\"nav-item\">\n" +
