@@ -81,10 +81,12 @@ $("#select-store").on("change", function () {
 
 $(function() {
     $("#store-orders-form").submit(function() {
+        $("#h1-headline").removeClass("invisible");
         $("#orders-table").removeClass("invisible");
         selectedStore = getStore(selectedStoreOptionStr.split(" ")[1]);
         $("#orders-table tbody").empty();
         $("#order-details-div").addClass("invisible");
+
         selectedStore.orders.forEach(order =>appendToOrdersTable(order));
         return  false;
     });

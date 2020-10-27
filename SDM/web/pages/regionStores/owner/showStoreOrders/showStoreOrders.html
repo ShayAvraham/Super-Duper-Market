@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="../../common/jquery-3.5.1.min.js"></script>
     <script src="owner/showStoreOrders/showStoreOrders.js"></script>
     <link rel="stylesheet" href="owner/showStoreOrders/showStoreOrders.css" />
 </head>
 <body>
-    <h1>Store Orders</h1>
     <div class="container" id="main-container">
         <div id="alert-div" class="alert alert-info invisible" role="alert">
             <label id="no-orders-label"></label>
@@ -23,6 +21,7 @@
             </div>
             <button class="btn btn-primary" type="submit"  id="show-orders-btn">Show Orders</button>
         </form>
+        <h1 id="h1-headline" class="invisible">Store Orders</h1>
         <table class="table table-hover invisible" id ="orders-table">
             <thead>
                 <tr>

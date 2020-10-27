@@ -1,7 +1,5 @@
 package dataContainers;
 
-import javafx.beans.property.*;
-
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,10 +15,7 @@ public class ProductDataContainer
     private Map<Integer,Integer> pricePerStore;
     private Map<Integer,Float> soldAmountPerStore;
     private float amount = 0;
-
-//    private final BooleanProperty checked = new SimpleBooleanProperty(false);
-//    private final SimpleDoubleProperty amount = new SimpleDoubleProperty(1);
-//    private final SimpleIntegerProperty price = new SimpleIntegerProperty(1);
+    private int newPrice = 0;
 
     public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct, float averagePrice, float numOfProductWasOrdered)
     {
@@ -58,7 +53,7 @@ public class ProductDataContainer
     /**** json constructor ******/
     public ProductDataContainer(int id, String name, String purchaseForm, int numberOfStoresSellProduct,
                                 float averagePrice, float numOfProductWasOrdered, Map<Integer, Integer> pricePerStore,
-                                Map<Integer, Float> soldAmountPerStore, float amount) {
+                                Map<Integer, Float> soldAmountPerStore, float amount,int newPrice) {
         this.id = id;
         this.name = name;
         this.purchaseForm = purchaseForm;
@@ -68,6 +63,7 @@ public class ProductDataContainer
         this.pricePerStore = pricePerStore;
         this.soldAmountPerStore = soldAmountPerStore;
         this.amount = amount;
+        this.newPrice = newPrice;
     }
 
     public int getId() {
@@ -106,31 +102,9 @@ public class ProductDataContainer
         return amount;
     }
 
-    //    public boolean isChecked()
-//    {
-//        return checked.get();
-//    }
-//
-//    public BooleanProperty checkedProperty()
-//    {
-//        return checked;
-//    }
-//
-//    public double getAmount() {
-//        return amount.get();
-//    }
-//
-//    public SimpleDoubleProperty amountProperty() {
-//        return amount;
-//    }
-//
-//    public int getPrice() {
-//        return price.get();
-//    }
-//
-//    public SimpleIntegerProperty priceProperty() {
-//        return price;
-//    }
+    public int getNewPrice() {
+        return newPrice;
+    }
 
     @Override
     public boolean equals(Object o)

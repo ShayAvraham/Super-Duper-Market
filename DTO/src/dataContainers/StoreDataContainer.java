@@ -33,6 +33,17 @@ public class StoreDataContainer
         this.discounts = discounts;
     }
 
+
+    public StoreDataContainer(int id, String name, String ownerName,Point position ,float ppk,Collection<ProductDataContainer> products)
+    {
+        this.id = id;
+        this.name = name;
+        this.ownerName = ownerName;
+        this.position = position;
+        this.ppk = ppk;
+        this.products = products;
+    }
+
     public int getId()
     {
         return id;

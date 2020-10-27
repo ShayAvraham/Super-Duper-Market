@@ -8,8 +8,8 @@ $(function() {
         {
             $.ajax({
                 url: "validatePosition",
-                data: "xDestinationPosition=" + $("#x-location-text").val()
-                    + "&" + "yDestinationPosition=" + $("#y-location-text").val(),
+                data: "xPosition=" + $("#x-location-text").val()
+                    + "&" + "yPosition=" + $("#y-location-text").val(),
                 timeout: 2000,
                 dataType: 'json',
                 error: function(errorObject) {
@@ -17,7 +17,7 @@ $(function() {
                 },
                 success: function(data)
                 {
-                    if(data == "false")
+                    if(data === false)
                     {
                         $("#table-error-placeholder").empty();
                         $("#table-error-placeholder").append("the location you enter is invalid," +
