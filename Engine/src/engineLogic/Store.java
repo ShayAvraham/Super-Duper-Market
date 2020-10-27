@@ -27,6 +27,7 @@ public class Store
         DECIMAL_FORMAT = new DecimalFormat("#.##");
     }
 
+    /** from xml  **/
     public Store(SDMStore store,String ownerName, Point position, Collection<StoreProduct> storeProducts, Collection<Discount>storeDiscounts)
     {
         this.id = store.getId();
@@ -39,10 +40,12 @@ public class Store
         this.storeOrders = new HashSet<>();
     }
 
-    public Store(int id, String name, Point position, float ppk ,Collection<StoreProduct> storeProducts)
+    /** Create New store **/
+    public Store(int id, String name,String ownerName, Point position, float ppk ,Collection<StoreProduct> storeProducts)
     {
         this.id = id;
         this.name = name;
+        this.ownerName = ownerName;
         this.position = position;
         this.ppk = ppk;
         this.storeProducts = new HashSet<>(storeProducts);

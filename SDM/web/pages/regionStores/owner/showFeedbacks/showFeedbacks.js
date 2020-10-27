@@ -1,5 +1,4 @@
 $(function() {
-    console.log("show feedbacks page");
     loadUserFeedbacks();
 });
 
@@ -26,6 +25,7 @@ function loadUserFeedbacks()
             {
                 $("#alert-div").remove();
                 $("#feedbacks-table").removeClass("invisible");
+                $("#h1-headline").removeClass("invisible");
                 $("#feedbacks-table tbody").empty();
                 $.each(data || [], appendToFeedbackTable);
             }

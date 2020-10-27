@@ -5,6 +5,7 @@ import dataContainers.TransactionDataContainer;
 import dataContainers.UserDataContainer;
 import engineLogic.*;
 
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,11 +72,16 @@ public final class UserDataContainerBuilder
         {
             return creatNoticeDataFromFeedback((Feedback) notice);
         }
+        else if (notice instanceof OrderNotice)
+        {
+           return creatNoticeDataFromOrderNotice((OrderNotice) notice);
+        }
         else
         {
-           return creatNoticeDataFromFeedback((OrderNotice) notice);
+            return creatNoticeDataFromStoreNotice((StoreNotice) notice);
         }
     }
+
 
     private static NoticeDataContainer creatNoticeDataFromFeedback(Feedback feedback)
     {
@@ -93,7 +99,7 @@ public final class UserDataContainerBuilder
                 strMessage);
     }
 
-    private static NoticeDataContainer creatNoticeDataFromFeedback(OrderNotice orderNotice)
+    private static NoticeDataContainer creatNoticeDataFromOrderNotice(OrderNotice orderNotice)
     {
         String strMessage = "Order \n" +
                              "----------\n" +
@@ -108,6 +114,25 @@ public final class UserDataContainerBuilder
                 orderNotice.getProductsCost(),
                 orderNotice.getDeliveryCost(),
                 orderNotice.getCustomerName(),
+                strMessage);
+    }
+
+    private static NoticeDataContainer creatNoticeDataFromStoreNotice(StoreNotice storeNotice)
+    {
+        Point location = storeNotice.getLocation();
+        String strMessage = "Store" +
+                "----------\n" +
+                "Store owner: " + storeNotice.getStoreOwner() +"\n" +
+                "Store name: " + storeNotice.getStoreName() + "\n" +
+                "Location: " + "(" + location.getX() + "," + location.getY() + ")" + "\n" +
+                "Products on sale: " + storeNotice.getAmountOfProductsForSale() + "/" +
+                storeNotice.getAmountOfProductsForSale() + "\n";
+
+        return new NoticeDataContainer(storeNotice.getStoreOwner(),
+                storeNotice.getStoreName(),
+                location,
+                storeNotice.getAmountOfProductsForSale(),
+                storeNotice.getAmountOfRegionProducts(),
                 strMessage);
     }
 }

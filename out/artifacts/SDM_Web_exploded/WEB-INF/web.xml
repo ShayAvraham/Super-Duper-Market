@@ -70,6 +70,10 @@
         <servlet-class>servlets.regionStores.ValidatePositionServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>ValidateStoreIDServlet</servlet-name>
+        <servlet-class>servlets.regionStores.ValidateStoreIDServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LoadNotificationsServlet</servlet-name>
         <servlet-class>servlets.LoadNotificationsServlet</servlet-class>
     </servlet>
@@ -80,6 +84,10 @@
     <servlet>
         <servlet-name>LoadUserRegionFeedbacksServlet</servlet-name>
         <servlet-class>servlets.regionStores.showFeedbacks.LoadUserRegionFeedbacks</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddNewStoreServlet</servlet-name>
+        <servlet-class>servlets.regionStores.addNewStore.AddNewStoreServlet</servlet-class>
     </servlet>
 
 
@@ -153,6 +161,10 @@
         <url-pattern>/pages/regionStores/validatePosition</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>ValidateStoreIDServlet</servlet-name>
+        <url-pattern>/pages/regionStores/validateStoreID</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>LoadNotificationsServlet</servlet-name>
         <url-pattern>/pages/dashboard/loadNotifications</url-pattern>
     </servlet-mapping>
@@ -163,5 +175,9 @@
     <servlet-mapping>
         <servlet-name>LoadUserRegionFeedbacksServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadUserRegionFeedbacks</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddNewStoreServlet</servlet-name>
+        <url-pattern>/pages/regionStores/addNewStore</url-pattern>
     </servlet-mapping>
 </web-app>

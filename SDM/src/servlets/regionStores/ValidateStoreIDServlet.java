@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ValidatePositionServlet extends HttpServlet
+public class ValidateStoreIDServlet extends HttpServlet
 {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
@@ -20,11 +20,10 @@ public class ValidatePositionServlet extends HttpServlet
         response.setContentType("application/json");
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
         String regionName = SessionUtils.getRegionName(request);
-        Integer xPosition = ServletUtils.getIntParameter(request,"xPosition");
-        Integer yPosition = ServletUtils.getIntParameter(request,"yPosition");
-        boolean isPositionValid = systemManager.ValidatePosition(xPosition,yPosition,regionName);
+        Integer storeID = ServletUtils.getIntParameter(request,"storeID");
+        boolean isStoreIDValid = systemManager.ValidateStoreID(storeID,regionName);
         Gson gson = new Gson();
-        String jsonResponse = gson.toJson(isPositionValid);
+        String jsonResponse = gson.toJson(isStoreIDValid);
         response.setStatus(200);
         PrintWriter out = response.getWriter();
         out.print(jsonResponse);

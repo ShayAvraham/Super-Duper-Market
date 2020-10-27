@@ -106,63 +106,6 @@ public class SystemManager
         usersData.replace(userId, userDataContainer);
     }
 
-    /********************************************** Update Products Logic ****************************************/
-//
-    /** Remove Product Logic **/
-//    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove) throws ValidationException
-//    {
-//        validateRemoveProduct(store,productToRemove);
-//        try
-//        {
-//            region.removeProductFromStore(store.getId(),productToRemove.getId());
-//        }
-//        finally
-//        {
-//            updateDataContainers();
-//        }
-//    }
-//
-//    private void validateRemoveProduct(StoreDataContainer store, ProductDataContainer product) throws ValidationException
-//    {
-//        if(!isOthersStoresSellThisProduct(store, product))
-//        {
-//            throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE);
-//        }
-//        if(store.getProducts().size() == 1)
-//        {
-//            throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE);
-//        }
-//    }
-//
-//    private boolean isOthersStoresSellThisProduct(StoreDataContainer selectedStore, ProductDataContainer product)
-//    {
-//        for(StoreDataContainer store: getAllStoresData())
-//        {
-//            if(!selectedStore.equals(store))
-//            {
-//                if(store.getProducts().contains(product))
-//                {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//
-    /** Add Product Logic **/
-//    public void addProductToStore(StoreDataContainer store, ProductDataContainer productToAdd, int price)
-//    {
-//        region.addProductToStore(store.getId(),productToAdd.getId(),price);
-//        updateDataContainers();
-//    }
-//
-//    /** Update Product Price Logic **/
-//    public void updateProductPriceInStore(StoreDataContainer store, ProductDataContainer productToRemove, int newPrice)
-//    {
-//        region.updateProductPriceInStore(store.getId(), productToRemove.getId(), newPrice);
-//        updateDataContainers();
-//    }
-//
     /********************************************** Place Order Logic ****************************************/
 
     /** Dynamic Store Allocation **/
@@ -266,9 +209,12 @@ public class SystemManager
                 usersData.get(regionOwnerID).getName(),region));
         usersData.replace(customerID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(customerID)));
         usersData.replace(regionOwnerID,UserDataContainerBuilder.createUserData(dataManager.getAllUsers().get(regionOwnerID)));
-        for (User user : usersCollection )
+        if(usersCollection != null)
         {
-            usersData.replace(user.getId(),UserDataContainerBuilder.createUserData(user));
+            for (User user : usersCollection)
+            {
+                usersData.replace(user.getId(), UserDataContainerBuilder.createUserData(user));
+            }
         }
     }
 
@@ -365,17 +311,14 @@ public class SystemManager
         return orders;
     }
 
-    public boolean ValidatePosition(Integer xPosition, Integer yPosition)
+    public boolean ValidatePosition(Integer xPosition, Integer yPosition,String regionName)
     {
         Point positionToValidate = new Point(xPosition,yPosition);
-        for(RegionDataContainer region: regionsData.values())
+        for (StoreDataContainer store: regionsData.get(regionName).getStoresData().values())
         {
-            for (StoreDataContainer store: region.getStoresData().values())
+            if(store.getPosition().equals(positionToValidate))
             {
-                if(store.getPosition().equals(positionToValidate))
-                {
-                    return false;
-                }
+                return false;
             }
         }
         return true;
@@ -410,126 +353,96 @@ public class SystemManager
         return userRegionFeedbacks;
     }
 
-    /********************************************** Order Details Logic ****************************************/
+    /********************************************** Add New Store ****************************************/
+
+
+    public boolean ValidateStoreID(Integer storeID,String regionName)
+    {
+        for (StoreDataContainer store: regionsData.get(regionName).getStoresData().values())
+        {
+            if(store.getId() == (storeID))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void AddNewStore(String regionName, int ownerID, Integer storeID,
+                            String storeName, Integer xPosition, Integer yPosition,
+                            Integer storePPK, Collection<ProductDataContainer> selectedProducts)
+    {
+        Point location = new Point(xPosition,yPosition);
+        StoreDataContainer newStoreData = new StoreDataContainer(storeID,
+                storeName,
+                usersData.get(ownerID).getName(),
+                location,
+                storePPK,
+                selectedProducts);
+        dataManager.addNewStore(newStoreData,regionName);
+        updateDataContainers(regionName,ownerID,null);
+    }
+
+    /********************************************** Update Products Logic ****************************************/
 //
-//    public int getProductPrice(StoreDataContainer store,ProductDataContainer product)
+    /** Remove Product Logic **/
+//    public void removeProductFromStore(StoreDataContainer store, ProductDataContainer productToRemove) throws ValidationException
 //    {
-//        return region.getStores().get(store.getId()).getProductById(product.getId()).getPrice();
+//        validateRemoveProduct(store,productToRemove);
+//        try
+//        {
+//            region.removeProductFromStore(store.getId(),productToRemove.getId());
+//        }
+//        finally
+//        {
+//            updateDataContainers();
+//        }
 //    }
 //
-//    public Collection<DiscountDataContainer> createSubDiscounts(Collection <DiscountDataContainer> discounts)
+//    private void validateRemoveProduct(StoreDataContainer store, ProductDataContainer product) throws ValidationException
 //    {
-//        Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
-//        if(discounts != null)
+//        if(!isOthersStoresSellThisProduct(store, product))
 //        {
-//            for(DiscountDataContainer discount : discounts)
+//            throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_ONE_STORE_MESSAGE);
+//        }
+//        if(store.getProducts().size() == 1)
+//        {
+//            throw new ValidationException(UNABLE_TO_REMOVE_PRODUCT_ONE_PRODUCT_MESSAGE);
+//        }
+//    }
+//
+//    private boolean isOthersStoresSellThisProduct(StoreDataContainer selectedStore, ProductDataContainer product)
+//    {
+//        for(StoreDataContainer store: getAllStoresData())
+//        {
+//            if(!selectedStore.equals(store))
 //            {
-//                switch (discount.getDiscountType())
+//                if(store.getProducts().contains(product))
 //                {
-//                    case "ONE_OF":
-//                    case "IRRELEVANT":
-//                        subDiscounts.add(discount);
-//                        break;
-//                    case "ALL_OR_NOTHING":
-//                        subDiscounts.addAll(createAllOrNothingSubDiscounts(discount));
-//                        break;
+//                    return true;
 //                }
 //            }
 //        }
-//        return subDiscounts;
+//        return false;
 //    }
 //
-//    private Collection<DiscountDataContainer> createAllOrNothingSubDiscounts(DiscountDataContainer discount)
+    /** Add Product Logic **/
+//    public void addProductToStore(StoreDataContainer store, ProductDataContainer productToAdd, int price)
 //    {
-//        Collection<DiscountDataContainer> subDiscounts = new ArrayList<>();
-//        for(ProductDataContainer offerProduct : discount.getPriceForOfferProduct().keySet())
-//        {
-//            subDiscounts.add(new DiscountDataContainer(discount.getDiscountName(),
-//                    discount.getDiscountType(),
-//                    discount.getDiscountProduct(),
-//                    discount.getAmountForDiscount(),
-//                    new HashMap<ProductDataContainer,Integer>(){{put(offerProduct,discount.getPriceForOfferProduct().get(offerProduct));}},
-//                    new HashMap<ProductDataContainer,Double>(){{put(offerProduct,discount.getAmountForOfferProduct().get(offerProduct));}}));
-//        }
-//        return subDiscounts;
-//    }
-//
-//
-//
-    /********************************************** Add New Store ****************************************/
-//    public void ValidateStore(StoreDataContainer store)
-//    {
-//        validateStoreId(store.getId());
-//        validateStorePosition(store.getPosition());
-//        validateSelectedProducts(store.getProducts());
-//    }
-//
-//    private void validateStorePosition(Point storePos)
-//    {
-//        validateNoStoreExistWithPos(storePos);
-//        validateNoCustomerExistWithPos(storePos);
-//    }
-//
-//    private void validateNoStoreExistWithPos(Point position)
-//    {
-//        for(StoreDataContainer store : allStoresData)
-//        {
-//            if(store.getPosition().equals(position))
-//            {
-//                throw new DuplicateValuesException("store",position);
-//            }
-//        }
-//    }
-//
-//    private void validateNoCustomerExistWithPos(Point position)
-//    {
-//        for(UserDataContainer customer : allCustomersData)
-//        {
-//            if(customer.getPosition().equals(position))
-//            {
-//                throw new DuplicateValuesException("customer",position);
-//            }
-//        }
-//    }
-//
-//    private void validateStoreId(int storeID)
-//    {
-//        if(region.getStores().get(storeID) != null)
-//        {
-//            throw new DuplicateValuesException("store",storeID);
-//        }
-//    }
-//
-//    public void addNewStore(StoreDataContainer newStoreDataContainer)
-//    {
-//        Store newStore = createNewStore(newStoreDataContainer);
-//        region.addNewStore(newStore);
+//        region.addProductToStore(store.getId(),productToAdd.getId(),price);
 //        updateDataContainers();
 //    }
 //
-//
-//    private Store createNewStore(StoreDataContainer newStoreDataContainer)
+//    /** Update Product Price Logic **/
+//    public void updateProductPriceInStore(StoreDataContainer store, ProductDataContainer productToRemove, int newPrice)
 //    {
-//        return new Store(newStoreDataContainer.getId(),
-//                newStoreDataContainer.getName(),
-//                newStoreDataContainer.getPosition(),
-//                newStoreDataContainer.getPpk(),
-//                createStoreProducts(newStoreDataContainer.getProducts()));
+//        region.updateProductPriceInStore(store.getId(), productToRemove.getId(), newPrice);
+//        updateDataContainers();
 //    }
 //
-//    private Collection<StoreProduct> createStoreProducts(Collection<ProductDataContainer> products)
-//    {
-//        Collection<StoreProduct> storeProducts = new HashSet<>();
-//        for(ProductDataContainer product: products)
-//        {
-//            storeProducts.add(new StoreProduct(
-//                    region.getProducts().get(product.getId()),
-//                    product.getPrice()));
-//        }
-//        return storeProducts;
-//    }
-//
-//
+
+
     /********************************************** Utilities ****************************************/
 //
 //    public StoreDataContainer getStoreDataById(String regionName,int storeId)

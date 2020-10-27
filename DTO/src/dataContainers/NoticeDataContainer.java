@@ -1,5 +1,6 @@
 package dataContainers;
 
+import java.awt.*;
 import java.util.Date;
 
 public class NoticeDataContainer
@@ -13,14 +14,21 @@ public class NoticeDataContainer
 
     /**  orderNotice **/
     private int orderId;
-    private int numOfProductsType;
     private float productsCost;
     private float deliveryCost;
+
+    /** storeNotice **/
+    private String storeOwner;
+    private String storeName;
+    private Point location;
+    private int numOfRegionProducts;
 
     /**  common **/
     private String customerName;
     private String strMessage;
     private String type;
+    private int numOfProductsType;
+
 
     /**  From Feedback **/
     public NoticeDataContainer(String regionName, int storeID, String customerName, int rank, String description, Date date, String strMassage)
@@ -45,6 +53,17 @@ public class NoticeDataContainer
         this.customerName = customerName;
         this.strMessage = strMassage;
         this.type = "orderNotice";
+    }
+
+    /**  From Store Notice **/
+    public NoticeDataContainer(String storeOwner, String storeName, Point location, int numOfProductsType, int numOfRegionProducts, String strMassage) {
+        this.storeOwner = storeOwner;
+        this.storeName = storeName;
+        this.location = location;
+        this.numOfProductsType = numOfProductsType;
+        this.numOfRegionProducts = numOfRegionProducts;
+        this.strMessage = strMassage;
+        this.type = "storeNotice";
     }
 
     public String getRegionName() {
@@ -93,5 +112,21 @@ public class NoticeDataContainer
 
     public String getType() {
         return type;
+    }
+
+    public String getStoreOwner() {
+        return storeOwner;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public int getNumOfRegionProducts() {
+        return numOfRegionProducts;
     }
 }

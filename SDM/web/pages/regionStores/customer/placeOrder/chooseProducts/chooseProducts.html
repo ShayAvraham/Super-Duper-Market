@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="../../common/jquery-3.5.1.min.js"></script>
     <script src="customer/placeOrder/chooseProducts/chooseProducts.js"></script>
 </head>
 <body>
@@ -18,11 +17,11 @@
                 </div>
                 <div class = "col">
                     <label for="x-location-text">X Location </label>
-                    <input type="number" class = "form-control" id="x-location-text" min = 0 max = 50 step= 1 required>
+                    <input type="number" class = "form-control" id="x-location-text" min = 1 max = 50 step= 1 required>
                 </div>
                 <div class = "col">
                     <label for="y-location-text">Y Location</label>
-                    <input type="number" class = "form-control" id="y-location-text" min = 0 max = 50 step=1 required>
+                    <input type="number" class = "form-control" id="y-location-text" min = 1 max = 50 step=1 required>
                 </div>
                 <div class = "col">
                 <label for="date">Date For Delivery</label>
@@ -30,11 +29,9 @@
                 </div>
             </div>
             <div class="form-row" id=static-order-row></div>
-            <div class="form-row" id=table-error-row>
-                <div id="table-error-placeholder" class="form-row alert-danger" role="alert"></div>
-            </div>
             <div class="form-row" id=products-table-row>
                 <div class = "col">
+                    <h2>Available Products</h2>
                     <table class="table responsive-lg" id ="products-table" >
                         <thead>
                         <tr>
@@ -48,6 +45,9 @@
                         <tbody></tbody>
                     </table>
                 </div>
+            </div>
+            <div class="form-row" id=table-error-row>
+                <div id="table-error-placeholder" class="form-row alert-danger" role="alert"></div>
             </div>
             <div class="form-row" id=submit-row>
                 <button class="btn btn-primary" type="submit" id="submit-btn">Submit</button>
