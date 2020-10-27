@@ -30,8 +30,10 @@ public class LoggedUserServlet extends HttpServlet
     {
         response.setContentType("application/json");
         UserDataContainer userFromSession = SessionUtils.getUser(request);
+        SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
+        UserDataContainer updatedUserDataContainer = systemManager.GetUserByID(userFromSession.getId());
         Gson gson = new Gson();
-        String loggedUser = gson.toJson(userFromSession);
+        String loggedUser = gson.toJson(updatedUserDataContainer);
         response.setStatus(200);
         PrintWriter out = response.getWriter();
         out.print(loggedUser);

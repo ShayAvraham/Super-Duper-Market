@@ -1,11 +1,6 @@
 var refreshRate = 2000;
 
 
-$(function() {
-    allIntervals.push(setInterval(ajaxRegionsList, refreshRate));
-});
-
-
 $(function () {
     $.ajax({
         url: "loadRegionsInfo",
@@ -15,7 +10,7 @@ $(function () {
         },
         success: function (data) {
             refreshRegionsTable(data);
-            setInterval(ajaxRegionsList, refreshRate);
+            allIntervals.push(setInterval(ajaxRegionsList, refreshRate));
         }
     });
     return false;
@@ -36,16 +31,20 @@ function appendToRegionsTable(region) {
 
 
 function refreshRegionsTable(regions) {
-    $("#all-regions-data").empty();
     if (regions.length > 0)
     {
+        let isEmptyTableMsgHidden = $("#empty-table-msg").attr("hidden");
+        let isRegionsHeaderHidden =  $("#regions-table-header").attr("hidden");
+        if (isEmptyTableMsgHidden !== "hidden") {
+            $("#empty-table-msg").attr("hidden", true);
+        }
+        if (isRegionsHeaderHidden === "hidden") {
+            $("#regions-table-header").attr("hidden", false);
+        }
+        $("#all-regions-data").empty();
         regions.forEach((region) => {
             appendToRegionsTable(region);
         })
-    }
-    else
-    {
-        $("#all-regions-data").append("<tr>No regions in the system</tr>"); // השורה לא עובדת - לתקן!
     }
 }
 

@@ -1,0 +1,31 @@
+.title {
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+#my-account-title {
+    margin-top: 20px;
+}
+
+#current-balance-label {
+    margin-left: 5px;
+    margin-right: 20px;
+    margin-top: 15px;
+    margin-bottom: 35px;
+}
+
+.form-control {
+    margin-right: 20px;
+    margin-bottom: 30px;
+}
+
+.date {
+    margin-left: 50px;
+}
+
+#user-balance-value {
+    margin-top: 15px;
+    margin-bottom: 40px;
+}
+
+

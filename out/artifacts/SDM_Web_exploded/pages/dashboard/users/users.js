@@ -1,10 +1,6 @@
 var refreshRate = 2000;
 
 
-$(function() {
-    allIntervals.push(setInterval(ajaxUsersList, refreshRate));
-});
-
 $(function () {
     $.ajax({
         url: "loadUsersInfo",
@@ -15,7 +11,7 @@ $(function () {
         success: function(data)
         {
             refreshUsersTable(data);
-            setInterval(ajaxUsersList, refreshRate);
+            allIntervals.push(setInterval(ajaxUsersList, refreshRate));
         }
     });
     return false;

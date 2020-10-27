@@ -2,28 +2,10 @@ var refreshRate = 2000;
 var allIntervals = [];
 var userRole = "customer";
 var ownerNotifications = [];
-let counter = 0;
+var counter = 0;
 
-// function createCounter() {
-//     let counter = 0;
-//     const counterObj = {};
-//
-//     counterObj.inc = function () {
-//         return ++counter;
-//     }
-//
-//     counterObj.getCounter = function () {
-//         return counter;
-//     }
-//
-//     counterObj.init = function () {
-//         counter = 0;
-//     }
-//
-//     return counterObj;
-// }
 
-async function ajaxNotificationsList() {
+function ajaxNotificationsList() {
     $.ajax({
         url: "loadNotifications",
         dataType: "json",
@@ -97,18 +79,21 @@ function loadUserButtons(userRole) {
 
 function createOwnerButtons() {
     var newLiContent = "                   <li class=\"nav-item\">\n" +
-        "                        <a id=\"load-xml-btn\" class=\"nav-link active\">\n" +
-        "                            <span data-feather=\"file\"></span>\n" +
+        "                        <a id=\"load-xml-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"share\"></span>\n" +
         "                            Load XML\n" +
         "                        </a>\n" +
         "                    </li>" +
         "<li class=\"nav-item\">\n" +
         "    <a id=\"notifications-btn\" class=\"nav-link\">\n" +
-        "        <span data-feather=\"users\"></span>\n" +
+        "        <span data-feather=\"bell\"></span>\n" +
         "        Notifications\n" +
         "        <span id=\"notifications-counter\" class=\"badge\"></span>\n" +
         "    </a>\n" +
-        "</li>"
+        "</li>\n" +
+        "<script>\n" +
+        "    feather.replace()\n" +
+        "</script>"
 
     $("#nav-bar-buttons").prepend(newLiContent);
 }

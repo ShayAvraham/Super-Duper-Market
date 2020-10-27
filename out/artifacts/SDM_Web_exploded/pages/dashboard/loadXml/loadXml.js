@@ -10,11 +10,13 @@ $(function() {
             processData: false,
             contentType: false,
             error: function(data) {
-                $("#upload-file-msg").text("Failed to load file due to " + data)
+                $("#upload-file-msg").attr("class", "alert-danger");
+                $("#upload-file-msg").text("Failed to load file due to: " + data.responseText);
             },
-            success: function(data)
+            success: function()
             {
-                $("#upload-file-msg").text("File was loaded successfully!")
+                $("#upload-file-msg").attr("class", "alert-success");
+                $("#upload-file-msg").text("File was loaded successfully!");
             }
         });
         return false

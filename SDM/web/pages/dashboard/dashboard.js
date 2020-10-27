@@ -5,7 +5,7 @@ var ownerNotifications = [];
 var counter = 0;
 
 
-async function ajaxNotificationsList() {
+function ajaxNotificationsList() {
     $.ajax({
         url: "loadNotifications",
         dataType: "json",
@@ -79,18 +79,21 @@ function loadUserButtons(userRole) {
 
 function createOwnerButtons() {
     var newLiContent = "                   <li class=\"nav-item\">\n" +
-        "                        <a id=\"load-xml-btn\" class=\"nav-link active\">\n" +
-        "                            <span data-feather=\"file\"></span>\n" +
+        "                        <a id=\"load-xml-btn\" class=\"nav-link\">\n" +
+        "                            <span data-feather=\"share\"></span>\n" +
         "                            Load XML\n" +
         "                        </a>\n" +
         "                    </li>" +
         "<li class=\"nav-item\">\n" +
         "    <a id=\"notifications-btn\" class=\"nav-link\">\n" +
-        "        <span data-feather=\"users\"></span>\n" +
+        "        <span data-feather=\"bell\"></span>\n" +
         "        Notifications\n" +
         "        <span id=\"notifications-counter\" class=\"badge\"></span>\n" +
         "    </a>\n" +
-        "</li>"
+        "</li>\n" +
+        "<script>\n" +
+        "    feather.replace()\n" +
+        "</script>"
 
     $("#nav-bar-buttons").prepend(newLiContent);
 }

@@ -1,11 +1,6 @@
 var refreshRate = 2000;
 
 
-$(function() {
-    allIntervals.push(setInterval(ajaxTransactionsList, refreshRate));
-});
-
-
 $(function () {
     $.ajax({
         url: "loggedUser",
@@ -16,7 +11,7 @@ $(function () {
         },
         success: function (data) {
             refreshTransactionsTable(data);
-            setInterval(ajaxTransactionsList, refreshRate);
+            allIntervals.push(setInterval(ajaxTransactionsList, refreshRate));
         }
     });
 });
@@ -32,7 +27,7 @@ $(function() {
             error: function(data) {
                 $("#error-label").text("Failed to charge the amount of money to your account");
             },
-            success: function(data)
+            success: function()
             {
                 $("#money-amount").val("");
                 $("#date").val("");
@@ -44,7 +39,7 @@ $(function() {
 
 
 function updateUserCurrentBalance(balance) {
-    $("#user-balance-value").text(balance.toString());
+    $("#user-balance-value").text(balance.toFixed(2).toString());
 }
 
 
@@ -64,6 +59,14 @@ function refreshTransactionsTable(user) {
     updateUserCurrentBalance(user.balance);
     if (user.transactions.length > 0)
     {
+        let isEmptyTableMsgHidden = $("#empty-table-msg").attr("hidden");
+        let isTransactionsHeaderHidden =  $("#transactions-table-header").attr("hidden");
+        if (isEmptyTableMsgHidden !== "hidden") {
+            $("#empty-table-msg").attr("hidden", true);
+        }
+        if (isTransactionsHeaderHidden === "hidden") {
+            $("#transactions-table-header").attr("hidden", false);
+        }
         $("#user-transactions-data").empty();
         user.transactions.forEach((transaction) => {
             appendToTransactionTable(transaction);

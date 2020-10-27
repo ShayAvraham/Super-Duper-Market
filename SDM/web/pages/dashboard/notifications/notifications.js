@@ -2,35 +2,35 @@ var refreshNotificationsRate = 1000;
 var notificationsLength = 0;
 
 
-function appendToNotificationsTable(notification) {
+function prependToNotificationsTable(notification) {
     var newRowContent = "<tr>\n" +
-        "      <td >" + notification.description + "</td>\n" +
+        "      <td >" + notification.strMessage + "</td>\n" +
         "    </tr>"
-    $("#all-notifications-data").append(newRowContent);
+    $("#all-notifications-data").prepend(newRowContent);
 }
 
 
 function refreshNotificationsTable() {
+    if (ownerNotifications.length > 0)
+    {
+        let isEmptyTableMsgHidden = $("#empty-table-msg").attr("hidden");
+        if (isEmptyTableMsgHidden !== "hidden") {
+            $("#empty-table-msg").attr("hidden", true);
+        }
+    }
     if (ownerNotifications.length > notificationsLength)
     {
         notificationsLength = ownerNotifications.length;
         $("#all-notifications-data").empty();
         ownerNotifications.forEach((notification) => {
-            appendToNotificationsTable(notification);
+            prependToNotificationsTable(notification);
         })
-    }
-    else if (ownerNotifications.length === 0)
-    {
-        $("#all-notifications-data").empty();
-        $("#all-notifications-data").append("<tr>\n" +
-            "      <td >" + "Your notifications box is empty" + "</td>\n" +
-            "    </tr>");
     }
 }
 
 $(function() {
     cleanNotificationCounterOnClickNotificationsTable();
-    setInterval(refreshNotificationsTable, refreshNotificationsRate);
+    allIntervals.push(setInterval(refreshNotificationsTable, refreshNotificationsRate));
 });
 
 

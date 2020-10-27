@@ -1,0 +1,19 @@
+#title {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+#select-file {
+    width: auto;
+    background-color: cornflowerblue;
+    color: white;
+    border-radius: 15px 15px 15px 15px;
+    margin-bottom: 50px;
+    cursor: pointer;
+}
+
+#upload-btn {
+    margin-bottom: 30px;
+}
+
+

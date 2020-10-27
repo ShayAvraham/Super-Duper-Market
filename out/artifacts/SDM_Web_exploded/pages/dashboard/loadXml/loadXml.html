@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <title>Load XML</title>
     <script src="../../common/jquery-3.5.1.min.js"></script>
+    <link href="loadXml/loadXml.css" rel="stylesheet">
     <script src="loadXml/loadXml.js"></script>
 </head>
 <body>
-    <h3>Select a File</h3>
+    <h2 id="title">Load XML File</h2>
     <form id="load-xml-form" enctype='multipart/form-data' method='POST' action="uploadFile">
         <div class="form-row">
-            <div class = "col">
-                <input type='file' id="select-file" class ="form-control" name='file' value="Select File" required><br>
+            <div class="col-auto">
+                <input type='file' id="select-file" class="form-control" name='file' required><br>
             </div>
         </div>
         <div class="form-row">
@@ -20,10 +21,13 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="col">
-                <label id="upload-file-msg"></label>
+            <div class="col-auto">
+                <div id="upload-file-msg" class="alert-danger" role="alert"></div>
             </div>
         </div>
     </form>
 </body>
 </html>
+
+
+

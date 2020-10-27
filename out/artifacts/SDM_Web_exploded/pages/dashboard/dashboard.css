@@ -47,6 +47,7 @@ body {
 .sidebar .nav-link {
     font-weight: 500;
     color: #333;
+    cursor: pointer;
 }
 
 .sidebar .nav-link .feather {
@@ -55,6 +56,7 @@ body {
 }
 
 .sidebar .nav-link.active {
+    cursor: pointer;
     color: #007bff;
 }
 
@@ -97,7 +99,14 @@ body {
     border-color: rgba(255, 255, 255, .1);
 }
 
-.form-control-dark:focus {
-    border-color: transparent;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+/*.form-control-dark:focus {*/
+/*    border-color: transparent;*/
+/*    box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);*/
+/*}*/
+
+.badge {
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
 }

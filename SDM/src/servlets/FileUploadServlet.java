@@ -26,12 +26,13 @@ public class FileUploadServlet extends HttpServlet
 {
     private static final String SUCCESS_MSG = "File was loaded successfully";
     private static final String FILE_NOT_XML_ERROR_MSG = "File is not xml file";
+    private static final String FILE_NOT_IN_FORMAT_MSG = "File is not in the correct format";
 
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
         Collection<Part> parts = request.getParts();
         UserDataContainer userFromSession = SessionUtils.getUser(request);
         SystemManager systemManager = ServletUtils.getSystemManager(getServletContext());
@@ -41,10 +42,17 @@ public class FileUploadServlet extends HttpServlet
             assert part != null;
             validateFileFormat(part);
             systemManager.LoadDataFromXMLFile(userFromSession.getId(), userFromSession.getName(), part.getInputStream());
+            response.setStatus(200);
             response.getWriter().print(SUCCESS_MSG);
+        }
+        catch (NullPointerException e)
+        {
+            response.setStatus(404);
+            response.getWriter().print(FILE_NOT_IN_FORMAT_MSG);
         }
         catch (Exception e)
         {
+            response.setStatus(404);
             response.getWriter().print(e.getMessage());
         }
     }
