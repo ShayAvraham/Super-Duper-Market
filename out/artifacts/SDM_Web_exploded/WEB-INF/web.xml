@@ -169,6 +169,10 @@
         <url-pattern>/pages/dashboard/loadNotifications</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>LoadNotificationsServlet</servlet-name>
+        <url-pattern>/pages/regionStores/loadNotifications</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>LoadUserStoresServlet</servlet-name>
         <url-pattern>/pages/regionStores/loadUserStores</url-pattern>
     </servlet-mapping>

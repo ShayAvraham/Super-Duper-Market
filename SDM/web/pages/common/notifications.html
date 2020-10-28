@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications</title>
+    <script src="../../common/jquery-3.5.1.min.js"></script>
+    <link href="../common/notifications.css" rel="stylesheet">
+    <script src="../common/notifications.js"></script>
+</head>
+<body>
+<div class="form-row">
+    <div class="col-auto">
+        <h2 id="title">Notifications</h2>
+    </div>
+</div>
+<div id="empty-table-msg" hidden>No Notifications To Display</div>
+<div id="tableContainer" class="container">
+    <table id="notifications-table" class="table table-hover">
+        <thead>
+        </thead>
+        <tbody id="all-notifications-data">
+        </tbody>
+    </table>
+</div>
+<div class="form-row">
+    <label id="error-label" class="alert-danger" role="alert"></label>
+</div>
+</body>
+</html>

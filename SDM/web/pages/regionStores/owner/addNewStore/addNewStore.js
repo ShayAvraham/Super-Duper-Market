@@ -2,7 +2,6 @@ var loadedProducts;
 var selectedProducts;
 
 $(function() {
-    console.log("add new store page");
     loadAllProducts()
 });
 

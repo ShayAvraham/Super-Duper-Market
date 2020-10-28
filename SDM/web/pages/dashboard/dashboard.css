@@ -33,7 +33,7 @@ body {
     top: 0;
     height: calc(100vh - 48px);
     padding-top: .5rem;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
@@ -110,3 +110,20 @@ body {
     background: red;
     color: white;
 }
+
+
+.bd-placeholder-img {
+     font-size: 1.125rem;
+     text-anchor: middle;
+     -webkit-user-select: none;
+     -moz-user-select: none;
+     -ms-user-select: none;
+     user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+

@@ -13,9 +13,13 @@ function prependToNotificationsTable(notification) {
 function refreshNotificationsTable() {
     if (ownerNotifications.length > 0)
     {
+        $("#empty-table-msg").remove();
+    }
+    else
+    {
         let isEmptyTableMsgHidden = $("#empty-table-msg").attr("hidden");
-        if (isEmptyTableMsgHidden !== "hidden") {
-            $("#empty-table-msg").attr("hidden", true);
+        if (isEmptyTableMsgHidden === "hidden") {
+            $("#empty-table-msg").attr("hidden", false);
         }
     }
     if (ownerNotifications.length > notificationsLength)
@@ -29,6 +33,7 @@ function refreshNotificationsTable() {
 }
 
 $(function() {
+    refreshNotificationsTable();
     cleanNotificationCounterOnClickNotificationsTable();
     allIntervals.push(setInterval(refreshNotificationsTable, refreshNotificationsRate));
 });

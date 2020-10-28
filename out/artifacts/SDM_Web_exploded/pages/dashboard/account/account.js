@@ -24,7 +24,7 @@ $(function() {
             url: "chargeUserMoney",
             dataType: 'json',
             data: "amount=" + amountToRecharge + "&" + "date=" + datePicked,
-            error: function(data) {
+            error: function() {
                 $("#error-label").text("Failed to charge the amount of money to your account");
             },
             success: function()
@@ -44,9 +44,11 @@ function updateUserCurrentBalance(balance) {
 
 
 function appendToTransactionTable(transaction) {
+    var dateArray = transaction.date.split(" ");
+    var date = dateArray[0] + " " + dateArray[1] + " " + dateArray[2] + " ";
     var newRowContent = "<tr>\n" +
         "      <td >" + transaction.transactionCategory + "</td>\n" +
-        "      <td>" + transaction.date + "</td>\n" +
+        "      <td>" + date + "</td>\n" +
         "      <td>" + transaction.cost + "</td>\n" +
         "      <td>" + transaction.balanceBefore.toFixed(2) + "</td>\n" +
         "      <td>" + transaction.balanceAfter.toFixed(2) + "</td>\n" +

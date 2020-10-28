@@ -23,6 +23,7 @@ function ajaxNotificationsList() {
 }
 
 $(function () {
+    ajaxNotificationsList();
     setInterval(ajaxNotificationsList, refreshRate);
 });
 
@@ -109,7 +110,7 @@ function addOwnerButtonsEvents() {
         $("#loader").empty();
         counter = 0;
         $("#notifications-counter").text("");
-        $("#loader").load('notifications/notifications.html');
+        $("#loader").load('../common/notifications.html');
     });
 }
 
