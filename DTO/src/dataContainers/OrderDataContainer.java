@@ -109,5 +109,4 @@ public class OrderDataContainer
     public int getAmountOfProductsTypes() {
         return amountOfProductsTypes;
     }
-
 }

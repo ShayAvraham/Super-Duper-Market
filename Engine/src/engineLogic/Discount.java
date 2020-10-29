@@ -88,6 +88,5 @@ public class Discount
             }
         }
         return amount;
-
     }
 }

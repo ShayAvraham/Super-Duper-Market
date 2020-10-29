@@ -49,26 +49,6 @@ public class DataManager
         user.addTransaction(Transaction.TransactionCategory.CHARGING, transactionDate, amountToCharge);
     }
 
-//    private InputStream createInputStreamFromPath() throws FileNotFoundException
-//    {
-//        validateXmlFileFormat();
-//        InputStream inputStream = new FileInputStream(new File(xmlFilePath));
-//        if (inputStream == null)
-//        {
-//            throw new FileNotFoundException(FILE_NOT_EXIST_ERROR_MSG + xmlFilePath);
-//        }
-//        return inputStream;
-//    }
-
-//    private void validateXmlFileFormat()
-//    {
-//        if(!xmlFilePath.endsWith(".xml"))
-//        {
-//            throw new IllegalArgumentException(FILE_NOT_XML_ERROR_MSG);
-//        }
-//    }
-
-
     public Map<String, Region> getAllRegions() {
         return allRegions;
     }
@@ -106,21 +86,6 @@ public class DataManager
             }
         }
     }
-
-
-//    private final Set<String> usersSet;
-//
-//
-//    public synchronized void removeUser(String username)
-//    {
-//        usersSet.remove(username);
-//    }
-//
-//    public synchronized Set<String> getUsers()
-//    {
-//        return Collections.unmodifiableSet(usersSet);
-//    }
-//
 
 /********************************************** Place Order Logic ****************************************/
 
@@ -359,7 +324,7 @@ public Store getStoreWithTheCheapestPrice(String regionName, int productId)
             cost += store.getProductById(product.getId()).getPrice() * product.getAmount();
         }
 
-        return  cost;
+        return cost;
     }
 
         private float getDiscountsCostFromStore(Integer storeID, Collection<DiscountDataContainer> discounts,

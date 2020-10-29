@@ -85,10 +85,8 @@ public final class UserDataContainerBuilder
 
     private static NoticeDataContainer creatNoticeDataFromFeedback(Feedback feedback)
     {
-        String strMessage = "Feedback \n" +
-                             "--------\n" +
-                            "Customer Name: " +feedback.getCustomerName() + "\n" +
-                            "Rank: " + feedback.getRank() + "\n";
+        String strMessage = "Customer " +feedback.getCustomerName() + "\n" +
+                            "gave your store rank of " + feedback.getRank() +  "." + "\n";
 
         return new NoticeDataContainer(feedback.getRegionName(),
                 feedback.getStoreID(),
@@ -101,14 +99,12 @@ public final class UserDataContainerBuilder
 
     private static NoticeDataContainer creatNoticeDataFromOrderNotice(OrderNotice orderNotice)
     {
-        String strMessage = "Order \n" +
-                             "----------\n" +
-                    "Order I.D: " + orderNotice.getOrderId() +"\n" +
-                    "Customer name: " + orderNotice.getCustomerName() + "\n" +
-                    "Number of products types: " + orderNotice.getNumOfProductsType() + "\n" +
-                    "Products cost: " + orderNotice.getProductsCost() + "\n" +
-                    "Delivery cost: " + orderNotice.getDeliveryCost() + "\n";
-
+        String strMessage = "Customer " + orderNotice.getCustomerName() + " added a new order " + "(" +
+                orderNotice.getOrderId() + ")\n" +
+                             "-\n" +
+                    "the order included " + orderNotice.getNumOfProductsType() + " types of products, \n" +
+                    "products cost " + DECIMAL_FORMAT.format(orderNotice.getProductsCost()) + ", \n" +
+                    "delivery cost " + DECIMAL_FORMAT.format(orderNotice.getDeliveryCost()) + ".\n";
         return new NoticeDataContainer(orderNotice.getOrderId(),
                 orderNotice.getNumOfProductsType(),
                 orderNotice.getProductsCost(),
@@ -120,13 +116,11 @@ public final class UserDataContainerBuilder
     private static NoticeDataContainer creatNoticeDataFromStoreNotice(StoreNotice storeNotice)
     {
         Point location = storeNotice.getLocation();
-        String strMessage = "Store" +
-                "----------\n" +
-                "Store owner: " + storeNotice.getStoreOwner() +"\n" +
-                "Store name: " + storeNotice.getStoreName() + "\n" +
-                "Location: " + "(" + location.getX() + "," + location.getY() + ")" + "\n" +
-                "Products on sale: " + storeNotice.getAmountOfProductsForSale() + "/" +
-                storeNotice.getAmountOfProductsForSale() + "\n";
+        String strMessage = storeNotice.getStoreOwner() + " added a new store - \n" +
+                            "Store name: " + storeNotice.getStoreName() + ", \n" +
+                            "Location: " + "(" + location.getX() + "," + location.getY() + ")" + ", \n" +
+                            "Products on sale: " + storeNotice.getAmountOfProductsForSale() + "/" +
+                            storeNotice.getAmountOfProductsForSale() + ".\n";
 
         return new NoticeDataContainer(storeNotice.getStoreOwner(),
                 storeNotice.getStoreName(),

@@ -21,6 +21,4 @@ public class OfferProduct extends StoreProduct
     {
         return offerAmount;
     }
-
-
 }

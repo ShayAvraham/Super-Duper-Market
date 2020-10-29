@@ -151,7 +151,6 @@ public final class RegionDataContainerBuilder
                 allDiscountData.add(DiscountDataContainerBuilder.createDiscountData(productsData,discount));
             }
         }
-
         return allDiscountData;
     }
 }
