@@ -2,3 +2,7 @@
     background-color: #ccc;
 }
 
+#storesTable {
+    cursor: pointer;
+}
+

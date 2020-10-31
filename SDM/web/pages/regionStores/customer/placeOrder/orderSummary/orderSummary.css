@@ -2,3 +2,7 @@
     background-color: #ccc;
 }
 
+#stores-summary-table {
+    cursor: pointer;
+}
+

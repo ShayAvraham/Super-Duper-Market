@@ -5,3 +5,7 @@
 h2.a {
     visibility: visible;
 }
+
+#orders-table {
+    cursor: pointer;
+}
